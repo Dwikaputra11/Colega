@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable-v24/radius_10_dp_border_white.xml" value="0.2255" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable-v24/show_password_state.xml" value="0.1" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/costum_progress.xml" value="0.2255" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2255" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/progress_bar_shape.xml" value="0.2255" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/radius_10_dp.xml" value="0.2255" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/radius_10_dp_border.xml" value="0.2255" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/radius_50_dp.xml" value="0.2255" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/tab_shape.xml" value="0.2455" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/activity_main.xml" value="0.22735507246376813" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/fragment_home.xml" value="0.4" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/fragment_login.xml" value="0.18342391304347827" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/fragment_news_detail.xml" value="0.2" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/fragment_on_boarding.xml" value="0.176" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/fragment_register.xml" value="0.22735507246376813" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/fragment_splash_screen.xml" value="0.264" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/headline_item.xml" value="0.2740740740740741" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/on_boarding_item.xml" value="0.152" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/related_news_item.xml" value="0.8" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/menu/menu_item.xml" value="0.25677083333333334" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2255" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2255" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
