@@ -1,16 +1,16 @@
 package com.example.colega.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.colega.R
+import androidx.fragment.app.Fragment
 import com.example.colega.adapter.HomeAdapter
 import com.example.colega.databinding.FragmentHomeBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
+    private val TAG = "HomeFragment"
     private lateinit var binding: FragmentHomeBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

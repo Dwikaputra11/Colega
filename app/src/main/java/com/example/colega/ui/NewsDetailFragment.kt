@@ -6,14 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.data.News
 import com.example.colega.databinding.FragmentNewsDetailBinding
+import com.github.ayodkay.models.Article
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.newFixedThreadPoolContext
 
-class NewsDetailFragment(private val news: News) : BottomSheetDialogFragment() {
+class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewsDetailBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private val TAG = "NewsDetailFragment"
@@ -33,7 +35,7 @@ class NewsDetailFragment(private val news: News) : BottomSheetDialogFragment() {
     private fun setBehaviour(view: View){
         bottomSheetBehavior = BottomSheetBehavior.from(view.parent as View)
         bottomSheetBehavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
-        hideView(binding.appBarDetail)
+        showView(binding.appBarDetail,getActionBarSize())
 
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -42,9 +44,6 @@ class NewsDetailFragment(private val news: News) : BottomSheetDialogFragment() {
                     Log.d(TAG, "onStateChanged: Expanded")
                     showView(binding.appBarDetail, getActionBarSize());
                     hideView(binding.clDetail);
-                }
-                if(BottomSheetBehavior.STATE_DRAGGING == newState){
-                    showView(binding.appBarDetail, getActionBarSize());
                 }
                 if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
                     Log.d(TAG, "onStateChanged: Collapsed")
@@ -70,11 +69,16 @@ class NewsDetailFragment(private val news: News) : BottomSheetDialogFragment() {
     }
 
     private fun setViews(){
-        binding.tvDetailCategory.text = news.category
-        binding.tvDetailContent.text = news.desc
+        binding.tvDetailCategory.text = "tech"
+        binding.tvDetailDesc.text = news.description
+        binding.tvDetailContent.text = news.content.substringBefore("[")
         binding.tvDetailTitle.text = news.title
-        binding.tvDetailDate.text = news.date
-        binding.tvDetailSource.text = news.source
+        binding.tvDetailDate.text = news.publishedAt
+        binding.tvDetailSource.text = news.source.name
+        Glide.with(requireContext())
+            .load(news.urlToImage)
+            .placeholder(R.drawable.news)
+            .into(binding.ivNews)
     }
 
     private fun hideView(view: View) {

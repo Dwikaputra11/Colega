@@ -1,29 +1,46 @@
 package com.example.colega.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.data.News
 import com.example.colega.databinding.RelatedNewsItemBinding
+import com.github.ayodkay.models.Article
 
-class RelatedNewsAdapter(private var relatedNews: List<News>):
+class RelatedNewsAdapter():
     RecyclerView.Adapter<RelatedNewsAdapter.ViewHolder>() {
+    private val TAG = "RelatedNewsAdapter"
     private lateinit var listener: OnItemClickListener
 
     interface OnItemClickListener{
-        fun onItemClick(news: News)
+        fun onItemClick(news: Article)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
         this.listener = listener
     }
 
+    private var diffCallback = object : DiffUtil.ItemCallback<Article>(){
+        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+            return oldItem.title == newItem.title
+        }
+
+        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+            return oldItem.hashCode() == newItem.hashCode()
+        }
+    }
+
+    private val differ = AsyncListDiffer(this, diffCallback)
+
     inner class ViewHolder(val binding: RelatedNewsItemBinding): RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                listener.onItemClick(relatedNews[adapterPosition])
+                listener.onItemClick(differ.currentList[adapterPosition])
             }
         }
     }
@@ -35,21 +52,23 @@ class RelatedNewsAdapter(private var relatedNews: List<News>):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Glide.with(holder.binding.root.context)
-            .load(relatedNews[position].img)
+            .load(differ.currentList[position].urlToImage)
             .placeholder(R.drawable.news)
             .into(holder.binding.ivRelated)
-        holder.binding.tvRelatedCategory.text = relatedNews[position].category
-        holder.binding.tvRelatedSource.text = relatedNews[position].source
-        holder.binding.tvRelatedTitle.text = relatedNews[position].title
-        holder.binding.tvRelatedTime.text = relatedNews[position].date.toString()
+        holder.binding.tvRelatedCategory.text = "tech"
+        holder.binding.tvRelatedSource.text = differ.currentList[position].source.name
+        holder.binding.tvRelatedTitle.text = differ.currentList[position].title
+        holder.binding.tvRelatedTime.text = differ.currentList[position].publishedAt
     }
 
     override fun getItemCount(): Int {
-        return relatedNews.size
+        if(differ.currentList.size > 10) return 10
+        return differ.currentList.size
     }
 
-    fun setRelatedNews(list: List<News>){
-        this.relatedNews = list
+    fun setRelatedNews(list: List<Article>){
+        Log.d(TAG, "setRelatedNews: $list")
+        differ.submitList(list)
     }
 
 }

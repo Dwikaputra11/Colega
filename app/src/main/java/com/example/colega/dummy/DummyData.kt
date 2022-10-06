@@ -39,14 +39,14 @@ class DummyData {
                     "Laoreet gravida metus at amet,\n"),
         )
 
-        val headline = arrayListOf<News>(
+        val headline = listOf(
             News(img = "https://cdn-2.tstatic.net/tribunnews/foto/bank/images/vivo-y52-5g.jpg", "Vivo Y52 5G Hadirkan Kamera 48MP dan Chipset Mediatek Dimensity 700, Ini Spesifikasi dan Harganya - Tribunnews.com", "tech",source = "BBC", date = "12 August 2022",desc = longString),
             News(img = "https://cdn-2.tstatic.net/tribunnews/foto/bank/images/vivo-y52-5g.jpg", "Vivo Y52 5G Hadirkan Kamera 48MP dan Chipset Mediatek Dimensity 700, Ini Spesifikasi dan Harganya - Tribunnews.com", "tech",source = "BBC", date = "12 August 2022",desc = longString),
             News(img = "https://cdn-2.tstatic.net/tribunnews/foto/bank/images/vivo-y52-5g.jpg", "Vivo Y52 5G Hadirkan Kamera 48MP dan Chipset Mediatek Dimensity 700, Ini Spesifikasi dan Harganya - Tribunnews.com", "tech",source = "BBC", date = "12 August 2022",desc = longString),
             News(img = "https://cdn-2.tstatic.net/tribunnews/foto/bank/images/vivo-y52-5g.jpg", "Vivo Y52 5G Hadirkan Kamera 48MP dan Chipset Mediatek Dimensity 700, Ini Spesifikasi dan Harganya - Tribunnews.com", "tech",source = "BBC", date = "12 August 2022",desc = longString)
         )
 
-        val relatedNews = listOf<News>(
+        val relatedNews = listOf(
             News("https://cdn-2.tstatic.net/tribunnews/foto/bank/images/vivo-y52-5g.jpg", title = "'Big Short' investor Michael Burry says the epic market crash he predicted is in full swing - and flags crypto, SPACs, and meme stocks as early victims", category = "tech", source = "BBC", date = "12 August 2022",desc = longString),
             News("https://cdn-2.tstatic.net/tribunnews/foto/bank/images/vivo-y52-5g.jpg", title = "'Big Short' investor Michael Burry says the epic market crash he predicted is in full swing - and flags crypto, SPACs, and meme stocks as early victims", category = "tech", source = "BBC", date = "12 August 2022",desc = longString),
             News("https://cdn-2.tstatic.net/tribunnews/foto/bank/images/vivo-y52-5g.jpg", title = "'Big Short' investor Michael Burry says the epic market crash he predicted is in full swing - and flags crypto, SPACs, and meme stocks as early victims", category = "tech", source = "BBC", date = "12 August 2022",desc = longString),

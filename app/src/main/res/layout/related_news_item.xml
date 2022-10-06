@@ -70,6 +70,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
+        android:scaleType="centerCrop"
         android:background="#525252"
         android:contentDescription="@string/related_news_image" />
 
