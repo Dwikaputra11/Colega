@@ -34,15 +34,6 @@ class FeedsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         articleVM = ViewModelProvider(this)[ArticleViewModel::class.java]
 
-        binding.vpHeadline.offscreenPageLimit = 3
-        binding.vpHeadline.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.vpHeadline.adapter = HeadlineAdapter(DummyData.headline)
-        binding.vpHeadline.canScrollHorizontally(1)
-        binding.vpHeadline.setPageTransformer(MarginPageTransformer(50))
-        binding.vpHeadline.clipToPadding = false;
-        binding.vpHeadline.setPadding(10,10,10,0);
-        binding.dotsIndicator.attachTo(binding.vpHeadline)
-
         val relatedAdapter = RelatedNewsAdapter()
         binding.rvForYou.adapter = relatedAdapter
         binding.rvForYou.layoutManager = object : LinearLayoutManager(binding.root.context){

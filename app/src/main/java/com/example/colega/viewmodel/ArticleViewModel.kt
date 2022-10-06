@@ -14,8 +14,10 @@ import retrofit2.Response
 class ArticleViewModel: ViewModel() {
     private val TAG = "ArticleViewModel"
     private var articleLiveData: MutableLiveData<List<Article>> = MutableLiveData()
+    private var headlineLiveData : MutableLiveData<List<Article>> = MutableLiveData()
 
     fun getArticleLiveData(): MutableLiveData<List<Article>> = articleLiveData
+    fun getHeadlineLiveData(): MutableLiveData<List<Article>> = headlineLiveData
 
     fun getRelatedNews(){
         RetrofitClient.instance.getPreferences()
@@ -25,6 +27,7 @@ class ArticleViewModel: ViewModel() {
                         Log.d(TAG, "onResponse: ${response.body()}")
                         if(response.body() != null){
                             articleLiveData.postValue(response.body()!!.articles)
+                            Log.d(TAG, "onResponse: ${response.body()!!.articles.size}")
                         }
                     }else{
                         Log.d(TAG, "onResponse: ${response.errorBody()}")
@@ -34,6 +37,26 @@ class ArticleViewModel: ViewModel() {
                 override fun onFailure(call: Call<NewsModel>, t: Throwable) {
                     Log.d(TAG, "onFailure: ${t.message}")
                 }
+            })
+    }
+
+    fun getHeadlineNews(){
+        RetrofitClient.instance.getTopHeadLines()
+            .enqueue(object : Callback<NewsModel>{
+                override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
+                    if(response.isSuccessful){
+                        if(response.body() != null){
+                            headlineLiveData.postValue(response.body()!!.articles)
+                        }
+                    }else{
+                        Log.d(TAG, "onResponse: Failed")
+                    }
+                }
+
+                override fun onFailure(call: Call<NewsModel>, t: Throwable) {
+                    Log.d(TAG, "onFailure: Failed")
+                }
+
             })
     }
 
