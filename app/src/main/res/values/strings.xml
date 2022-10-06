@@ -24,4 +24,8 @@
     <string name="search">Search</string>
     <string name="read_later">Read Later</string>
     <string name="profile">Profile</string>
+    <string name="default_time_format">yyyy-MM-dd\'T\'HH:mm:ss\'Z\'</string>
+    <string name="date_format">MMM d, yyyy</string>
+    <string name="time_format">HH:mm a</string>
+    <string name="go_to_the_original_page">Go To the Original Page</string>
 </resources>

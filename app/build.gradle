@@ -53,7 +53,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.1'
 
     // API Dependency
-    implementation 'com.github.ayodkay:NewsApiClient-Kotlin:1.0.5'
+//    implementation 'com.github.ayodkay:NewsApiClient-Kotlin:1.0.5'
 //    implementation 'com.github.dfloureiro:news-api-kotlin:v2.1'
 //    implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
 

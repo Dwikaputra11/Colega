@@ -166,6 +166,24 @@
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/tvDetailDesc"
                 app:layout_constraintTop_toBottomOf="@+id/tvDetailDesc" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnToUrlPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/radius_10_dp"
+                android:fontFamily="@font/playfair_display"
+                android:text="@string/go_to_the_original_page"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDetailContent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

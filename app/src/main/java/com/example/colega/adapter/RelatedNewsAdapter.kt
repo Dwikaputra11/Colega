@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.colega.R
-import com.example.colega.data.News
 import com.example.colega.databinding.RelatedNewsItemBinding
-import com.github.ayodkay.models.Article
+import com.example.colega.models.Article
+import com.example.colega.utils.Utils
 
 class RelatedNewsAdapter():
     RecyclerView.Adapter<RelatedNewsAdapter.ViewHolder>() {
@@ -55,14 +55,14 @@ class RelatedNewsAdapter():
             .load(differ.currentList[position].urlToImage)
             .placeholder(R.drawable.news)
             .into(holder.binding.ivRelated)
-        holder.binding.tvRelatedCategory.text = "tech"
+        holder.binding.tvRelatedCategory.text = Utils.category_technology
         holder.binding.tvRelatedSource.text = differ.currentList[position].source.name
         holder.binding.tvRelatedTitle.text = differ.currentList[position].title
         holder.binding.tvRelatedTime.text = differ.currentList[position].publishedAt
     }
 
     override fun getItemCount(): Int {
-        if(differ.currentList.size > 10) return 10
+        if(differ.currentList.size > 5) return 5
         return differ.currentList.size
     }
 

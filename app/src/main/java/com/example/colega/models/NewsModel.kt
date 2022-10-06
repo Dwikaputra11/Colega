@@ -3,7 +3,7 @@ package com.example.colega.models
 
 import com.google.gson.annotations.SerializedName
 
-data class NewsEverything(
+data class NewsModel(
     @SerializedName("articles")
     val articles: List<Article>,
     @SerializedName("status")

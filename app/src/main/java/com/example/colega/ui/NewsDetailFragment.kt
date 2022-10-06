@@ -1,19 +1,18 @@
 package com.example.colega.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.colega.R
-import com.example.colega.data.News
 import com.example.colega.databinding.FragmentNewsDetailBinding
-import com.github.ayodkay.models.Article
+import com.example.colega.models.Article
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.newFixedThreadPoolContext
 
 class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewsDetailBinding
@@ -30,6 +29,10 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setViews()
         setBehaviour(view)
+        binding.btnToUrlPage.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(news.url))
+            requireActivity().startActivity(browserIntent)
+        }
     }
 
     private fun setBehaviour(view: View){
@@ -71,7 +74,7 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
     private fun setViews(){
         binding.tvDetailCategory.text = "tech"
         binding.tvDetailDesc.text = news.description
-        binding.tvDetailContent.text = news.content.substringBefore("[")
+        binding.tvDetailContent.text = if(news.content != null) news.content.substringBefore("[") else ""
         binding.tvDetailTitle.text = news.title
         binding.tvDetailDate.text = news.publishedAt
         binding.tvDetailSource.text = news.source.name
