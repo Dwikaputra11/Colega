@@ -1,11 +1,13 @@
 package com.example.colega.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import com.example.colega.HomeActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentLoginBinding
 import com.example.colega.databinding.FragmentRegisterBinding
@@ -23,7 +25,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.btnSignIn.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(R.id.action_loginFragment_to_homeFragment)
+            startActivity(Intent(requireActivity(), HomeActivity::class.java))
         }
         binding.btnSignUp.setOnClickListener {
             val registerFragment = RegisterFragment()

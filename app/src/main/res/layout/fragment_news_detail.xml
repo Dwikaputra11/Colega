@@ -43,10 +43,11 @@
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_marginTop="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,6 +55,8 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarDetail">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clDetail"
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -107,7 +110,7 @@
                 android:padding="10dp"
                 android:text="Title"
                 android:textColor="#000000"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/cvCategory"
                 app:layout_constraintTop_toBottomOf="@+id/cvCategory" />
 
@@ -160,11 +163,11 @@
                 android:fontFamily="@font/roboto"
                 android:text="Content"
                 android:textColor="#000000"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/tvDetailDesc"
                 app:layout_constraintTop_toBottomOf="@+id/tvDetailDesc" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
