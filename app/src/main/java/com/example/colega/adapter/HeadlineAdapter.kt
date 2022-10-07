@@ -2,15 +2,14 @@ package com.example.colega.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.colega.R
-import com.example.colega.data.News
 import com.example.colega.databinding.HeadlineItemBinding
 import com.example.colega.models.Article
+import com.example.colega.utils.UtilMethods
 
 class HeadlineAdapter(): RecyclerView.Adapter<HeadlineAdapter.ViewHolder>() {
 
@@ -55,7 +54,7 @@ class HeadlineAdapter(): RecyclerView.Adapter<HeadlineAdapter.ViewHolder>() {
             .placeholder(R.drawable.news)
             .into(holder.binding.ivHeadline)
         holder.binding.tvHeadlineTitle.text = differ.currentList[position].title
-        holder.binding.tvHeadlineDate.text = differ.currentList[position].publishedAt
+        holder.binding.tvHeadlineDate.text = UtilMethods.convertISOTime(holder.binding.root.context,differ.currentList[position].publishedAt)
     }
 
     override fun getItemCount(): Int {

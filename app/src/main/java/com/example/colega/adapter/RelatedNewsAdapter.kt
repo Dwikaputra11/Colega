@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.databinding.RelatedNewsItemBinding
 import com.example.colega.models.Article
+import com.example.colega.utils.UtilMethods
 import com.example.colega.utils.Utils
 
 class RelatedNewsAdapter():
@@ -58,7 +59,7 @@ class RelatedNewsAdapter():
         holder.binding.tvRelatedCategory.text = Utils.category_technology
         holder.binding.tvRelatedSource.text = differ.currentList[position].source.name
         holder.binding.tvRelatedTitle.text = differ.currentList[position].title
-        holder.binding.tvRelatedTime.text = differ.currentList[position].publishedAt
+        holder.binding.tvRelatedTime.text = UtilMethods.convertISOTime(holder.binding.root.context,differ.currentList[position].publishedAt)
     }
 
     override fun getItemCount(): Int {

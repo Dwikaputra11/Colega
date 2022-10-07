@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Welcome Back,\nUser"
+                android:text="Welcome Back,"
                 android:textColor="#000000"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/textView5"
@@ -53,21 +53,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:layout_marginTop="16dp"
-                app:tabPadding="8dp"
                 android:layout_marginHorizontal="10dp"
+                android:background="@drawable/tab_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView6"
+                app:layout_constraintTop_toBottomOf="@+id/tvUsername"
                 app:tabGravity="center"
+                app:tabIndicator="@drawable/tab_shape"
                 app:tabIndicatorAnimationMode="elastic"
                 app:tabIndicatorColor="@color/white"
                 app:tabIndicatorGravity="stretch"
-                app:tabIndicator="@drawable/tab_shape"
-                android:background="@drawable/tab_background"
                 app:tabMode="auto"
-                app:tabTextAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
-                app:tabSelectedTextColor="@color/black" />
+                app:tabPadding="8dp"
+                app:tabSelectedTextColor="@color/black"
+                app:tabTextAppearance="@style/TextAppearance.AppCompat.SearchResult.Title" />
 
 
             <androidx.viewpager2.widget.ViewPager2
@@ -80,6 +79,17 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/textView6"
+                app:layout_constraintTop_toBottomOf="@+id/textView6" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

@@ -10,7 +10,7 @@ import java.util.*
 
 object UtilMethods {
     @SuppressLint("SimpleDateFormat")
-    fun convertISOTime(context: Context, isoTime: String?): String? {
+    fun convertISOTime(context: Context, isoTime: String?): String {
 
         val sdf = SimpleDateFormat(context.getString(R.string.default_time_format))
         var convertedDate: Date? = null

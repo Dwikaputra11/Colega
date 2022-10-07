@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.databinding.FragmentNewsDetailBinding
 import com.example.colega.models.Article
+import com.example.colega.utils.UtilMethods
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -76,7 +77,7 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
         binding.tvDetailDesc.text = news.description
         binding.tvDetailContent.text = if(news.content != null) news.content.substringBefore("[") else ""
         binding.tvDetailTitle.text = news.title
-        binding.tvDetailDate.text = news.publishedAt
+        binding.tvDetailDate.text = UtilMethods.convertISOTime(requireContext(), news.publishedAt)
         binding.tvDetailSource.text = news.source.name
         Glide.with(requireContext())
             .load(news.urlToImage)

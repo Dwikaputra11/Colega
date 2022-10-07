@@ -16,4 +16,11 @@ object Utils {
     const val category_sports : String = "sports"
     const val category_technology : String = "technology"
     const val pageSize : String = "pageSize"
+
+    const val name = "ACCOUNT"
+    const val username = "username"
+    const val password = "password"
+    const val email = "email"
+    const val firstInstall = "first_install"
+    const val userId = "user_id"
 }

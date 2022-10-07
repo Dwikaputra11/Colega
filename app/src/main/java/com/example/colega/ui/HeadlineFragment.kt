@@ -2,16 +2,14 @@ package com.example.colega.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.colega.R
 import com.example.colega.adapter.HeadlineAdapter
 import com.example.colega.databinding.FragmentHeadlineBinding
-import com.example.colega.databinding.HeadlineItemBinding
 import com.example.colega.models.Article
 import com.example.colega.viewmodel.ArticleViewModel
 
@@ -49,7 +47,6 @@ class HeadlineFragment : Fragment() {
                 val newsDetailFragment = NewsDetailFragment(news)
                 newsDetailFragment.show(requireActivity().supportFragmentManager, newsDetailFragment.tag)
             }
-
         })
 
     }

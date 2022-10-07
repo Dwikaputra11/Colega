@@ -6,17 +6,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import com.example.colega.data.User
 import com.example.colega.databinding.FragmentRegisterBinding
+import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.*
 
 
 class RegisterFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+    private lateinit var userVm : UserViewModel
     private val TAG = "RegisterFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,20 +31,80 @@ class RegisterFragment : BottomSheetDialogFragment() {
         return binding.root
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setOnShowListener {
-            val bottomSheetDialog = it as BottomSheetDialog
-            val parentLayout =bottomSheetDialog.findViewById<View>(
-                com.google.android.material.R.id.design_bottom_sheet
-            )
-            parentLayout?.let { bottomSheet ->
-                val behavior = BottomSheetBehavior.from(bottomSheet)
-                val layoutParams = bottomSheet.layoutParams
-                layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        userVm = ViewModelProvider(this)[UserViewModel::class.java]
+        setViews(view)
+        binding.btnSignUp.setOnClickListener {
+            GlobalScope.async { signUp() }
+        }
+    }
+
+    private suspend fun signUp() {
+        val username = binding.etUsername.text.toString().trim()
+        val email = binding.etEmail.text.toString().trim()
+        val password = binding.etPassword.text.toString()
+        val dateBirth = "2022-10-06"
+        val confPassword = binding.etConfirmPassword.text.toString()
+
+        if(password == confPassword){
+            if(isInputValid(username)){
+                addToDatabase(username, password, email, dateBirth)
+                requireActivity().runOnUiThread {
+                    toastMessage("Horay! Welcome to the club!")
+                }
+                dismiss()
             }
         }
+    }
+    private fun addToDatabase(username: String, password: String, email: String, birthDate: String) {
+        val user = User(
+            id = 0,
+            username = username,
+            password = password,
+            email = email,
+            birthDate = birthDate
+        )
+        userVm.addUser(user)
+        Log.d(TAG, "addToDatabase: Finish")
+    }
+    private suspend fun isInputValid(
+        username: String,
+    ): Boolean {
+        return if(!username.contains(" ")){
+                val isExist = GlobalScope.async { findUsername(username) }.await()
+                Log.d(TAG, "isInputValid: $isExist")
+                if(!isExist){
+                    Log.d(TAG, "isInputValid: Success")
+                    true
+                }else{
+                    toastMessage("Username Already Exist")
+                    false
+                }
+            }else{
+                toastMessage("Username should not contain whitespace!")
+                false
+            }
+    }
+
+    private suspend fun findUsername(username:String) : Boolean {
+        Log.d(TAG, "findUsername: ")
+        Log.d(TAG, "findUsername: Started")
+        val waitFor =  CoroutineScope(Dispatchers.IO).async {
+            val isExist = userVm.countUser(username) > 0
+            isExist
+        }.await()
+        Log.d(TAG, "findUsername: outer $waitFor")
+        return waitFor
+    }
+
+    private fun toastMessage(msg: String){
+        activity?.runOnUiThread {
+            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun setViews(view: View) {
         bottomSheetBehavior = BottomSheetBehavior.from(view.parent as View)
         bottomSheetBehavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
         showView(binding.appBarLayout,getActionBarSize())
@@ -75,7 +140,6 @@ class RegisterFragment : BottomSheetDialogFragment() {
         binding.tvClose.setOnClickListener {
             dismiss()
         }
-
     }
 
     private fun hideView(view: View) {
