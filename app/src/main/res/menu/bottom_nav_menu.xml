@@ -12,8 +12,8 @@
         android:title="@string/search"/>
     <item android:id="@+id/readLater"
         app:showAsAction="withText"
-        android:icon="@drawable/ic_round_menu_book_24"
-        android:title="@string/read_later"/>
+        android:icon="@drawable/ic_round_bookmark_24"
+        android:title="@string/bookmark"/>
     <item android:id="@+id/profile"
         app:showAsAction="withText"
         android:icon="@drawable/ic_round_person_24"

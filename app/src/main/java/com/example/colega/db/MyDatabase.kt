@@ -4,14 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.colega.data.Bookmark
+import com.example.colega.data.BookmarkDao
 import com.example.colega.data.User
 import com.example.colega.data.UserDao
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class, Bookmark::class], version = 1)
 abstract class MyDatabase: RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun bookmarkDao(): BookmarkDao
     companion object {
         private const val NUMBER_OF_THREADS = 4
 

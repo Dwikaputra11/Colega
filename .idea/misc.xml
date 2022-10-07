@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable-v24/radius_10_dp_border_white.xml" value="0.2255" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable-v24/show_password_state.xml" value="0.1" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/bookmark_state.xml" value="0.2455" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/costum_progress.xml" value="0.2255" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2255" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/drawable/progress_bar_shape.xml" value="0.2255" />
@@ -25,8 +26,10 @@
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/fragment_register.xml" value="0.22735507246376813" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/fragment_splash_screen.xml" value="0.264" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/headline_item.xml" value="0.2740740740740741" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/headline_news_shimmer.xml" value="0.20982905982905983" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/on_boarding_item.xml" value="0.152" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/related_news_item.xml" value="0.264" />
+        <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/layout/shimmer_placeholder_layout.xml" value="0.2974683544303797" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20982905982905983" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/menu/menu_item.xml" value="0.25677083333333334" />
         <entry key="..\:/dev/AndroidStudioProjects/Binar Academy/Dengan Git Config/Colega/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2255" />

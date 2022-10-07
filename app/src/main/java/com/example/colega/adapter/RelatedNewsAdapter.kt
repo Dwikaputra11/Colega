@@ -63,7 +63,6 @@ class RelatedNewsAdapter():
     }
 
     override fun getItemCount(): Int {
-        if(differ.currentList.size > 5) return 5
         return differ.currentList.size
     }
 

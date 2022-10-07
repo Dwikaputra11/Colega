@@ -1,5 +1,6 @@
 package com.example.colega.ui
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -33,6 +34,13 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
         binding.btnToUrlPage.setOnClickListener {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(news.url))
             requireActivity().startActivity(browserIntent)
+        }
+        binding.btnBookmark.setOnClickListener {
+            if(binding.btnBookmark.isChecked){
+                Log.d(TAG, "onViewCreated: Checked")
+            }else{
+                Log.d(TAG, "onViewCreated: UnChecked")
+            }
         }
     }
 
@@ -101,5 +109,23 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
         val styledAttributes =
             requireContext().theme.obtainStyledAttributes(intArrayOf(android.R.attr.actionBarSize))
         return styledAttributes.getDimension(0, 0f).toInt()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        var stateSelected = false
+        var stateEnabled = false
+        val states: IntArray = binding.btnBookmark.drawableState
+        for (state in states) {
+            if (state == android.R.attr.state_enabled) stateEnabled = true
+            else if (state == android.R.attr.state_selected) stateSelected = true
+        }
+
+        if(stateSelected){
+            Log.d(TAG, "onDismiss: Selected")
+        }else{
+            Log.d(TAG, "onDismiss: UnSelected")
+        }
+
+        super.onDismiss(dialog)
     }
 }

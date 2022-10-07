@@ -39,6 +39,9 @@ class HeadlineFragment : Fragment() {
         articleVM.getHeadlineLiveData().observe(viewLifecycleOwner){
             if(it != null){
                 adapter.setHeadlineList(it)
+                binding.shimmerLayout.startShimmer()
+                binding.shimmerLayout.visibility = View.GONE
+                binding.rvHeadline.visibility = View.VISIBLE
                 Log.d(TAG, "onViewCreated: ${it.size}")
             }
         }
@@ -51,5 +54,15 @@ class HeadlineFragment : Fragment() {
 
     }
 
+
+    override fun onStart() {
+        binding.shimmerLayout.startShimmer()
+        super.onStart()
+    }
+
+    override fun onPause() {
+        binding.shimmerLayout.stopShimmer()
+        super.onPause()
+    }
 
 }

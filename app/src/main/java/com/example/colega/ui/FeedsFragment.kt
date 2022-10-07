@@ -51,12 +51,25 @@ class FeedsFragment : Fragment() {
         articleVM.getArticleLiveData().observe(viewLifecycleOwner){
             if(it != null){
                 relatedAdapter.setRelatedNews(it)
+                binding.shimmerLayout.startShimmer()
+                binding.shimmerLayout.visibility = View.GONE
+                binding.rvForYou.visibility = View.VISIBLE
             }
         }
 
         binding.tvSeeMore.setOnClickListener {
 
         }
+    }
+
+    override fun onStart() {
+        binding.shimmerLayout.startShimmer()
+        super.onStart()
+    }
+
+    override fun onPause() {
+        binding.shimmerLayout.stopShimmer()
+        super.onPause()
     }
 
 }
