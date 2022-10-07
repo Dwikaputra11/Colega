@@ -65,6 +65,10 @@ dependencies {
     // library OKHTTP
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
+    // add dependence of pagination to gradle script
+    def paging_version = "3.1.1"
+    implementation "androidx.paging:paging-runtime:$paging_version" // pagination
+
     //  lib coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
 

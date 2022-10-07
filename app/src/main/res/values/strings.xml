@@ -29,4 +29,12 @@
     <string name="time_format">HH:mm a</string>
     <string name="go_to_the_original_page">Go To the Original Page</string>
     <string name="detail_news_image">Detail News Image</string>
+
+    <string name="error_msg">Sorry! Couldn\'t fetch Movies.</string>
+    <string name="btn_retry">Retry</string>
+    <string name="error_msg_no_internet">Not connected to internet</string>
+    <string name="error_msg_timeout">The server took too long to respond</string>
+    <string name="error_msg_unknown">An unexpected error occurred</string>
+    <string name="tap_to_reload">Tap to reload</string>
+    <string name="load_image_button">Load Image Button</string>
 </resources>

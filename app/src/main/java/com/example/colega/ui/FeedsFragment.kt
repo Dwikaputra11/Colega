@@ -1,6 +1,9 @@
 package com.example.colega.ui
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +17,15 @@ import com.example.colega.adapter.RelatedNewsAdapter
 import com.example.colega.databinding.FragmentFeedsBinding
 import com.example.colega.dummy.DummyData
 import com.example.colega.models.Article
+import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.ArticleViewModel
+import com.example.colega.viewmodel.BookmarkViewModel
 
 class FeedsFragment : Fragment() {
     private  val TAG = "FeedsFragment"
     private lateinit var binding: FragmentFeedsBinding
+    private lateinit var bookmarkVM: BookmarkViewModel
+    private lateinit var sharedPref: SharedPreferences
     private var relatedNewsList: List<Article> = emptyList()
 
     private lateinit var articleVM: ArticleViewModel
@@ -33,7 +40,8 @@ class FeedsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         articleVM = ViewModelProvider(this)[ArticleViewModel::class.java]
-
+        sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
+        bookmarkVM = ViewModelProvider(this)[BookmarkViewModel::class.java]
         val relatedAdapter = RelatedNewsAdapter()
         binding.rvForYou.adapter = relatedAdapter
         binding.rvForYou.layoutManager = object : LinearLayoutManager(binding.root.context){
@@ -70,6 +78,18 @@ class FeedsFragment : Fragment() {
     override fun onPause() {
         binding.shimmerLayout.stopShimmer()
         super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val userId = sharedPref.getInt(Utils.userId, -1)
+        bookmarkVM.getAllBookmark(userId).observe(viewLifecycleOwner){
+            if(it != null){
+                Log.d(TAG, "onResume: Bookmark add successfully")
+            }else{
+                Log.d(TAG, "onDismiss: Failed")
+            }
+        }
     }
 
 }

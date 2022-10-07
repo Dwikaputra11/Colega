@@ -10,13 +10,21 @@ import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.databinding.RelatedNewsItemBinding
 import com.example.colega.models.Article
+import com.example.colega.utils.PaginationAdapterCallback
 import com.example.colega.utils.UtilMethods
 import com.example.colega.utils.Utils
 
 class RelatedNewsAdapter():
-    RecyclerView.Adapter<RelatedNewsAdapter.ViewHolder>() {
+    RecyclerView.Adapter<RelatedNewsAdapter.ViewHolder>(), PaginationAdapterCallback {
     private val TAG = "RelatedNewsAdapter"
     private lateinit var listener: OnItemClickListener
+    private val item: Int = 0
+    private val loading: Int = 1
+
+    private var isLoadingAdded: Boolean = false
+    private var retryPageLoad: Boolean = false
+
+    private var errorMsg: String? = ""
 
     interface OnItemClickListener{
         fun onItemClick(news: Article)
@@ -69,6 +77,10 @@ class RelatedNewsAdapter():
     fun setRelatedNews(list: List<Article>){
         Log.d(TAG, "setRelatedNews: $list")
         differ.submitList(list)
+    }
+
+    override fun retryPageLoad() {
+
     }
 
 }

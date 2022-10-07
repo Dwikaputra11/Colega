@@ -7,24 +7,24 @@ import com.example.colega.models.Source
 
 @Entity
 data class Bookmark(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     @ColumnInfo
     val userId: Int,
     @ColumnInfo
-    val author: String,
+    val author: String?,
     @ColumnInfo
     val content: String?,
     @ColumnInfo
-    val description: String,
+    val description: String?,
     @ColumnInfo
-    val publishedAt: String,
+    val publishedAt: String?,
     @ColumnInfo
-    val source: String,
+    val source: String?,
     @ColumnInfo
-    val title: String,
+    val title: String?,
     @ColumnInfo
-    val url: String,
+    val url: String?,
     @ColumnInfo
-    val urlToImage: String
+    val urlToImage: String?
 )

@@ -10,7 +10,7 @@
         app:showAsAction="withText"
         android:icon="@drawable/ic_round_explore_24"
         android:title="@string/search"/>
-    <item android:id="@+id/readLater"
+    <item android:id="@+id/bookmark"
         app:showAsAction="withText"
         android:icon="@drawable/ic_round_bookmark_24"
         android:title="@string/bookmark"/>

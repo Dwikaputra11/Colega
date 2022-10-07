@@ -1,24 +1,33 @@
 package com.example.colega.ui
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.colega.R
+import com.example.colega.data.Bookmark
 import com.example.colega.databinding.FragmentNewsDetailBinding
 import com.example.colega.models.Article
 import com.example.colega.utils.UtilMethods
+import com.example.colega.utils.Utils
+import com.example.colega.viewmodel.BookmarkViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewsDetailBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+    private lateinit var bookmarkVM: BookmarkViewModel
+    private lateinit var sharedPref: SharedPreferences
     private val TAG = "NewsDetailFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +38,8 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
+        bookmarkVM = ViewModelProvider(this)[BookmarkViewModel::class.java]
         setViews()
         setBehaviour(view)
         binding.btnToUrlPage.setOnClickListener {
@@ -36,11 +47,7 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
             requireActivity().startActivity(browserIntent)
         }
         binding.btnBookmark.setOnClickListener {
-            if(binding.btnBookmark.isChecked){
-                Log.d(TAG, "onViewCreated: Checked")
-            }else{
-                Log.d(TAG, "onViewCreated: UnChecked")
-            }
+
         }
     }
 
@@ -111,21 +118,33 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
         return styledAttributes.getDimension(0, 0f).toInt()
     }
 
+    override fun onPause() {
+        super.onPause()
+        
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
-        var stateSelected = false
-        var stateEnabled = false
-        val states: IntArray = binding.btnBookmark.drawableState
-        for (state in states) {
-            if (state == android.R.attr.state_enabled) stateEnabled = true
-            else if (state == android.R.attr.state_selected) stateSelected = true
+        Log.d(TAG, "onDismiss: ${binding.btnBookmark.isChecked}")
+        if(binding.btnBookmark.isChecked) {
+            val userId = sharedPref.getInt(Utils.userId, -1)
+            if (userId != -1) {
+                Log.d(TAG, "onDismiss: $userId")
+                val bookmark = Bookmark(
+                    userId = userId,
+                    author = news.author,
+                    publishedAt = news.publishedAt,
+                    urlToImage = news.urlToImage,
+                    description = news.description,
+                    content = news.content,
+                    source = news.source.name,
+                    title = news.title,
+                    url = news.url,
+                    id = 0
+                )
+                bookmarkVM.insertBookmark(bookmark)
+                Log.d(TAG, "onDismiss: Done")
+            }
         }
-
-        if(stateSelected){
-            Log.d(TAG, "onDismiss: Selected")
-        }else{
-            Log.d(TAG, "onDismiss: UnSelected")
-        }
-
         super.onDismiss(dialog)
     }
 }

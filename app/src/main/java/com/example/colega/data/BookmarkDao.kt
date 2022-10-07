@@ -1,20 +1,17 @@
 package com.example.colega.data
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface BookmarkDao{
-    @Query("SELECT * FROM bookmark WHERE userId == :userId")
+    @Query("SELECT * FROM bookmark WHERE bookmark.userId == :userId")
     fun getAllBookmark(userId: Int): LiveData<List<Bookmark>>
 
     @Query("DELETE FROM bookmark")
     fun deleteAll()
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertBookmark(bookmark: Bookmark)
 
     @Delete
