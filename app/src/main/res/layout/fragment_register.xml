@@ -129,12 +129,12 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:drawableEnd="@drawable/ic_round_calendar_month_24"
-                    android:enabled="false"
+                    android:clickable="true"
                     android:fontFamily="@font/roboto"
                     android:hint="@string/birth_date"
                     android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:focusable="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

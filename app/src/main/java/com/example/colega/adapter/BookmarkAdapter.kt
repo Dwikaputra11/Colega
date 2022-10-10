@@ -14,6 +14,16 @@ import com.example.colega.models.Article
 
 class BookmarkAdapter:RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
 
+    private lateinit var listener: OnItemClickListener
+
+    interface OnItemClickListener{
+        fun onItemClick(news: Bookmark)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener){
+        this.listener = listener
+    }
+
     private var diffCallback = object : DiffUtil.ItemCallback<Bookmark>(){
         override fun areItemsTheSame(oldItem: Bookmark, newItem: Bookmark): Boolean {
             return oldItem.title == newItem.title
@@ -26,7 +36,12 @@ class BookmarkAdapter:RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
 
     private val differ = AsyncListDiffer(this, diffCallback)
 
-    class ViewHolder(val binding: HeadlineItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: HeadlineItemBinding): RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.root.setOnClickListener {
+                listener.onItemClick(differ.currentList[absoluteAdapterPosition])
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

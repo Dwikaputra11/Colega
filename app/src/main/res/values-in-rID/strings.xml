@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Colega</string>
+    <string name="tagline">Berita Untukmu</string>
+    <string name="next">Selanjutnya</string>
+    <string name="welcome_back">Selamat Datang Kembali!</string>
+    <string name="sign_in">Masuk</string>
+    <string name="sign_up">Daftar</string>
+    <string name="forgot_password"><u>Lupa Password?</u></string>
+    <string name="birth_date">Tanggal Lahir</string>
+    <string name="confirm_password">Konfimasi Kata Sandi</string>
+    <string name="create_new_account"><u>Buat Akun Baru</u></string>
+    <string name="see_more">Selengkapnya</string>
+    <string name="just_for_you">Hanya Untukmu</string>
+    <string name="close">Tutup</string>
+    <string name="detail_news">Detail Berita</string>
+    <string name="search">Penelusuran</string>
+    <string name="bookmark">Arsip</string>
+    <string name="profile">Akun</string>
+    <string name="go_to_the_original_page">Lihat Pada Halaman Asli</string>
+    <string name="password_status">Password anda masih salah!</string>
+    <string name="username_status">Username tidak ada!</string>
+    <string name="username_field">Username tidak boleh ada spasi!</string>
+    <string name="username_already_exist">Username sudah ada!</string>
+    <string name="register_success">Horay! Selamat datang ke klub!</string>
+    <string name="error_msg">Maaf! TIdak bisa mengambil berita</string>
+    <string name="birth_date_profile">Tanggal Lahir</string>
+    <string name="language">Bahasa</string>
+    <string name="logout_account">Keluar dari akun?</string>
+    <string name="confirm_logout">Apa anda yakin keluar dari akun?</string>
+    <string name="yes">Iya</string>
+    <string name="no">Tidak</string>
+</resources>

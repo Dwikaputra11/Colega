@@ -13,6 +13,12 @@ class BookmarkRepository(private val bookmarkDao: BookmarkDao) {
         }
     }
 
+    fun updateBookmark(bookmark: Bookmark){
+        MyDatabase.databaseWriteExecutor.execute {
+            bookmarkDao.updateBookmark(bookmark)
+        }
+    }
+
     fun deleteAllBookmark(){
         MyDatabase.databaseWriteExecutor.execute {
             bookmarkDao.deleteAll()

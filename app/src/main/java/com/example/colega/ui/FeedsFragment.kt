@@ -51,7 +51,7 @@ class FeedsFragment : Fragment() {
         }
         relatedAdapter.setOnItemClickListener(object : RelatedNewsAdapter.OnItemClickListener{
             override fun onItemClick(news: Article) {
-                val newsDetailFragment = NewsDetailFragment(news)
+                val newsDetailFragment = NewsDetailFragment(news, null)
                 newsDetailFragment.show(requireActivity().supportFragmentManager, newsDetailFragment.tag)
             }
         })

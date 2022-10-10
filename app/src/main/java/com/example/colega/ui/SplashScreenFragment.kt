@@ -7,16 +7,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.colega.HomeActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentSplashScreenBinding
 import com.example.colega.utils.Utils
-import kotlinx.coroutines.flow.combine
+import java.util.*
 
 class SplashScreenFragment : Fragment() {
     private var progressMax = 450
@@ -35,6 +35,12 @@ class SplashScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
         binding.progressBar.max = progressMax
+        val language = sharedPref.getString(Utils.languageApp, null)
+        if(language == null){
+            setLocale("en")
+        }else{
+            setLocale(language)
+        }
         for(i in 1..(progressMax - 5)){
             Handler(Looper.getMainLooper()).postDelayed({
                 if(i in 101..150) {
@@ -54,6 +60,14 @@ class SplashScreenFragment : Fragment() {
         }
     }
 
+    private fun setLocale(lang: String?) {
+        val myLocale = lang?.let { Locale(it) }
+        val res = resources
+        val conf = res.configuration
+        conf.locale = myLocale
+        res.updateConfiguration(conf, res.displayMetrics)
+    }
+
     private fun isFirstInstall(){
         // check if user first install app it will go to on boarding page for the introduction
         val firstInstall = sharedPref.getBoolean(Utils.firstInstall,true)
@@ -62,6 +76,8 @@ class SplashScreenFragment : Fragment() {
         }else{
             // if user is already login it will go to home, if not it will go to login page
             val username = sharedPref.getString(Utils.username, "")
+            val edit = sharedPref.edit()
+            edit.putBoolean(Utils.firstInstall, false)
             if(username != null){
                 // username blank that means the last user open the app the account has been already logout
                 if(username.isBlank()){

@@ -26,5 +26,7 @@ data class Bookmark(
     @ColumnInfo
     val url: String?,
     @ColumnInfo
-    val urlToImage: String?
+    val urlToImage: String?,
+    @ColumnInfo(defaultValue = false.toString())
+    var isCheck: Boolean,
 )

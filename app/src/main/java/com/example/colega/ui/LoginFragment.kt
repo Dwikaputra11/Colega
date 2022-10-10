@@ -5,18 +5,15 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
-import com.bumptech.glide.util.Util
 import com.example.colega.HomeActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentLoginBinding
-import com.example.colega.databinding.FragmentRegisterBinding
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.UserViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -65,7 +62,7 @@ class LoginFragment : Fragment() {
                 addToSharedPref(username, password)
             }
         }else{
-            toastMessage("Username Tidak Terdaftar")
+            toastMessage(getString(R.string.username_status))
         }
     }
 
@@ -107,10 +104,11 @@ class LoginFragment : Fragment() {
                 addData.putString(Utils.username, username)
                 addData.putString(Utils.password, user.password)
                 addData.putInt(Utils.userId, user.id)
+                addData.putString(Utils.dateBirth, user.birthDate)
                 // when password is correct go to home page
                 startActivity(Intent(requireActivity(), HomeActivity::class.java))
             }else{
-                toastMessage("Password Anda Salah")
+                toastMessage(getString(R.string.password_status))
             }
             addData.apply()
         }

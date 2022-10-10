@@ -11,7 +11,10 @@ interface BookmarkDao{
     @Query("DELETE FROM bookmark")
     fun deleteAll()
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Update
+    fun updateBookmark(bookmark: Bookmark)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertBookmark(bookmark: Bookmark)
 
     @Delete

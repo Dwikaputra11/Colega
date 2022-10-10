@@ -1,10 +1,10 @@
 package com.example.colega
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.colega.databinding.ActivityHomeBinding
 import com.example.colega.ui.HomeFragment
+import com.example.colega.ui.ProfileFragment
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -28,6 +28,12 @@ class HomeActivity : AppCompatActivity() {
                 R.id.home -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.flContainer, HomeFragment())
+                        .commit()
+                    return@setOnItemSelectedListener true
+                }
+                R.id.profile ->{
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.flContainer, ProfileFragment())
                         .commit()
                     return@setOnItemSelectedListener true
                 }

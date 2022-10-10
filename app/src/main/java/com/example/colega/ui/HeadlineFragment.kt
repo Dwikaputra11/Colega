@@ -47,7 +47,7 @@ class HeadlineFragment : Fragment() {
         }
         adapter.setOnItemClickListener(object : HeadlineAdapter.OnItemClickListener{
             override fun onItemClick(news: Article) {
-                val newsDetailFragment = NewsDetailFragment(news)
+                val newsDetailFragment = NewsDetailFragment(news, null)
                 newsDetailFragment.show(requireActivity().supportFragmentManager, newsDetailFragment.tag)
             }
         })

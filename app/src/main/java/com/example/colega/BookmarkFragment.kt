@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.BookmarkAdapter
+import com.example.colega.data.Bookmark
 import com.example.colega.databinding.ActivityBookmarkBinding
 import com.example.colega.databinding.FragmentBookmarkBinding
+import com.example.colega.ui.NewsDetailFragment
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.BookmarkViewModel
 
@@ -30,6 +32,10 @@ class BookmarkFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
         bookmarkVM = ViewModelProvider(this)[BookmarkViewModel::class.java]
+        setViews()
+    }
+
+    private fun setViews() {
         binding.rvBookmark.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         val adapter = BookmarkAdapter()
         binding.rvBookmark.adapter = adapter
@@ -44,7 +50,15 @@ class BookmarkFragment : Fragment() {
                 }
             }
         }
+        adapter.setOnItemClickListener(object : BookmarkAdapter.OnItemClickListener{
+            override fun onItemClick(news: Bookmark) {
+                val newsDetailFragment = NewsDetailFragment(null, news)
+                newsDetailFragment.show(requireActivity().supportFragmentManager, newsDetailFragment.tag)
+            }
+
+        })
     }
+
     override fun onStart() {
         binding.shimmerLayout.startShimmer()
         super.onStart()

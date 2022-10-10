@@ -17,10 +17,13 @@ object Utils {
     const val category_technology : String = "technology"
     const val pageSize : String = "pageSize"
 
+    // shared pref
     const val name = "ACCOUNT"
     const val username = "username"
     const val password = "password"
     const val email = "email"
     const val firstInstall = "first_install"
     const val userId = "user_id"
+    const val dateBirth = "date_birth"
+    const val languageApp = "language"
 }

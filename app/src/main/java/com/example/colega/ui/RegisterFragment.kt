@@ -1,24 +1,28 @@
 package com.example.colega.ui
 
-import android.R
+import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
+import com.example.colega.R
 import com.example.colega.data.User
 import com.example.colega.databinding.FragmentRegisterBinding
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class RegisterFragment : BottomSheetDialogFragment() {
-
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var userVm : UserViewModel
@@ -38,20 +42,25 @@ class RegisterFragment : BottomSheetDialogFragment() {
         binding.btnSignUp.setOnClickListener {
             GlobalScope.async { signUp() }
         }
+
+        binding.etBirthDate.setOnClickListener {
+            Log.d(TAG, "onViewCreated: clicked")
+            binding.etBirthDate.transformIntoDatePicker(requireContext(), "MM/dd/yyyy")
+        }
     }
 
     private suspend fun signUp() {
         val username = binding.etUsername.text.toString().trim()
         val email = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString()
-        val dateBirth = "2022-10-06"
+        val dateBirth = binding.etBirthDate.text.toString()
         val confPassword = binding.etConfirmPassword.text.toString()
 
         if(password == confPassword){
             if(isInputValid(username)){
                 addToDatabase(username, password, email, dateBirth)
                 requireActivity().runOnUiThread {
-                    toastMessage("Horay! Welcome to the club!")
+                    toastMessage(getString(R.string.register_success))
                 }
                 dismiss()
             }
@@ -78,11 +87,11 @@ class RegisterFragment : BottomSheetDialogFragment() {
                     Log.d(TAG, "isInputValid: Success")
                     true
                 }else{
-                    toastMessage("Username Already Exist")
+                    toastMessage(getString(R.string.username_already_exist))
                     false
                 }
             }else{
-                toastMessage("Username should not contain whitespace!")
+                toastMessage(getString(R.string.username_field))
                 false
             }
     }
@@ -156,10 +165,35 @@ class RegisterFragment : BottomSheetDialogFragment() {
 
     private fun getActionBarSize(): Int {
         val styledAttributes =
-            requireContext().theme.obtainStyledAttributes(intArrayOf(R.attr.actionBarSize))
+            requireContext().theme.obtainStyledAttributes(intArrayOf(com.google.android.material.R.attr.actionBarSize))
         return styledAttributes.getDimension(0, 0f).toInt()
     }
 
+    private fun EditText.transformIntoDatePicker(context: Context, format: String, maxDate: Date? = null) {
+        isFocusableInTouchMode = false
+        isClickable = true
+        isFocusable = false
 
+        val myCalendar = Calendar.getInstance()
+        val datePickerOnDataSetListener =
+            OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                myCalendar.set(Calendar.YEAR, year)
+                myCalendar.set(Calendar.MONTH, monthOfYear)
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                val sdf = SimpleDateFormat(format, Locale.ENGLISH)
+                setText(sdf.format(myCalendar.time))
+            }
+
+        setOnClickListener {
+            DatePickerDialog(
+                context, datePickerOnDataSetListener, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)
+            ).run {
+                maxDate?.time?.also { datePicker.maxDate = it }
+                show()
+            }
+        }
+    }
 
 }

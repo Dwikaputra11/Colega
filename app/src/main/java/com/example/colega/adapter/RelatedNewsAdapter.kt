@@ -49,7 +49,7 @@ class RelatedNewsAdapter():
     inner class ViewHolder(val binding: RelatedNewsItemBinding): RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                listener.onItemClick(differ.currentList[adapterPosition])
+                listener.onItemClick(differ.currentList[absoluteAdapterPosition])
             }
         }
     }

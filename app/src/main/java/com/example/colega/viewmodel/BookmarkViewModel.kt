@@ -28,6 +28,12 @@ class BookmarkViewModel(application: Application): AndroidViewModel(application)
         }
     }
 
+    fun updateBookmark(bookmark: Bookmark){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateBookmark(bookmark)
+        }
+    }
+
     fun deleteAllBookmark(){
         viewModelScope.launch(Dispatchers.IO){
             repository.deleteAllBookmark()

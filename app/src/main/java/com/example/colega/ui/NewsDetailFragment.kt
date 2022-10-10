@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.colega.R
@@ -23,7 +22,7 @@ import com.example.colega.viewmodel.BookmarkViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment() {
+class NewsDetailFragment(private val news: Article?,private val bookmark: Bookmark?) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewsDetailBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var bookmarkVM: BookmarkViewModel
@@ -43,11 +42,10 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
         setViews()
         setBehaviour(view)
         binding.btnToUrlPage.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(news.url))
-            requireActivity().startActivity(browserIntent)
-        }
-        binding.btnBookmark.setOnClickListener {
-
+            if (news != null){
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(news.url))
+                requireActivity().startActivity(browserIntent)
+            }
         }
     }
 
@@ -88,16 +86,32 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
     }
 
     private fun setViews(){
-        binding.tvDetailCategory.text = "tech"
-        binding.tvDetailDesc.text = news.description
-        binding.tvDetailContent.text = if(news.content != null) news.content.substringBefore("[") else ""
-        binding.tvDetailTitle.text = news.title
-        binding.tvDetailDate.text = UtilMethods.convertISOTime(requireContext(), news.publishedAt)
-        binding.tvDetailSource.text = news.source.name
-        Glide.with(requireContext())
-            .load(news.urlToImage)
-            .placeholder(R.drawable.news)
-            .into(binding.ivNews)
+        if(news != null){
+            binding.tvDetailCategory.text = "tech"
+            binding.tvDetailDesc.text = news.description
+            binding.tvDetailContent.text = if(news.content != null) news.content.substringBefore("[") else ""
+            binding.tvDetailTitle.text = news.title
+            binding.tvDetailDate.text = UtilMethods.convertISOTime(requireContext(), news.publishedAt)
+            binding.tvDetailSource.text = news.source.name
+            Glide.with(requireContext())
+                .load(news.urlToImage)
+                .placeholder(R.drawable.news)
+                .into(binding.ivNews)
+        }else if(bookmark != null){
+            binding.tvDetailCategory.text = "tech"
+            binding.tvDetailDesc.text = bookmark.description
+            binding.tvDetailContent.text = if(bookmark.content != null) bookmark.content.substringBefore("[") else ""
+            binding.tvDetailTitle.text = bookmark.title
+            binding.tvDetailDate.text = UtilMethods.convertISOTime(requireContext(), bookmark.publishedAt)
+            binding.tvDetailSource.text = bookmark.source
+            Glide.with(requireContext())
+                .load(bookmark.urlToImage)
+                .placeholder(R.drawable.news)
+                .into(binding.ivNews)
+            if(bookmark.isCheck){
+                binding.btnBookmark.isChecked = true
+            }
+        }
     }
 
     private fun hideView(view: View) {
@@ -118,31 +132,38 @@ class NewsDetailFragment(private val news: Article) : BottomSheetDialogFragment(
         return styledAttributes.getDimension(0, 0f).toInt()
     }
 
-    override fun onPause() {
-        super.onPause()
-        
-    }
-
     override fun onDismiss(dialog: DialogInterface) {
         Log.d(TAG, "onDismiss: ${binding.btnBookmark.isChecked}")
         if(binding.btnBookmark.isChecked) {
-            val userId = sharedPref.getInt(Utils.userId, -1)
-            if (userId != -1) {
-                Log.d(TAG, "onDismiss: $userId")
-                val bookmark = Bookmark(
-                    userId = userId,
-                    author = news.author,
-                    publishedAt = news.publishedAt,
-                    urlToImage = news.urlToImage,
-                    description = news.description,
-                    content = news.content,
-                    source = news.source.name,
-                    title = news.title,
-                    url = news.url,
-                    id = 0
-                )
-                bookmarkVM.insertBookmark(bookmark)
-                Log.d(TAG, "onDismiss: Done")
+            if(news != null){
+                val userId = sharedPref.getInt(Utils.userId, -1)
+                if (userId != -1) {
+                    Log.d(TAG, "onDismiss: $userId")
+                    val bookmark = Bookmark(
+                        userId = userId,
+                        author = news.author,
+                        publishedAt = news.publishedAt,
+                        urlToImage = news.urlToImage,
+                        description = news.description,
+                        content = news.content,
+                        source = news.source.name,
+                        title = news.title,
+                        url = news.url,
+                        id = 0,
+                        isCheck = true
+                    )
+                    bookmarkVM.insertBookmark(bookmark)
+                    Log.d(TAG, "onDismiss: Done")
+                }
+            }
+        }else{
+            if(news == null && bookmark != null){
+                val userId = sharedPref.getInt(Utils.userId, -1)
+                if (userId != -1) {
+                    Log.d(TAG, "onDismiss: $userId")
+                    bookmarkVM.deleteBookmark(bookmark)
+                    Log.d(TAG, "onDismiss: Done")
+                }
             }
         }
         super.onDismiss(dialog)

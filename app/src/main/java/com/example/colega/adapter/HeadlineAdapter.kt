@@ -38,7 +38,7 @@ class HeadlineAdapter(): RecyclerView.Adapter<HeadlineAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: HeadlineItemBinding): RecyclerView.ViewHolder(binding.root){
         init {
             binding.root.setOnClickListener {
-                 listener.onItemClick(differ.currentList[adapterPosition])
+                 listener.onItemClick(differ.currentList[absoluteAdapterPosition])
             }
         }
     }
