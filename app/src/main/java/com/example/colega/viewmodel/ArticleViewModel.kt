@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.example.colega.api.RetrofitClient
 import com.example.colega.models.Article
 import com.example.colega.models.NewsModel
-import com.example.colega.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +19,7 @@ class ArticleViewModel: ViewModel() {
     fun getHeadlineLiveData(): MutableLiveData<List<Article>> = headlineLiveData
 
     fun getRelatedNews(){
-        RetrofitClient.instance.getPreferences()
+        RetrofitClient.instanceFilm.getPreferences()
             .enqueue(object : Callback<NewsModel>{
                 override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
                     if(response.isSuccessful){
@@ -41,7 +40,7 @@ class ArticleViewModel: ViewModel() {
     }
 
     fun getHeadlineNews(){
-        RetrofitClient.instance.getTopHeadLines()
+        RetrofitClient.instanceFilm.getTopHeadLines()
             .enqueue(object : Callback<NewsModel>{
                 override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
                     if(response.isSuccessful){

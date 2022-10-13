@@ -21,12 +21,12 @@ import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+private val TAG = "RegisterFragment"
 
 class RegisterFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var userVm : UserViewModel
-    private val TAG = "RegisterFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -100,7 +100,7 @@ class RegisterFragment : BottomSheetDialogFragment() {
         Log.d(TAG, "findUsername: ")
         Log.d(TAG, "findUsername: Started")
         val waitFor =  CoroutineScope(Dispatchers.IO).async {
-            val isExist = userVm.countUser(username) > 0
+            val isExist = userVm.isUserExist(username) > 0
             isExist
         }.await()
         Log.d(TAG, "findUsername: outer $waitFor")

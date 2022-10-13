@@ -11,11 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.colega.HomeActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentSplashScreenBinding
 import com.example.colega.utils.Utils
+import com.example.colega.viewmodel.UserViewModel
 import java.util.*
 
 class SplashScreenFragment : Fragment() {
@@ -23,6 +25,7 @@ class SplashScreenFragment : Fragment() {
     private val TAG = "SplashScreenFragment"
     private lateinit var binding: FragmentSplashScreenBinding
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var userVM: UserViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +37,7 @@ class SplashScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
+        userVM = ViewModelProvider(this)[UserViewModel::class.java]
         binding.progressBar.max = progressMax
         val language = sharedPref.getString(Utils.languageApp, null)
         if(language == null){
@@ -71,20 +75,20 @@ class SplashScreenFragment : Fragment() {
     private fun isFirstInstall(){
         // check if user first install app it will go to on boarding page for the introduction
         val firstInstall = sharedPref.getBoolean(Utils.firstInstall,true)
+        var username = ""
         if(firstInstall){
             Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_onBoardingFragment)
         }else{
             // if user is already login it will go to home, if not it will go to login page
-            val username = sharedPref.getString(Utils.username, "")
-            val edit = sharedPref.edit()
-            edit.putBoolean(Utils.firstInstall, false)
-            if(username != null){
-                // username blank that means the last user open the app the account has been already logout
-                if(username.isBlank()){
-                    Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_loginFragment)
-                }else{
-                    startActivity(Intent(requireActivity(), HomeActivity::class.java))
-                }
+            userVM.dataUser.observe(viewLifecycleOwner){
+                username = it.username
+                Log.d(TAG, "isFirstInstall: ${it.username}")
+            }
+            // username blank that means the last user open the app the account has been already logout
+            if(username.isBlank()){
+                Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_loginFragment)
+            }else{
+                startActivity(Intent(requireActivity(), HomeActivity::class.java))
             }
         }
     }

@@ -3,6 +3,7 @@ package com.example.colega
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.colega.databinding.ActivityHomeBinding
+import com.example.colega.ui.BookmarkFragment
 import com.example.colega.ui.HomeFragment
 import com.example.colega.ui.ProfileFragment
 

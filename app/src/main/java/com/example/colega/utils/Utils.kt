@@ -16,6 +16,7 @@ object Utils {
     const val category_sports : String = "sports"
     const val category_technology : String = "technology"
     const val pageSize : String = "pageSize"
+    const val loginImage: String = "https://images.unsplash.com/photo-1598078412711-93b01b0fb206?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80"
 
     // shared pref
     const val name = "ACCOUNT"

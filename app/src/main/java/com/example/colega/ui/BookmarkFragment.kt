@@ -1,8 +1,9 @@
-package com.example.colega
+package com.example.colega.ui
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +12,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.BookmarkAdapter
 import com.example.colega.data.Bookmark
-import com.example.colega.databinding.ActivityBookmarkBinding
 import com.example.colega.databinding.FragmentBookmarkBinding
-import com.example.colega.ui.NewsDetailFragment
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.BookmarkViewModel
+import com.example.colega.viewmodel.UserViewModel
+
+private const val TAG = "BookmarkFragment"
 
 class BookmarkFragment : Fragment() {
     private lateinit var binding: FragmentBookmarkBinding
     private lateinit var bookmarkVM: BookmarkViewModel
+    private lateinit var userVM: UserViewModel
     private lateinit var sharedPref: SharedPreferences
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,17 +35,25 @@ class BookmarkFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
         bookmarkVM = ViewModelProvider(this)[BookmarkViewModel::class.java]
-        setViews()
+        userVM = ViewModelProvider(this)[UserViewModel::class.java]
+        requireActivity().runOnUiThread {
+            setViews()
+        }
     }
 
     private fun setViews() {
         binding.rvBookmark.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         val adapter = BookmarkAdapter()
         binding.rvBookmark.adapter = adapter
-        val userId = sharedPref.getInt(Utils.userId, -1)
+        var userId = -1
+        userVM.dataUser.observe(requireActivity()){
+            userId = it.userId
+            Log.d(TAG, "setViews: $userId")
+        }
         if(userId != -1){
             bookmarkVM.getAllBookmark(userId).observe(viewLifecycleOwner){
                 if(it != null){
+                    Log.d(TAG, "setViews: $it")
                     adapter.setBookmarkList(it)
                     binding.shimmerLayout.startShimmer()
                     binding.shimmerLayout.visibility = View.GONE
@@ -55,7 +66,6 @@ class BookmarkFragment : Fragment() {
                 val newsDetailFragment = NewsDetailFragment(null, news)
                 newsDetailFragment.show(requireActivity().supportFragmentManager, newsDetailFragment.tag)
             }
-
         })
     }
 

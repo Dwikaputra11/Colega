@@ -3,14 +3,18 @@ package com.example.colega.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.colega.data.User
 import com.example.colega.data.UserRepository
 import com.example.colega.db.MyDatabase
+import com.example.colega.preferences.UserPreferencesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
+    private val prefRepo = UserPreferencesRepository(application)
+    val dataUser = prefRepo.readData.asLiveData()
     private val repository: UserRepository
 
     init {
@@ -36,7 +40,11 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         return repository.findUser(username)
     }
 
-    fun countUser(username: String): Int{
+    fun isUserExist(username: String): Int{
         return repository.countUser(username)
+    }
+
+    fun addToUserPref(user: User){
+        viewModelScope.launch { prefRepo.saveData(user) }
     }
 }
