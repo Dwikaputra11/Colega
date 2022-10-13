@@ -3,20 +3,15 @@ package com.example.colega.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.widget.MarginPageTransformer
-import androidx.viewpager2.widget.ViewPager2
-import com.example.colega.adapter.HeadlineAdapter
 import com.example.colega.adapter.RelatedNewsAdapter
 import com.example.colega.databinding.FragmentFeedsBinding
-import com.example.colega.dummy.DummyData
-import com.example.colega.models.Article
+import com.example.colega.models.news.Article
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.ArticleViewModel
 import com.example.colega.viewmodel.BookmarkViewModel
@@ -26,7 +21,6 @@ class FeedsFragment : Fragment() {
     private lateinit var binding: FragmentFeedsBinding
     private lateinit var bookmarkVM: BookmarkViewModel
     private lateinit var sharedPref: SharedPreferences
-    private var relatedNewsList: List<Article> = emptyList()
 
     private lateinit var articleVM: ArticleViewModel
 
@@ -79,17 +73,4 @@ class FeedsFragment : Fragment() {
         binding.shimmerLayout.stopShimmer()
         super.onPause()
     }
-
-    override fun onResume() {
-        super.onResume()
-        val userId = sharedPref.getInt(Utils.userId, -1)
-        bookmarkVM.getAllBookmark(userId).observe(viewLifecycleOwner){
-            if(it != null){
-                Log.d(TAG, "onResume: Bookmark add successfully")
-            }else{
-                Log.d(TAG, "onDismiss: Failed")
-            }
-        }
-    }
-
 }

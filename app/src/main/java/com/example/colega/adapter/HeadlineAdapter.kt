@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.databinding.HeadlineItemBinding
-import com.example.colega.models.Article
+import com.example.colega.models.news.Article
 import com.example.colega.utils.UtilMethods
 
 class HeadlineAdapter(): RecyclerView.Adapter<HeadlineAdapter.ViewHolder>() {

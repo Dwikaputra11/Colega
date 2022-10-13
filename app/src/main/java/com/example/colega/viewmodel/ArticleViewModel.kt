@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.colega.api.RetrofitClient
-import com.example.colega.models.Article
-import com.example.colega.models.NewsModel
+import com.example.colega.models.news.Article
+import com.example.colega.models.news.NewsModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,10 +23,10 @@ class ArticleViewModel: ViewModel() {
             .enqueue(object : Callback<NewsModel>{
                 override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
                     if(response.isSuccessful){
-                        Log.d(TAG, "onResponse: ${response.body()}")
+//                        Log.d(TAG, "onResponse: ${response.body()}")
                         if(response.body() != null){
                             articleLiveData.postValue(response.body()!!.articles)
-                            Log.d(TAG, "onResponse: ${response.body()!!.articles.size}")
+//                            Log.d(TAG, "onResponse: ${response.body()!!.articles.size}")
                         }
                     }else{
                         Log.d(TAG, "onResponse: ${response.errorBody()}")

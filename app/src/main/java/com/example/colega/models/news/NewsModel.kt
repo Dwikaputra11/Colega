@@ -1,4 +1,4 @@
-package com.example.colega.models
+package com.example.colega.models.news
 
 
 import com.google.gson.annotations.SerializedName

@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.colega.HomeActivity
 import com.example.colega.R
-import com.example.colega.data.User
 import com.example.colega.databinding.FragmentLoginBinding
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.UserViewModel
@@ -69,7 +68,7 @@ class LoginFragment : Fragment() {
             // cause login() run in different thread so when we go back to the ui thread it cannot work
             // so we have to declare the that the function we want tu run in ui thread like below
             requireActivity().runOnUiThread {
-                addToSharedPref(username, password)
+                addToSharedPref(password)
             }
             Log.d(TAG, "loginAccount: Exist")
         }else{
@@ -79,38 +78,40 @@ class LoginFragment : Fragment() {
 
     private suspend fun isExist(username: String):Boolean{
         Log.d(TAG, "isExist: $usernameSharedPref")
+        userVM.getUserResponse(username)
         return if (usernameSharedPref.isNotBlank()) {
             if (usernameSharedPref == username) {
                 true
             } else {
                 Log.d(TAG, "isExist: Search to database user pref")
-                findInDatabase(username)
+//                findInDatabase(username)
+                findInApi()
             }
         } else {
             Log.d(TAG, "isExist: Search to database user pref null")
-            findInDatabase(username)
+//            findInDatabase(username)
+            findInApi()
         }
     }
 
-    private suspend fun findInDatabase(username: String): Boolean {
+    private suspend fun findInApi(): Boolean {
         val status = withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
-                val isExist = userVM.isUserExist(username) > 0
-                Log.d(TAG, "findInDatabase: $isExist")
-                isExist
-            }
+            val isExist = userVM.getUser().value?.username != null
+            Log.d(TAG, "findInDatabase: $isExist")
+            isExist
+        }
         Log.d(TAG, "findInDatabase: status $status")
         return status
     }
-    private fun addToSharedPref(username: String, password: String) {
+    private fun addToSharedPref(password: String) {
         Log.d(TAG, "addToSharedPref: Started")
-        userVM.findUser(username).observe(requireActivity()){
+        userVM.getUser().observe(viewLifecycleOwner){
             if(password == it.password){
                 Log.d("Register", "Username: ${it.username}")
                 Log.d("Register", "Password: ${it.password}")
                 Log.d("Register", "Email: ${it.email}")
                 Log.d("Register", "User Id: ${it.id}")
                 Log.d(TAG, "addToSharedPref: Password Same")
-                // when password is correct go to home page
                 userVM.addToUserPref(it)
                 startActivity(Intent(requireActivity(), HomeActivity::class.java))
             }else{
@@ -118,11 +119,26 @@ class LoginFragment : Fragment() {
                 toastMessage(getString(R.string.password_status))
             }
         }
-        userVM.dataUser.observe(requireActivity()){
-            Log.d(TAG, "Proto: ${it.userId}")
-            Log.d(TAG, "Proto: ${it.username}")
-        }
-        Log.d(TAG, "addToSharedPref: Closed")
+//        userVM.findUser(username).observe(requireActivity()){
+//            if(password == it.password){
+//                Log.d("Register", "Username: ${it.username}")
+//                Log.d("Register", "Password: ${it.password}")
+//                Log.d("Register", "Email: ${it.email}")
+//                Log.d("Register", "User Id: ${it.id}")
+//                Log.d(TAG, "addToSharedPref: Password Same")
+//                // when password is correct go to home page
+//                userVM.addToUserPref(it)
+//                startActivity(Intent(requireActivity(), HomeActivity::class.java))
+//            }else{
+//                Log.d(TAG, "addToSharedPref: Your Password is wrong")
+//                toastMessage(getString(R.string.password_status))
+//            }
+//        }
+//        userVM.dataUser.observe(requireActivity()){
+//            Log.d(TAG, "Proto: ${it.userId}")
+//            Log.d(TAG, "Proto: ${it.username}")
+//        }
+//        Log.d(TAG, "addToSharedPref: Closed")
     }
 
     private fun toastMessage(msg:String){

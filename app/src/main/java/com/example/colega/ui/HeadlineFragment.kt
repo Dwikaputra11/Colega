@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.HeadlineAdapter
 import com.example.colega.databinding.FragmentHeadlineBinding
-import com.example.colega.models.Article
+import com.example.colega.models.news.Article
 import com.example.colega.viewmodel.ArticleViewModel
 
 

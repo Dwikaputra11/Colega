@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.colega.R
+import com.example.colega.data.DataUser
 import com.example.colega.data.User
 import com.example.colega.databinding.FragmentRegisterBinding
 import com.example.colega.viewmodel.UserViewModel
@@ -58,7 +59,7 @@ class RegisterFragment : BottomSheetDialogFragment() {
 
         if(password == confPassword){
             if(isInputValid(username)){
-                addToDatabase(username, password, email, dateBirth)
+                addToApi(username, password, email, dateBirth)
                 requireActivity().runOnUiThread {
                     toastMessage(getString(R.string.register_success))
                 }
@@ -66,22 +67,23 @@ class RegisterFragment : BottomSheetDialogFragment() {
             }
         }
     }
-    private fun addToDatabase(username: String, password: String, email: String, birthDate: String) {
-        val user = User(
-            id = 0,
+    private fun addToApi(username: String, password: String, email: String, birthDate: String) {
+        val user = DataUser(
             username = username,
             password = password,
             email = email,
-            birthDate = birthDate
+            dateBirth = birthDate,
+            fullName = "dwika putra"
         )
-        userVm.addUser(user)
-        Log.d(TAG, "addToDatabase: Finish")
+        userVm.postUser(user)
+        Log.d(TAG, "addToApi: Finish")
     }
     private suspend fun isInputValid(
-        username: String,
+        username: String
     ): Boolean {
+        userVm.getUserResponse(username)
         return if(!username.contains(" ")){
-                val isExist = GlobalScope.async { findUsername(username) }.await()
+                val isExist = GlobalScope.async { isUserExist(username) }.await()
                 Log.d(TAG, "isInputValid: $isExist")
                 if(!isExist){
                     Log.d(TAG, "isInputValid: Success")
@@ -96,13 +98,22 @@ class RegisterFragment : BottomSheetDialogFragment() {
             }
     }
 
-    private suspend fun findUsername(username:String) : Boolean {
-        Log.d(TAG, "findUsername: ")
-        Log.d(TAG, "findUsername: Started")
-        val waitFor =  CoroutineScope(Dispatchers.IO).async {
-            val isExist = userVm.isUserExist(username) > 0
+//    private suspend fun findUsername(username:String) : Boolean {
+//        Log.d(TAG, "findUsername: ")
+//        Log.d(TAG, "findUsername: Started")
+//        val waitFor =  CoroutineScope(Dispatchers.IO).async {
+//            val isExist = userVm.isUserExist(username) > 0
+//            isExist
+//        }.await()
+//        Log.d(TAG, "findUsername: outer $waitFor")
+//        return waitFor
+//    }
+
+    private suspend fun isUserExist(username: String):Boolean{
+        val waitFor =  withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+            val isExist = userVm.getUser().value != null
             isExist
-        }.await()
+        }
         Log.d(TAG, "findUsername: outer $waitFor")
         return waitFor
     }

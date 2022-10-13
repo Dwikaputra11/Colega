@@ -1,9 +1,7 @@
 package com.example.colega.ui
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -15,18 +13,19 @@ import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.data.Bookmark
 import com.example.colega.databinding.FragmentNewsDetailBinding
-import com.example.colega.models.Article
+import com.example.colega.models.news.Article
 import com.example.colega.utils.UtilMethods
-import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.BookmarkViewModel
+import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class NewsDetailFragment(private val news: Article?,private val bookmark: Bookmark?) : BottomSheetDialogFragment() {
+class NewsDetailFragment(private val news: Article?, private val bookmark: Bookmark?) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewsDetailBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var bookmarkVM: BookmarkViewModel
-    private lateinit var sharedPref: SharedPreferences
+    private lateinit var userVM: UserViewModel
+    private var userId = -1
     private val TAG = "NewsDetailFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,8 +36,11 @@ class NewsDetailFragment(private val news: Article?,private val bookmark: Bookma
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
         bookmarkVM = ViewModelProvider(this)[BookmarkViewModel::class.java]
+        userVM = ViewModelProvider(this)[UserViewModel::class.java]
+        userVM.dataUser.observe(viewLifecycleOwner){
+            userId = it.userId
+        }
         setViews()
         setBehaviour(view)
         binding.btnToUrlPage.setOnClickListener {
@@ -136,7 +138,6 @@ class NewsDetailFragment(private val news: Article?,private val bookmark: Bookma
         Log.d(TAG, "onDismiss: ${binding.btnBookmark.isChecked}")
         if(binding.btnBookmark.isChecked) {
             if(news != null){
-                val userId = sharedPref.getInt(Utils.userId, -1)
                 if (userId != -1) {
                     Log.d(TAG, "onDismiss: $userId")
                     val bookmark = Bookmark(
@@ -158,7 +159,6 @@ class NewsDetailFragment(private val news: Article?,private val bookmark: Bookma
             }
         }else{
             if(news == null && bookmark != null){
-                val userId = sharedPref.getInt(Utils.userId, -1)
                 if (userId != -1) {
                     Log.d(TAG, "onDismiss: $userId")
                     bookmarkVM.deleteBookmark(bookmark)

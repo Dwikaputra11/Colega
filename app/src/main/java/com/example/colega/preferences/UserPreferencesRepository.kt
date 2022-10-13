@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.example.colega.UserProto
+import com.example.colega.data.DataUser
 import com.example.colega.data.User
+import com.example.colega.models.user.UserResponseItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.io.IOException
@@ -24,7 +26,7 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     // save data to data store proto
-    suspend fun saveData(user: User) {
+    suspend fun saveData(user: UserResponseItem) {
         context.userPreferencesStore.updateData { preferences ->
             preferences.toBuilder().setUsername(user.username).build()
         }
@@ -35,7 +37,7 @@ class UserPreferencesRepository(private val context: Context) {
             it.toBuilder().setEmail(user.email).build()
         }
         context.userPreferencesStore.updateData {
-            it.toBuilder().setUserId(user.id).build()
+            it.toBuilder().setUserId(user.id.toInt()).build()
         }
     }
 

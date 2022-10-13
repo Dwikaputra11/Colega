@@ -48,12 +48,10 @@ class BookmarkFragment : Fragment() {
         var userId = -1
         userVM.dataUser.observe(requireActivity()){
             userId = it.userId
-            Log.d(TAG, "setViews: $userId")
         }
         if(userId != -1){
             bookmarkVM.getAllBookmark(userId).observe(viewLifecycleOwner){
                 if(it != null){
-                    Log.d(TAG, "setViews: $it")
                     adapter.setBookmarkList(it)
                     binding.shimmerLayout.startShimmer()
                     binding.shimmerLayout.visibility = View.GONE

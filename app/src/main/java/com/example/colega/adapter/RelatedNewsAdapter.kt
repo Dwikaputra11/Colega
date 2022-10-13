@@ -1,6 +1,5 @@
 package com.example.colega.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -9,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.databinding.RelatedNewsItemBinding
-import com.example.colega.models.Article
+import com.example.colega.models.news.Article
 import com.example.colega.utils.PaginationAdapterCallback
 import com.example.colega.utils.UtilMethods
 import com.example.colega.utils.Utils
@@ -75,7 +74,6 @@ class RelatedNewsAdapter():
     }
 
     fun setRelatedNews(list: List<Article>){
-        Log.d(TAG, "setRelatedNews: $list")
         differ.submitList(list)
     }
 

@@ -75,20 +75,17 @@ class SplashScreenFragment : Fragment() {
     private fun isFirstInstall(){
         // check if user first install app it will go to on boarding page for the introduction
         val firstInstall = sharedPref.getBoolean(Utils.firstInstall,true)
-        var username = ""
         if(firstInstall){
             Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_onBoardingFragment)
         }else{
             // if user is already login it will go to home, if not it will go to login page
-            userVM.dataUser.observe(viewLifecycleOwner){
-                username = it.username
-                Log.d(TAG, "isFirstInstall: ${it.username}")
-            }
-            // username blank that means the last user open the app the account has been already logout
-            if(username.isBlank()){
-                Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_loginFragment)
-            }else{
-                startActivity(Intent(requireActivity(), HomeActivity::class.java))
+            userVM.dataUser.observe(requireActivity()){
+                // username blank that means the last user open the app the account has been already logout
+                if(it.username.isBlank()){
+                    Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_loginFragment)
+                }else{
+                    startActivity(Intent(requireActivity(), HomeActivity::class.java))
+                }
             }
         }
     }
