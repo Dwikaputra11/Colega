@@ -5,8 +5,6 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.example.colega.UserProto
-import com.example.colega.data.DataUser
-import com.example.colega.data.User
 import com.example.colega.models.user.UserResponseItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

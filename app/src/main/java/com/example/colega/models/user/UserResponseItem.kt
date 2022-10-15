@@ -8,6 +8,8 @@ data class UserResponseItem(
     val avatar: String,
     @SerializedName("birthDate")
     val birthDate: String,
+    @SerializedName("bookmarks")
+    val userBookmarks: List<UserBookmark>?,
     @SerializedName("createdAt")
     val createdAt: String,
     @SerializedName("email")

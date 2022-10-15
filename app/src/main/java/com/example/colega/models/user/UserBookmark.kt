@@ -1,24 +1,27 @@
-package com.example.colega.models.news
+package com.example.colega.models.user
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Article(
+data class UserBookmark(
     @SerializedName("author")
     val author: String,
     @SerializedName("content")
-    val content: String?,
+    val content: String,
     @SerializedName("description")
     val description: String,
-    @SerializedName("publishedAt")
-    val publishedAt: String,
+    @SerializedName("id")
+    val id: String,
+    @SerializedName("publishAt")
+    val publishAt: String,
     @SerializedName("source")
-    val source: Source,
+    val source: String,
     @SerializedName("title")
     val title: String,
     @SerializedName("url")
     val url: String,
     @SerializedName("urlToImage")
     val urlToImage: String,
-    var isCheck: Boolean = false
+    @SerializedName("userId")
+    val userId: String
 )

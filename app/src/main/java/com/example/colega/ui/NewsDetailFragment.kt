@@ -110,9 +110,10 @@ class NewsDetailFragment(private val news: Article?, private val bookmark: Bookm
                 .load(bookmark.urlToImage)
                 .placeholder(R.drawable.news)
                 .into(binding.ivNews)
-            if(bookmark.isCheck){
-                binding.btnBookmark.isChecked = true
-            }
+//            if(bookmark.isCheck){
+//                binding.btnBookmark.isChecked = true
+//            }
+            binding.btnBookmark.isChecked = true
         }
     }
 
@@ -151,9 +152,10 @@ class NewsDetailFragment(private val news: Article?, private val bookmark: Bookm
                         title = news.title,
                         url = news.url,
                         id = 0,
-                        isCheck = true
+//                        isCheck = true,
                     )
                     bookmarkVM.insertBookmark(bookmark)
+                    bookmarkVM.postBookmarkToApi(bookmark)
                     Log.d(TAG, "onDismiss: Done")
                 }
             }
@@ -162,6 +164,7 @@ class NewsDetailFragment(private val news: Article?, private val bookmark: Bookm
                 if (userId != -1) {
                     Log.d(TAG, "onDismiss: $userId")
                     bookmarkVM.deleteBookmark(bookmark)
+                    bookmarkVM.deleteBookmarkUserFromApi(userId.toString(), bookmark.id.toString())
                     Log.d(TAG, "onDismiss: Done")
                 }
             }

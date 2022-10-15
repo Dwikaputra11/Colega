@@ -36,7 +36,6 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        user = User()
         Glide.with(requireContext())
             .load(Utils.loginImage)
             .into(binding.ivLogin)
