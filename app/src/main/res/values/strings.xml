@@ -52,6 +52,7 @@
     <string name="birth_date_profile">Birth Date:</string>
     <string name="language">Language:</string>
     <string name="logout_image" translatable="false">Logout Image</string>
+    <string name="source_name" translatable="false">Source Name</string>
 
     <string-array name="language_list">
         <item>English</item>
