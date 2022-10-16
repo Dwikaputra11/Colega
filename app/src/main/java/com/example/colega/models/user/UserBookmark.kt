@@ -12,8 +12,12 @@ data class UserBookmark(
     val description: String,
     @SerializedName("id")
     val id: String,
+    @SerializedName("isCheck")
+    val isCheck: String,
     @SerializedName("publishAt")
     val publishAt: String,
+    @SerializedName("publishedAt")
+    val publishedAt: String,
     @SerializedName("source")
     val source: String,
     @SerializedName("title")

@@ -11,13 +11,11 @@ import com.example.colega.data.Bookmark
 import com.example.colega.data.BookmarkRepository
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.user.UserBookmark
-import com.example.colega.models.user.UserResponseItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.log
 
 private const val TAG = "BookmarkViewModel"
 

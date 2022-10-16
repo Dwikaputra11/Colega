@@ -10,16 +10,19 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.colega.MainActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentProfileBinding
 import com.example.colega.utils.Utils
+import com.example.colega.viewmodel.UserViewModel
 import java.util.*
 
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var userVM: UserViewModel
     private val TAG = "ProfileFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,19 +34,21 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
+        userVM = ViewModelProvider(this)[UserViewModel::class.java]
         setViews()
         binding.ivLogout.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setPositiveButton(R.string.yes) { _, _ ->
                 run {
                     // when "YES" option was clicked shared pref will clear the all data that was store
-                    val exit = sharedPref.edit()
-                    exit.remove(Utils.email)
-                    exit.remove(Utils.username)
-                    exit.remove(Utils.userId)
-                    exit.remove(Utils.dateBirth)
-                    exit.remove(Utils.password)
-                    exit.apply()
+//                    val exit = sharedPref.edit()
+//                    exit.remove(Utils.email)
+//                    exit.remove(Utils.username)
+//                    exit.remove(Utils.userId)
+//                    exit.remove(Utils.dateBirth)
+//                    exit.remove(Utils.password)
+//                    exit.apply()
+                    userVM.clearUserPref()
                     startActivity(Intent(requireActivity(), MainActivity::class.java))
                 }
             }
@@ -55,40 +60,38 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setViews() {
-        val username = sharedPref.getString(Utils.username, null)
-        val email = sharedPref.getString(Utils.email, null)
-        val birthDate = sharedPref.getString(Utils.dateBirth, null)
+        userVM.dataUser.observe(viewLifecycleOwner){
+            if(it != null){
+                binding.tvName.text = it.username
+                binding.tvEmail.text = it.email
+                binding.tvBirth.text = it.birthDate
+            }
+        }
 
-        if (username != null && email != null && birthDate != null){
-            binding.tvName.text = username
-            binding.tvEmail.text = email
-            binding.tvBirth.text = birthDate
+        val language = sharedPref.getString(Utils.languageApp, null)
+        if(language != null){
+            if (language == "id"){
+                binding.spinner.setSelection(1)
+            }
+        }
 
-            val language = sharedPref.getString(Utils.languageApp, null)
-            if(language != null){
-                if (language == "id"){
-                    binding.spinner.setSelection(1)
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
+                val edit = sharedPref.edit()
+                if(pos == 1){
+                    edit.putString(Utils.languageApp, "id")
+                    setLocale("id")
+                }else{
+                    edit.putString(Utils.languageApp, "en")
+                    setLocale("en")
                 }
+                edit.apply()
             }
 
-            binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                    val edit = sharedPref.edit()
-                    if(pos == 1){
-                        edit.putString(Utils.languageApp, "id")
-                        setLocale("id")
-                    }else{
-                        edit.putString(Utils.languageApp, "en")
-                        setLocale("en")
-                    }
-                    edit.apply()
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                }
+            override fun onNothingSelected(p0: AdapterView<*>?) {
 
             }
+
         }
     }
 

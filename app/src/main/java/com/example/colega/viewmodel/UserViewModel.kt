@@ -116,4 +116,8 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     fun addToUserPref(user: UserResponseItem){
         viewModelScope.launch { prefRepo.saveData(user) }
     }
+
+    fun clearUserPref(){
+        viewModelScope.launch { prefRepo.clearData() }
+    }
 }

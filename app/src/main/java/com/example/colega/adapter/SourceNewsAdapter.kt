@@ -36,7 +36,7 @@ class SourceNewsAdapter: RecyclerView.Adapter<SourceNewsAdapter.ViewHolder>() {
     private val differ = AsyncListDiffer(this, diffCallback)
 
     interface OnItemClickListener{
-        fun onItemClick(sourceResponseItem: SourceResponseItem)
+        fun onItemClick(sourceResponseItem: SourceResponseItem, isClicked: Boolean)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
@@ -48,7 +48,7 @@ class SourceNewsAdapter: RecyclerView.Adapter<SourceNewsAdapter.ViewHolder>() {
         init {
             binding.btnFollow.setOnClickListener {
                 isClicked = !isClicked
-                listener.onItemClick(differ.currentList[absoluteAdapterPosition])
+                listener.onItemClick(differ.currentList[absoluteAdapterPosition], isClicked)
                 if(isClicked){
                     binding.btnFollow.setBackgroundResource(R.drawable.follow_button_selected)
                     binding.btnFollow.text = binding.root.context.getText(R.string.following)

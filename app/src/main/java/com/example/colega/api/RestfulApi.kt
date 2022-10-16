@@ -2,9 +2,10 @@ package com.example.colega.api
 
 import com.example.colega.data.Bookmark
 import com.example.colega.data.DataUser
+import com.example.colega.data.FollowingSource
 import com.example.colega.models.news.NewsModel
 import com.example.colega.models.news.SourceResponse
-import com.example.colega.models.news.SourceResponseItem
+import com.example.colega.models.user.UserFollowingSource
 import com.example.colega.models.user.UserBookmark
 import com.example.colega.models.user.UserResponseItem
 import com.example.colega.utils.Utils
@@ -39,16 +40,30 @@ interface RestfulApi {
     @GET("users/{id}")
     fun getUser(@Path("id") id: String): Call<UserResponseItem>
 
-    @GET("users/{id}/bookmark")
-    fun getUserBookmark(@Path("id") id: String): Call<List<UserBookmark>>
-
     @POST("users")
     fun addUser(@Body request: DataUser): Call<UserResponseItem>
+
+    // BOOKMARK
+    @GET("users/{id}/bookmark")
+    fun getUserBookmark(@Path("id") id: String): Call<List<UserBookmark>>
 
     @POST("users/{id}/bookmark")
     fun postBookmark(@Path("id") id: String, @Body bookmark: Bookmark): Call<UserBookmark>
 
     @DELETE("users/{userId}/bookmark/{id}")
     fun deleteBookmark(@Path("userId") userId: String, @Path("id") id: String): Call<UserBookmark>
+
+    // FOLLOWING SOURCE
+    @GET("users/{userId}/followingSource")
+    fun getUserFollowingSource(@Path("userId") id: String): Call<List<UserFollowingSource>>
+
+    @GET("users/{userId}/followingSource")
+    fun getSingleSource(@Path("userId") userId: String,@Query("sourceId") sourceId: String): Call<List<UserFollowingSource>>
+
+    @POST("users/{userId}/followingSource")
+    fun postFollowingSource(@Path("userId") id: String, @Body sources: FollowingSource): Call<UserFollowingSource>
+
+    @DELETE("users/{userId}/followingSource/{id}")
+    fun deleteFollowingSource(@Path("userId") userId: String, @Path("id") id: String): Call<UserFollowingSource>
 
 }

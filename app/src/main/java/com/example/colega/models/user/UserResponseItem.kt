@@ -9,11 +9,13 @@ data class UserResponseItem(
     @SerializedName("birthDate")
     val birthDate: String,
     @SerializedName("bookmarks")
-    val userBookmarks: List<UserBookmark>?,
+    val bookmarks: List<UserBookmark>,
     @SerializedName("createdAt")
     val createdAt: String,
     @SerializedName("email")
     val email: String,
+    @SerializedName("followingSource")
+    val userFollowingSource: List<UserFollowingSource>,
     @SerializedName("fullName")
     val fullName: String,
     @SerializedName("id")
