@@ -53,6 +53,11 @@
     <string name="language">Language:</string>
     <string name="logout_image" translatable="false">Logout Image</string>
     <string name="source_name" translatable="false">Source Name</string>
+    <string name="empty_following" translatable="false">You are not following any source news yet!</string>
+    <string name="source" translatable="false">Source</string>
+    <string name="logout" translatable="false">Logout</string>
+    <string name="greeting" translatable="false">Welcome Back</string>
+    <string name="open" translatable="false">Open</string>
 
     <string-array name="language_list">
         <item>English</item>
