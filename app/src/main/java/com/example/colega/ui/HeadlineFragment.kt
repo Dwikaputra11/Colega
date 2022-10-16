@@ -32,7 +32,7 @@ class HeadlineFragment : Fragment() {
         binding.rvHeadline.adapter = adapter
         binding.rvHeadline.layoutManager = object: LinearLayoutManager(binding.root.context){
             override fun canScrollVertically(): Boolean {
-                return false
+                return true
             }
         }
         articleVM.getHeadlineNews()

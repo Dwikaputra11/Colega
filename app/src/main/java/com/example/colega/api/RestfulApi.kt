@@ -3,6 +3,8 @@ package com.example.colega.api
 import com.example.colega.data.Bookmark
 import com.example.colega.data.DataUser
 import com.example.colega.models.news.NewsModel
+import com.example.colega.models.news.SourceResponse
+import com.example.colega.models.news.SourceResponseItem
 import com.example.colega.models.user.UserBookmark
 import com.example.colega.models.user.UserResponseItem
 import com.example.colega.utils.Utils
@@ -25,6 +27,9 @@ interface RestfulApi {
         @Query("category") category: String = Utils.category_technology,
         @Query("apiKey") apiKey: String = Utils.apiKey,
     ): Call<NewsModel>
+
+    @GET("top-headlines/sources")
+    fun getAllSourceNews(@Query("apiKey") apiKey : String = Utils.apiKey): Call<SourceResponse>
 
 
     // USER

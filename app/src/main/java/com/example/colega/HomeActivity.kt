@@ -79,13 +79,14 @@ class HomeActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.source -> {
                     startActivity(Intent(this, SourceActivity::class.java))
-                    binding.drawerLayout.closeDrawer(GravityCompat.START)
                     true
                 }
                 else -> {
                     false
                 }
             }
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            return@setNavigationItemSelectedListener false
         }
     }
 

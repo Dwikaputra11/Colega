@@ -40,7 +40,7 @@ class FeedsFragment : Fragment() {
         binding.rvForYou.adapter = relatedAdapter
         binding.rvForYou.layoutManager = object : LinearLayoutManager(binding.root.context){
             override fun canScrollVertically(): Boolean {
-                return false
+                return true
             }
         }
         relatedAdapter.setOnItemClickListener(object : RelatedNewsAdapter.OnItemClickListener{
