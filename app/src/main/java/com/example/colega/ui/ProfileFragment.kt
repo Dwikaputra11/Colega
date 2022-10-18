@@ -22,10 +22,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.colega.MainActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentProfileBinding
 import com.example.colega.databinding.UploadImageProfileProgressBinding
+import com.example.colega.models.user.DataUser
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.UserViewModel
 import com.google.firebase.storage.FirebaseStorage
@@ -38,12 +40,15 @@ private const val REQUEST_IMAGE_CODE_PERMISSION = 100
 private const val TAG = "ProfileFragment"
 
 class ProfileFragment : Fragment() {
+    private lateinit var userId: String
+    private lateinit var username:String
     private lateinit var binding: FragmentProfileBinding
     private lateinit var sharedPref: SharedPreferences
     private lateinit var userVM: UserViewModel
     private lateinit var storage: FirebaseStorage
     private lateinit var storageReference: StorageReference
     private lateinit var imgUri: Uri
+    private lateinit var downloadUri: Uri
 
     private val cameraResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -57,7 +62,6 @@ class ProfileFragment : Fragment() {
             if(result != null) imgUri = result
             Log.d(TAG, "Gallery result: $imgUri")
             saveToFirebase()
-            binding.civProfile.setImageURI(result)
         }
 
     override fun onCreateView(
@@ -77,38 +81,6 @@ class ProfileFragment : Fragment() {
         binding.ivLogout.setOnClickListener {
             logoutDialog()
         }
-    }
-
-    private fun logoutDialog(){
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setPositiveButton(R.string.yes) { _, _ ->
-            run {
-                userVM.clearUserPref()
-                startActivity(Intent(requireActivity(), MainActivity::class.java))
-            }
-        }
-        builder.setNegativeButton(getString(R.string.no)) { _, _ -> }
-        builder.setTitle(getString(R.string.logout_account))
-        builder.setMessage(getString(R.string.confirm_logout))
-        builder.create().show()
-    }
-
-    private fun setViews() {
-        userVM.dataUser.observe(viewLifecycleOwner){
-            if(it != null){
-                binding.tvName.text = it.username
-                binding.tvEmail.text = it.email
-                binding.tvBirth.text = it.birthDate
-            }
-        }
-
-        val language = sharedPref.getString(Utils.languageApp, null)
-        if(language != null){
-            if (language == "id"){
-                binding.spinner.setSelection(1)
-            }
-        }
-
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
                 val edit = sharedPref.edit()
@@ -128,9 +100,46 @@ class ProfileFragment : Fragment() {
 
         }
 
-
         binding.btnAddProfile.setOnClickListener {
             checkPermission()
+        }
+    }
+
+    private fun logoutDialog(){
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton(R.string.yes) { _, _ ->
+            run {
+                userVM.clearUserPref()
+                startActivity(Intent(requireActivity(), MainActivity::class.java))
+            }
+        }
+
+        builder.setNegativeButton(getString(R.string.no)) { _, _ -> }
+        builder.setTitle(getString(R.string.logout_account))
+        builder.setMessage(getString(R.string.confirm_logout))
+        builder.create().show()
+    }
+
+    private fun setViews() {
+        userVM.dataUser.observe(viewLifecycleOwner){
+            if(it != null){
+                username = it.username
+                binding.tvName.text = it.username
+                binding.tvEmail.text = it.email
+                binding.tvBirth.text = it.birthDate
+                Log.d(TAG, "setViews Avatar: ${it.avatar}")
+                Glide.with(binding.root)
+                    .load(it.avatar)
+                    .placeholder(R.drawable.ic_baseline_account_circle_100)
+                    .into(binding.civProfile)
+            }
+        }
+
+        val language = sharedPref.getString(Utils.languageApp, null)
+        if(language != null){
+            if (language == "id"){
+                binding.spinner.setSelection(1)
+            }
         }
 
     }
@@ -218,7 +227,6 @@ class ProfileFragment : Fragment() {
         imgUri = getImageUri(requireContext(), bitmap)
         saveToFirebase()
         Log.d(TAG, "handleCameraImage: $imgUri")
-        binding.civProfile.setImageBitmap(bitmap)
     }
 
     private fun getImageUri(inContext: Context, inImage: Bitmap): Uri {
@@ -237,18 +245,40 @@ class ProfileFragment : Fragment() {
         val dialog = builder.create()
         dialog.show()
         try {
-            val reference = storageReference.child("image/" + UUID.randomUUID().toString())
+            val reference = storageReference.child("image/" + username + "_" + UUID.randomUUID().toString())
             reference.putFile(imgUri).addOnSuccessListener {
+                it.storage.downloadUrl.addOnCompleteListener { image ->
+                    downloadUri = image.result
+                    updateUserProfile(downloadUri.toString())
+                }
                 Toast.makeText(requireActivity(), "Saved Successfully", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }.addOnFailureListener{
                 Toast.makeText(requireActivity(), "Error Occurred", Toast.LENGTH_SHORT).show()
             }.addOnProgressListener{
                 val progress = (100.0 * it.task.snapshot.bytesTransferred / it.task.snapshot.totalByteCount)
-                dialogBinding.tvPercentProgress.text = "Uploading...$progress%"
+                dialogBinding.tvPercentProgress.text = "Uploading..." + progress + "%"
             }
         }catch (e: java.lang.Exception){
             e.stackTrace
+        }
+    }
+
+    private fun updateUserProfile(downloadUri: String) {
+        userVM.dataUser.observe(this){ it ->
+            userId = it.userId.toString()
+            val userData = DataUser(
+                username = it.username,
+                fullName = it.fullName,
+                birthDate = it.birthDate,
+                email = it.email,
+                password = it.password,
+                avatar = downloadUri
+            )
+            userVM.updateUser(userId, userData)
+            userVM.getUserData().observe(this){ user ->
+                userVM.addToUserPref(user)
+            }
         }
     }
 

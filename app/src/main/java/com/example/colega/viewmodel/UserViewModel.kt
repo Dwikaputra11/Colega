@@ -23,7 +23,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     val dataUser = prefRepo.readData.asLiveData()
     private val repository: UserRepository
     private val activeUser: MutableLiveData<UserResponseItem> = MutableLiveData()
-    private val postUser: MutableLiveData<UserResponseItem> = MutableLiveData()
+    private val userData: MutableLiveData<UserResponseItem> = MutableLiveData()
 
     init {
         val userDao = MyDatabase.getDatabase(
@@ -67,8 +67,8 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             })
     }
 
-    fun getPostUser(): MutableLiveData<UserResponseItem>{
-        return postUser
+    fun getUserData(): MutableLiveData<UserResponseItem>{
+        return userData
     }
 
     fun postUser(user: DataUser){
@@ -80,7 +80,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
                 ) {
                     if(response.isSuccessful){
                         Log.d(TAG, "onResponse: ${response.body()}")
-                        postUser.postValue(response.body())
+                        userData.postValue(response.body())
                     }else{
                         Log.d(TAG, "onResponse: Failed Fetch")
                     }
@@ -88,6 +88,25 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
                 override fun onFailure(call: Call<UserResponseItem>, t: Throwable) {
                     Log.d(TAG, "onFailure: Api Failed")
+                }
+
+            })
+    }
+
+    fun updateUser(userId: String,user: DataUser){
+        RetrofitClient.instanceUser.updateUser(userId,user)
+            .enqueue(object : Callback<UserResponseItem>{
+                override fun onResponse(
+                    call: Call<UserResponseItem>,
+                    response: Response<UserResponseItem>
+                ) {
+                    if(response.isSuccessful){
+                        Log.d(TAG, "onResponse Update: Successfully")
+                        userData.postValue(response.body())
+                    }
+                }
+                override fun onFailure(call: Call<UserResponseItem>, t: Throwable) {
+                    Log.d(TAG, "onFailure: Update ${t.message}")
                 }
 
             })

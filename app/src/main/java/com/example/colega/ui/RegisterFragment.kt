@@ -72,7 +72,8 @@ class RegisterFragment : BottomSheetDialogFragment() {
             password = password,
             email = email,
             birthDate = birthDate,
-            fullName = "dwika putra"
+            fullName = "dwika putra",
+            avatar = ""
         )
         userVm.postUser(user)
         Log.d(TAG, "addToApi: Finish")

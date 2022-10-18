@@ -11,4 +11,5 @@ message UserProto {
   string full_name = 4;
   string email = 5;
   string birthDate = 6;
+  string avatar = 7;
 }

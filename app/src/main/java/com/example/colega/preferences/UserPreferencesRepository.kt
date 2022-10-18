@@ -40,6 +40,9 @@ class UserPreferencesRepository(private val context: Context) {
         context.userPreferencesStore.updateData {
             it.toBuilder().setBirthDate(user.birthDate).build()
         }
+        context.userPreferencesStore.updateData {
+            it.toBuilder().setAvatar(user.avatar).build()
+        }
     }
 
 
@@ -59,6 +62,9 @@ class UserPreferencesRepository(private val context: Context) {
         }
         context.userPreferencesStore.updateData {
             it.toBuilder().clearBirthDate().build()
+        }
+        context.userPreferencesStore.updateData {
+            it.toBuilder().clearAvatar().build()
         }
     }
 
