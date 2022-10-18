@@ -12,6 +12,9 @@ interface FollowingSourceDao {
     @Query("SELECT * FROM followingsource WHERE userId == :userId")
     fun getNewsBySource(userId: String): LiveData<List<FollowingSource>>
 
+    @Query("DELETE FROM followingsource")
+    fun deleteAll()
+
     @Insert
     fun insertUserFollow(followingSource: FollowingSource)
 

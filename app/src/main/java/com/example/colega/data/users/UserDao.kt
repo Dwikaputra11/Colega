@@ -11,6 +11,9 @@ interface UserDao {
     @Query("SELECT COUNT() FROM user WHERE username == :username")
     fun countExistUser(username: String): Int
 
+    @Query("DELETE FROM user")
+    fun deleteAllUser()
+
     @Insert
     fun addUser(user: User)
 

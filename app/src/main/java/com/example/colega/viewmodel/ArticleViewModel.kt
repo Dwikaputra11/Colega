@@ -1,22 +1,35 @@
 package com.example.colega.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.colega.api.RetrofitClient
+import com.example.colega.data.article.RelatedNews
+import com.example.colega.data.article.RelatedNewsRepository
+import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.ArticleResponse
 import com.example.colega.models.news.NewsModel
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ArticleViewModel: ViewModel() {
-    private val TAG = "ArticleViewModel"
+private const val TAG = "ArticleViewModel"
+class ArticleViewModel(application: Application): AndroidViewModel(application) {
     private var articleResponseLiveData: MutableLiveData<List<ArticleResponse>> = MutableLiveData()
     private var headlineLiveData : MutableLiveData<List<ArticleResponse>> = MutableLiveData()
+    private lateinit var relatedNewsRepository: RelatedNewsRepository
 
     fun getArticleLiveData(): MutableLiveData<List<ArticleResponse>> = articleResponseLiveData
     fun getHeadlineLiveData(): MutableLiveData<List<ArticleResponse>> = headlineLiveData
+
+    init {
+        val relatedNewsDao = MyDatabase.getDatabase(application).relatedNews()
+        relatedNewsRepository = RelatedNewsRepository(relatedNewsDao)
+    }
 
     fun getRelatedNews(){
         RetrofitClient.instanceFilm.getPreferences()
@@ -57,6 +70,12 @@ class ArticleViewModel: ViewModel() {
                 }
 
             })
+    }
+
+    fun insertRelatedNewsToDB(relatedNews: RelatedNews){
+        viewModelScope.launch {
+
+        }
     }
 
 }
