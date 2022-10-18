@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.NetworkInfo
 import android.os.Build
 import androidx.annotation.RequiresPermission
 
@@ -20,7 +19,7 @@ class CheckConnectivity {
         @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
         private fun getNetworkInfo(context: Context): Boolean {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val nw      = connectivityManager.activeNetwork ?: return false
                 val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
                 return when {
@@ -45,8 +44,7 @@ class CheckConnectivity {
          */
         @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
         fun isConnected(context: Context): Boolean {
-            val info = getNetworkInfo(context)
-            return info != null && info
+            return getNetworkInfo(context)
         }
     }
 }

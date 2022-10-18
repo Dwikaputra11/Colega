@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "220861944344",
+    "project_id": "colega-4e859",
+    "storage_bucket": "colega-4e859.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220861944344:android:7ba125d517eac27d0e296d",
+        "android_client_info": {
+          "package_name": "com.example.colega"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220861944344-1kouot00nh31rvo2f2ka7gh2ngn4gl0v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpcwYbNCQkzaq6uBNR9ibELvj-I1du_EU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220861944344-1kouot00nh31rvo2f2ka7gh2ngn4gl0v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

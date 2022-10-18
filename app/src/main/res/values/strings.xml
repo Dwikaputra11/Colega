@@ -60,6 +60,7 @@
     <string name="open" translatable="false">Open</string>
     <string name="following" translatable="false">Following</string>
     <string name="follow" translatable="false">Follow</string>
+    <string name="add_image_profile" translatable="false">Add Image Profile</string>
 
     <string-array name="language_list">
         <item>English</item>
