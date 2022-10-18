@@ -12,8 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.colega.R
-import com.example.colega.data.DataUser
-import com.example.colega.data.User
+import com.example.colega.models.user.DataUser
 import com.example.colega.databinding.FragmentRegisterBinding
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -72,7 +71,7 @@ class RegisterFragment : BottomSheetDialogFragment() {
             username = username,
             password = password,
             email = email,
-            dateBirth = birthDate,
+            birthDate = birthDate,
             fullName = "dwika putra"
         )
         userVm.postUser(user)

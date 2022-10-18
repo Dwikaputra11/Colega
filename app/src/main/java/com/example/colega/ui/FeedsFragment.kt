@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.RelatedNewsAdapter
 import com.example.colega.databinding.FragmentFeedsBinding
-import com.example.colega.models.news.Article
+import com.example.colega.models.news.ArticleResponse
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.ArticleViewModel
 import com.example.colega.viewmodel.BookmarkViewModel
@@ -44,7 +44,7 @@ class FeedsFragment : Fragment() {
             }
         }
         relatedAdapter.setOnItemClickListener(object : RelatedNewsAdapter.OnItemClickListener{
-            override fun onItemClick(news: Article) {
+            override fun onItemClick(news: ArticleResponse) {
                 val newsDetailFragment = NewsDetailFragment(news, null)
                 newsDetailFragment.show(requireActivity().supportFragmentManager, newsDetailFragment.tag)
             }

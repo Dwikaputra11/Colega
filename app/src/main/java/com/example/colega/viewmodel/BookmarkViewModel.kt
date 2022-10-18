@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.colega.api.RetrofitClient
-import com.example.colega.data.Bookmark
-import com.example.colega.data.BookmarkRepository
+import com.example.colega.data.users.Bookmark
+import com.example.colega.data.users.BookmarkRepository
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.user.UserBookmark
 import kotlinx.coroutines.Dispatchers

@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.colega.api.RetrofitClient
-import com.example.colega.models.news.Article
+import com.example.colega.models.news.ArticleResponse
 import com.example.colega.models.news.NewsModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -12,11 +12,11 @@ import retrofit2.Response
 
 class ArticleViewModel: ViewModel() {
     private val TAG = "ArticleViewModel"
-    private var articleLiveData: MutableLiveData<List<Article>> = MutableLiveData()
-    private var headlineLiveData : MutableLiveData<List<Article>> = MutableLiveData()
+    private var articleResponseLiveData: MutableLiveData<List<ArticleResponse>> = MutableLiveData()
+    private var headlineLiveData : MutableLiveData<List<ArticleResponse>> = MutableLiveData()
 
-    fun getArticleLiveData(): MutableLiveData<List<Article>> = articleLiveData
-    fun getHeadlineLiveData(): MutableLiveData<List<Article>> = headlineLiveData
+    fun getArticleLiveData(): MutableLiveData<List<ArticleResponse>> = articleResponseLiveData
+    fun getHeadlineLiveData(): MutableLiveData<List<ArticleResponse>> = headlineLiveData
 
     fun getRelatedNews(){
         RetrofitClient.instanceFilm.getPreferences()
@@ -25,7 +25,7 @@ class ArticleViewModel: ViewModel() {
                     if(response.isSuccessful){
 //                        Log.d(TAG, "onResponse: ${response.body()}")
                         if(response.body() != null){
-                            articleLiveData.postValue(response.body()!!.articles)
+                            articleResponseLiveData.postValue(response.body()!!.articleResponses)
 //                            Log.d(TAG, "onResponse: ${response.body()!!.articles.size}")
                         }
                     }else{
@@ -45,7 +45,7 @@ class ArticleViewModel: ViewModel() {
                 override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
                     if(response.isSuccessful){
                         if(response.body() != null){
-                            headlineLiveData.postValue(response.body()!!.articles)
+                            headlineLiveData.postValue(response.body()!!.articleResponses)
                         }
                     }else{
                         Log.d(TAG, "onResponse: Failed")

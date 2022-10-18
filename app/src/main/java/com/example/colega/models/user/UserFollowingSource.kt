@@ -2,6 +2,7 @@ package com.example.colega.models.user
 
 
 import com.google.gson.annotations.SerializedName
+import org.intellij.lang.annotations.Language
 
 data class UserFollowingSource(
     @SerializedName("createdAt")
@@ -13,5 +14,11 @@ data class UserFollowingSource(
     @SerializedName("userId")
     val userId: String,
     @SerializedName("sourceId")
-    val sourceId: String
+    val sourceId: String,
+    @SerializedName("language")
+    val language: String,
+    @SerializedName("country")
+    val country: String,
+    @SerializedName("description")
+    val description: String
 )

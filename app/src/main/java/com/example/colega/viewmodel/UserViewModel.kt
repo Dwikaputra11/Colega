@@ -4,9 +4,9 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.colega.api.RetrofitClient
-import com.example.colega.data.DataUser
-import com.example.colega.data.User
-import com.example.colega.data.UserRepository
+import com.example.colega.models.user.DataUser
+import com.example.colega.data.users.User
+import com.example.colega.data.users.UserRepository
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.user.UserResponseItem
 import com.example.colega.preferences.UserPreferencesRepository

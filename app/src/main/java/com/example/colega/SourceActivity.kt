@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.SourceNewsAdapter
-import com.example.colega.data.FollowingSource
+import com.example.colega.models.user.DataFollowingSource
 import com.example.colega.databinding.ActivitySourceBinding
 import com.example.colega.models.news.SourceResponseItem
 import com.example.colega.viewmodel.FollowingSourceViewModel
@@ -60,17 +60,24 @@ class SourceActivity : AppCompatActivity() {
         adapter.setOnItemClickListener(object : SourceNewsAdapter.OnItemClickListener{
             override fun onItemClick(sourceResponseItem: SourceResponseItem, isClicked: Boolean) {
                 if(isClicked){
-                    val followingSource = FollowingSource(name = sourceResponseItem.name,  userId = userId, sourceId = sourceResponseItem.id)
-                    followingSourceVM.postFollowingSourceToApi(userId, followingSource)
+                    val dataFollowingSource = DataFollowingSource(
+                        name = sourceResponseItem.name,
+                        userId = userId,
+                        sourceId = sourceResponseItem.id,
+                        language = sourceResponseItem.language,
+                        country = sourceResponseItem.country,
+                        description = sourceResponseItem.description
+                    )
+                    followingSourceVM.postFollowingSourceToApi(userId, dataFollowingSource)
                     followingSourceVM.getPostFollowingSource().observe(this@SourceActivity){
                         if(it  != null) Toast.makeText(this@SourceActivity, "Add to Following", Toast.LENGTH_SHORT).show()
                         else Toast.makeText(this@SourceActivity, "Failed to Post", Toast.LENGTH_SHORT).show()
                     }
                 }else{
                     followingSourceVM.getSingleSourceFromApi(userId, sourceResponseItem.id)
-                    followingSourceVM.getSingleSource().observe(this@SourceActivity){ user ->
-                        if(user != null) {
-                            followingSourceVM.deleteFollowingSource(userId, user[0].id)
+                    followingSourceVM.getSingleSource().observe(this@SourceActivity){ source ->
+                        if(source != null) {
+                            followingSourceVM.deleteFollowingFromApi(userId, source[0].id)
                             followingSourceVM.getDeleteFollowingSource().observe(this@SourceActivity){
                                 if(it  != null) Toast.makeText(this@SourceActivity, "Delete from Following", Toast.LENGTH_SHORT).show()
                                 else Toast.makeText(this@SourceActivity, "Failed to Delete", Toast.LENGTH_SHORT).show()

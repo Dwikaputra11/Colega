@@ -1,8 +1,8 @@
 package com.example.colega.api
 
-import com.example.colega.data.Bookmark
-import com.example.colega.data.DataUser
-import com.example.colega.data.FollowingSource
+import com.example.colega.data.users.Bookmark
+import com.example.colega.models.user.DataUser
+import com.example.colega.models.user.DataFollowingSource
 import com.example.colega.models.news.NewsModel
 import com.example.colega.models.news.SourceResponse
 import com.example.colega.models.user.UserFollowingSource
@@ -31,6 +31,19 @@ interface RestfulApi {
 
     @GET("top-headlines/sources")
     fun getAllSourceNews(@Query("apiKey") apiKey : String = Utils.apiKey): Call<SourceResponse>
+
+//    @GET("top-headlines/")
+//    fun getAFewNewsBySource(
+//        @Query("apiKey") apiKey: String = Utils.apiKey,
+//        @Query("sources") sourceId: String,
+//        @Query("pageSize") pageSize: Int = 2
+//    )
+
+    @GET("top-headlines/")
+    fun getAllNewsBySource(
+        @Query("apiKey") apiKey : String = Utils.apiKey,
+        @Query("sources") sourceId: String,
+    ): Call<NewsModel>
 
 
     // USER
@@ -61,7 +74,7 @@ interface RestfulApi {
     fun getSingleSource(@Path("userId") userId: String,@Query("sourceId") sourceId: String): Call<List<UserFollowingSource>>
 
     @POST("users/{userId}/followingSource")
-    fun postFollowingSource(@Path("userId") id: String, @Body sources: FollowingSource): Call<UserFollowingSource>
+    fun postFollowingSource(@Path("userId") id: String, @Body sources: DataFollowingSource): Call<UserFollowingSource>
 
     @DELETE("users/{userId}/followingSource/{id}")
     fun deleteFollowingSource(@Path("userId") userId: String, @Path("id") id: String): Call<UserFollowingSource>

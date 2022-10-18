@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.colega.R
-import com.example.colega.data.Bookmark
+import com.example.colega.data.users.Bookmark
 import com.example.colega.databinding.HeadlineItemBinding
 
 class BookmarkAdapter:RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {

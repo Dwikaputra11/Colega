@@ -37,6 +37,9 @@ class UserPreferencesRepository(private val context: Context) {
         context.userPreferencesStore.updateData {
             it.toBuilder().setUserId(user.id.toInt()).build()
         }
+        context.userPreferencesStore.updateData {
+            it.toBuilder().setBirthDate(user.birthDate).build()
+        }
     }
 
 
@@ -53,6 +56,9 @@ class UserPreferencesRepository(private val context: Context) {
         }
         context.userPreferencesStore.updateData { preferences ->
             preferences.toBuilder().clearUserId().build()
+        }
+        context.userPreferencesStore.updateData {
+            it.toBuilder().clearBirthDate().build()
         }
     }
 

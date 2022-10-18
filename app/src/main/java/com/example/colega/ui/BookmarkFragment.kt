@@ -3,7 +3,6 @@ package com.example.colega.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.BookmarkAdapter
-import com.example.colega.data.Bookmark
+import com.example.colega.data.users.Bookmark
 import com.example.colega.databinding.FragmentBookmarkBinding
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.BookmarkViewModel

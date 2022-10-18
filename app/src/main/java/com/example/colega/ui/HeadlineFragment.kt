@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.HeadlineAdapter
 import com.example.colega.databinding.FragmentHeadlineBinding
-import com.example.colega.models.news.Article
+import com.example.colega.models.news.ArticleResponse
 import com.example.colega.viewmodel.ArticleViewModel
 
 
@@ -46,7 +46,7 @@ class HeadlineFragment : Fragment() {
             }
         }
         adapter.setOnItemClickListener(object : HeadlineAdapter.OnItemClickListener{
-            override fun onItemClick(news: Article) {
+            override fun onItemClick(news: ArticleResponse) {
                 val newsDetailFragment = NewsDetailFragment(news, null)
                 newsDetailFragment.show(requireActivity().supportFragmentManager, newsDetailFragment.tag)
             }

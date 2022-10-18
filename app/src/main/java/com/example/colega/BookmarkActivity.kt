@@ -8,7 +8,6 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.BookmarkAdapter
-import com.example.colega.data.Bookmark
 import com.example.colega.databinding.ActivityBookmarkBinding
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.BookmarkViewModel

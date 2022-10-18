@@ -1,4 +1,4 @@
-package com.example.colega.data
+package com.example.colega.data.users
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

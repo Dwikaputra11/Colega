@@ -11,16 +11,16 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.colega.R
-import com.example.colega.data.Bookmark
+import com.example.colega.data.users.Bookmark
 import com.example.colega.databinding.FragmentNewsDetailBinding
-import com.example.colega.models.news.Article
+import com.example.colega.models.news.ArticleResponse
 import com.example.colega.utils.UtilMethods
 import com.example.colega.viewmodel.BookmarkViewModel
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class NewsDetailFragment(private val news: Article?, private val bookmark: Bookmark?) : BottomSheetDialogFragment() {
+class NewsDetailFragment(private val news: ArticleResponse?, private val bookmark: Bookmark?) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewsDetailBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var bookmarkVM: BookmarkViewModel
@@ -94,7 +94,7 @@ class NewsDetailFragment(private val news: Article?, private val bookmark: Bookm
             binding.tvDetailContent.text = if(news.content != null) news.content.substringBefore("[") else ""
             binding.tvDetailTitle.text = news.title
             binding.tvDetailDate.text = UtilMethods.convertISOTime(requireContext(), news.publishedAt)
-            binding.tvDetailSource.text = news.source.name
+            binding.tvDetailSource.text = news.articleSource.name
             Glide.with(requireContext())
                 .load(news.urlToImage)
                 .placeholder(R.drawable.news)
@@ -148,7 +148,7 @@ class NewsDetailFragment(private val news: Article?, private val bookmark: Bookm
                         urlToImage = news.urlToImage,
                         description = news.description,
                         content = news.content,
-                        source = news.source.name,
+                        source = news.articleSource.name,
                         title = news.title,
                         url = news.url,
                         id = 0,

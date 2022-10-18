@@ -1,16 +1,14 @@
-package com.example.colega.data
+package com.example.colega.data.article
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Bookmark(
+data class Article(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    @ColumnInfo
-    val userId: Int,
-    @ColumnInfo
+    @ColumnInfo()
     val author: String?,
     @ColumnInfo
     val content: String?,
@@ -26,6 +24,6 @@ data class Bookmark(
     val url: String?,
     @ColumnInfo
     val urlToImage: String?,
-//    @ColumnInfo(defaultValue = false.toString())
-//    var isCheck: Boolean,
+    @ColumnInfo
+    var isCheck: Boolean = false
 )

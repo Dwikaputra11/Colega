@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.databinding.HeadlineItemBinding
-import com.example.colega.models.news.Article
+import com.example.colega.models.news.ArticleResponse
 import com.example.colega.utils.UtilMethods
 
 class HeadlineAdapter(): RecyclerView.Adapter<HeadlineAdapter.ViewHolder>() {
@@ -16,19 +16,19 @@ class HeadlineAdapter(): RecyclerView.Adapter<HeadlineAdapter.ViewHolder>() {
     private lateinit var listener: OnItemClickListener
 
     interface OnItemClickListener{
-        fun onItemClick(news: Article)
+        fun onItemClick(news: ArticleResponse)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
         this.listener = listener
     }
 
-    private var diffCallback = object : DiffUtil.ItemCallback<Article>(){
-        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+    private var diffCallback = object : DiffUtil.ItemCallback<ArticleResponse>(){
+        override fun areItemsTheSame(oldItem: ArticleResponse, newItem: ArticleResponse): Boolean {
             return oldItem.title == newItem.title
         }
 
-        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+        override fun areContentsTheSame(oldItem: ArticleResponse, newItem: ArticleResponse): Boolean {
             return oldItem.hashCode() == newItem.hashCode()
         }
     }
@@ -61,7 +61,7 @@ class HeadlineAdapter(): RecyclerView.Adapter<HeadlineAdapter.ViewHolder>() {
         return differ.currentList.size
     }
 
-    fun setHeadlineList(list: List<Article>){
+    fun setHeadlineList(list: List<ArticleResponse>){
         differ.submitList(list)
     }
 }

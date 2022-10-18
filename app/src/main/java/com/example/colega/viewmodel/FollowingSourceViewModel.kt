@@ -3,11 +3,16 @@ package com.example.colega.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.colega.api.RetrofitClient
-import com.example.colega.data.FollowingSource
+import com.example.colega.data.users.FollowingSource
+import com.example.colega.data.users.FollowingSourceRepository
+import com.example.colega.db.MyDatabase
+import com.example.colega.models.user.DataFollowingSource
 import com.example.colega.models.user.UserFollowingSource
-import com.example.colega.models.user.UserResponseItem
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,11 +25,21 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
     private val deleteFollowingSource: MutableLiveData<UserFollowingSource?> = MutableLiveData()
     private val singleSource: MutableLiveData<List<UserFollowingSource>?> = MutableLiveData()
 
+    private var repository: FollowingSourceRepository
+
+    init {
+        val followingSourceDao = MyDatabase.getDatabase(application).followingDao()
+        repository = FollowingSourceRepository(followingSourceDao)
+    }
+
     fun getFollowingSource(): MutableLiveData<List<UserFollowingSource>?> = allUserFollowingSource
     fun getPostFollowingSource(): MutableLiveData<UserFollowingSource?> = postFollowingSource
     fun getDeleteFollowingSource():MutableLiveData<UserFollowingSource?> = deleteFollowingSource
     fun getSingleSource():MutableLiveData<List<UserFollowingSource>?> = singleSource
 
+
+
+    // API
     fun getFollowingFromApi(userId: String){
         RetrofitClient.instanceUser.getUserFollowingSource(userId)
             .enqueue(object : Callback<List<UserFollowingSource>>{
@@ -49,14 +64,29 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
             })
     }
 
-    fun postFollowingSourceToApi(userId: String,followingSource: FollowingSource){
-        RetrofitClient.instanceUser.postFollowingSource(userId, followingSource)
+    fun postFollowingSourceToApi(userId: String, dataFollowingSource: DataFollowingSource){
+        RetrofitClient.instanceUser.postFollowingSource(userId, dataFollowingSource)
             .enqueue(object : Callback<UserFollowingSource>{
                 override fun onResponse(
                     call: Call<UserFollowingSource>,
                     response: Response<UserFollowingSource>
                 ) {
                     if(response.isSuccessful){
+                        if(response.body() != null){
+                            response.body()?.let {
+                                val follSource = FollowingSource(
+                                    name = it.name,
+                                    userId = userId,
+                                    sourceId = it.sourceId,
+                                    createdAt = it.createdAt,
+                                    id = 0,
+                                    language = it.language,
+                                    country = it.country,
+                                    description = it.description
+                                )
+                                insertFollowingToDB(follSource)
+                            }
+                        }
                         postFollowingSource.postValue(response.body())
                     }else{
                         Log.d(TAG, "onResponse: Post Unsuccessfully")
@@ -72,7 +102,7 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
             })
     }
 
-    fun deleteFollowingSource(userId: String, id: String){
+    fun deleteFollowingFromApi(userId: String, id: String){
         RetrofitClient.instanceUser.deleteFollowingSource(userId, id)
             .enqueue(object : Callback<UserFollowingSource>{
                 override fun onResponse(
@@ -80,6 +110,21 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
                     response: Response<UserFollowingSource>
                 ) {
                     if(response.isSuccessful){
+                        if(response.body() != null){
+                            response.body()?.let {
+                                val follSource = FollowingSource(
+                                    name = it.name,
+                                    userId = userId,
+                                    sourceId = it.sourceId,
+                                    createdAt = it.createdAt,
+                                    id = 0,
+                                    language = it.language,
+                                    country = it.country,
+                                    description = it.description
+                                )
+                                deleteFollowingFromDB(follSource)
+                            }
+                        }
                         deleteFollowingSource.postValue(response.body())
                     }else{
                         Log.d(TAG, "onResponse: Delete Unsuccessfully")
@@ -94,7 +139,6 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
 
             })
     }
-
 
     fun getSingleSourceFromApi(userId: String, sourceId: String){
         RetrofitClient.instanceUser.getSingleSource(userId, sourceId)
@@ -120,5 +164,17 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
             })
     }
 
+    // DATABASE
+    fun insertFollowingToDB(followingSource: FollowingSource){
+        viewModelScope.launch {
+            repository.insertUserFollow(followingSource)
+        }
+    }
 
+    fun deleteFollowingFromDB(followingSource: FollowingSource){
+        viewModelScope.launch {
+            repository.deleteUserFollow(followingSource)
+        }
+    }
+    fun getAllFollowingSource(userId: String): LiveData<List<FollowingSource>> = repository.getAllNewsBySource(userId)
 }

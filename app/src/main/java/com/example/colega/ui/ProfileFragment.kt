@@ -40,14 +40,6 @@ class ProfileFragment : Fragment() {
             val builder = AlertDialog.Builder(requireContext())
             builder.setPositiveButton(R.string.yes) { _, _ ->
                 run {
-                    // when "YES" option was clicked shared pref will clear the all data that was store
-//                    val exit = sharedPref.edit()
-//                    exit.remove(Utils.email)
-//                    exit.remove(Utils.username)
-//                    exit.remove(Utils.userId)
-//                    exit.remove(Utils.dateBirth)
-//                    exit.remove(Utils.password)
-//                    exit.apply()
                     userVM.clearUserPref()
                     startActivity(Intent(requireActivity(), MainActivity::class.java))
                 }

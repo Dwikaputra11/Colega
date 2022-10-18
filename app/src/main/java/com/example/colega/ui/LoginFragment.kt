@@ -60,6 +60,9 @@ class LoginFragment : Fragment() {
     private suspend fun loginAccount() {
         val username = binding.etUsername.text.toString().trim()
         val password = binding.etPassword.text.toString().trim()
+        withContext(Dispatchers.IO) {
+            userVM.getUserResponse(username)
+        }
         if(isExist(username)){
             // if auth success username will be store in shared pref so
             // when user open the app, it will goes to home page immediately
@@ -77,7 +80,6 @@ class LoginFragment : Fragment() {
 
     private suspend fun isExist(username: String):Boolean{
         Log.d(TAG, "isExist: $usernameSharedPref")
-        userVM.getUserResponse(username)
         return if (usernameSharedPref.isNotBlank()) {
             if (usernameSharedPref == username) {
                 true
@@ -96,10 +98,10 @@ class LoginFragment : Fragment() {
     private suspend fun findInApi(): Boolean {
         val status = withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
             val isExist = userVM.getUser().value?.username != null
-            Log.d(TAG, "findInDatabase: $isExist")
+            Log.d(TAG, "findInApi: $isExist")
             isExist
         }
-        Log.d(TAG, "findInDatabase: status $status")
+        Log.d(TAG, "findInApi: status $status")
         return status
     }
     private fun addToSharedPref(password: String) {
@@ -118,26 +120,6 @@ class LoginFragment : Fragment() {
                 toastMessage(getString(R.string.password_status))
             }
         }
-//        userVM.findUser(username).observe(requireActivity()){
-//            if(password == it.password){
-//                Log.d("Register", "Username: ${it.username}")
-//                Log.d("Register", "Password: ${it.password}")
-//                Log.d("Register", "Email: ${it.email}")
-//                Log.d("Register", "User Id: ${it.id}")
-//                Log.d(TAG, "addToSharedPref: Password Same")
-//                // when password is correct go to home page
-//                userVM.addToUserPref(it)
-//                startActivity(Intent(requireActivity(), HomeActivity::class.java))
-//            }else{
-//                Log.d(TAG, "addToSharedPref: Your Password is wrong")
-//                toastMessage(getString(R.string.password_status))
-//            }
-//        }
-//        userVM.dataUser.observe(requireActivity()){
-//            Log.d(TAG, "Proto: ${it.userId}")
-//            Log.d(TAG, "Proto: ${it.username}")
-//        }
-//        Log.d(TAG, "addToSharedPref: Closed")
     }
 
     private fun toastMessage(msg:String){
