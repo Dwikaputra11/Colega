@@ -14,5 +14,5 @@ interface SourceDao {
     fun deleteAllSource()
 
     @Insert
-    fun postSource(source: Source)
+    fun postSource(sources: List<Source>)
 }

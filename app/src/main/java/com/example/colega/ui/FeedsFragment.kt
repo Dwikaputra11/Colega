@@ -1,5 +1,6 @@
 package com.example.colega.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -9,9 +10,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.WorkInfo
 import com.example.colega.adapter.RelatedNewsAdapter
+import com.example.colega.data.article.RelatedNews
 import com.example.colega.databinding.FragmentFeedsBinding
-import com.example.colega.models.news.ArticleResponse
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.ArticleViewModel
 import com.example.colega.viewmodel.BookmarkViewModel
@@ -21,6 +23,7 @@ class FeedsFragment : Fragment() {
     private lateinit var binding: FragmentFeedsBinding
     private lateinit var bookmarkVM: BookmarkViewModel
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var relatedAdapter: RelatedNewsAdapter
 
     private lateinit var articleVM: ArticleViewModel
 
@@ -36,7 +39,7 @@ class FeedsFragment : Fragment() {
         articleVM = ViewModelProvider(this)[ArticleViewModel::class.java]
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
         bookmarkVM = ViewModelProvider(this)[BookmarkViewModel::class.java]
-        val relatedAdapter = RelatedNewsAdapter()
+        relatedAdapter = RelatedNewsAdapter()
         binding.rvForYou.adapter = relatedAdapter
         binding.rvForYou.layoutManager = object : LinearLayoutManager(binding.root.context){
             override fun canScrollVertically(): Boolean {
@@ -44,20 +47,22 @@ class FeedsFragment : Fragment() {
             }
         }
         relatedAdapter.setOnItemClickListener(object : RelatedNewsAdapter.OnItemClickListener{
-            override fun onItemClick(news: ArticleResponse) {
-                val newsDetailFragment = NewsDetailFragment(news, null)
+            override fun onItemClick(news: RelatedNews) {
+                val newsDetailFragment = NewsDetailFragment(null,news, null)
                 newsDetailFragment.show(requireActivity().supportFragmentManager, newsDetailFragment.tag)
             }
         })
-        articleVM.getRelatedNews()
-        articleVM.getArticleLiveData().observe(viewLifecycleOwner){
-            if(it != null){
-                relatedAdapter.setRelatedNews(it)
-                binding.shimmerLayout.startShimmer()
-                binding.shimmerLayout.visibility = View.GONE
-                binding.rvForYou.visibility = View.VISIBLE
-            }
-        }
+
+        requestNews()
+//        articleVM.getRelatedNews()
+//        articleVM.getArticleLiveData().observe(viewLifecycleOwner){
+//            if(it != null){
+//                relatedAdapter.setRelatedNews(it)
+//                binding.shimmerLayout.startShimmer()
+//                binding.shimmerLayout.visibility = View.GONE
+//                binding.rvForYou.visibility = View.VISIBLE
+//            }
+//        }
 
         binding.tvSeeMore.setOnClickListener {
 
@@ -72,5 +77,22 @@ class FeedsFragment : Fragment() {
     override fun onPause() {
         binding.shimmerLayout.stopShimmer()
         super.onPause()
+    }
+
+    @SuppressLint("RestrictedApi")
+    fun requestNews(){
+        articleVM.fetchRelatedNews()
+        articleVM.getRelatedWorkInfo().observe(viewLifecycleOwner){
+            val workInfo = it[0]
+            if(workInfo.state == WorkInfo.State.ENQUEUED || workInfo.state == WorkInfo.State.SUCCEEDED){
+                binding.shimmerLayout.startShimmer()
+                articleVM.getAlRelatedNewsFromDB().observe(viewLifecycleOwner){ list ->
+                    relatedAdapter.setRelatedNews(list)
+                    binding.shimmerLayout.startShimmer()
+                    binding.shimmerLayout.visibility = View.GONE
+                    binding.rvForYou.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 }

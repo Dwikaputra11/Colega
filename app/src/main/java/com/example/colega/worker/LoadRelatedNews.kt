@@ -1,44 +1,92 @@
 package com.example.colega.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.colega.api.RetrofitClient
 import com.example.colega.data.article.RelatedNews
-import com.example.colega.viewmodel.ArticleViewModel
+import com.example.colega.data.article.RelatedNewsDao
+import com.example.colega.db.MyDatabase
+import com.example.colega.models.news.ArticleResponse
+import com.example.colega.models.news.NewsModel
+import com.example.colega.utils.UtilMethods
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
+
+private const val TAG = "LoadRelatedNews"
+@Suppress("BlockingMethodInNonBlockingContext")
 class LoadRelatedNews(
-    private val owner: ViewModelStoreOwner,
-    private val lifecycleOwner: LifecycleOwner,
     context: Context,
     workerParams: WorkerParameters
 ): CoroutineWorker(context, workerParams) {
+
+    private val application = applicationContext
+    private val relatedNewsDao: RelatedNewsDao = MyDatabase.getDatabase(application).relatedNews()
+
     override suspend fun doWork(): Result {
+        Log.d(TAG, "doWork: Started")
         try {
             // TODO: CHECK IF CONNECTION AVAILABLE IF NOT RETRY
-            val articleVM = ViewModelProvider(owner)[ArticleViewModel::class.java]
-            articleVM.getArticleLiveData().observe(lifecycleOwner){
-                for(i in it.indices){
-                    val article = RelatedNews(
-                        id = 0,
-                        title = it[i].title,
-                        content = it[i].content,
-                        source = it[i].articleSource.name,
-                        url = it[i].url,
-                        publishedAt = it[i].publishedAt,
-                        author = it[i].author,
-                        urlToImage = it[i].urlToImage,
-                        isCheck = it[i].isCheck,
-                        description = it[i].description
-                    )
-                    articleVM.insertRelatedNewsToDB(article)
-                }
-            }
+            Log.d(TAG, "doWork: Fetching Data")
+
+            RetrofitClient.instanceFilm.getPreferences()
+                .enqueue(object : Callback<NewsModel> {
+                    override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
+                        if(response.isSuccessful) {
+                            Log.d(TAG, "onResponse: Data Success")
+                            if (response.body() != null) {
+                                val it = response.body()!!.articleResponses
+                                postArticleToDB(response.body()!!.articleResponses)
+                            }
+                        }else{
+                            Log.d(TAG, "onResponse: Data Failed")
+                            throw Exception()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<NewsModel>, t: Throwable) {
+                        Log.d(TAG, "onFailure: Failed to Fetch")
+                        throw Exception()
+                    }
+
+                })
+            Log.d(TAG, "doWork: Success")
             return Result.success()
         }catch (e: Exception){
+            Log.d(TAG, "doWork: Failed")
             return Result.failure()
         }
+    }
+
+    fun postArticleToDB(it: List<ArticleResponse>){
+        MyDatabase.databaseWriteExecutor.execute {
+            relatedNewsDao.deleteAllArticle()
+        }
+        val articles = it.map { list ->
+            RelatedNews(
+                id = 0,
+                title = list.title,
+                content =  list.content,
+                source = list.articleSource.name,
+                url = list.url,
+                publishedAt = list.publishedAt,
+                author = list.author,
+                urlToImage = list.urlToImage,
+                isCheck = list.isCheck,
+                description = list.description
+            )
+        }.toList()
+        MyDatabase.databaseWriteExecutor.execute {
+            relatedNewsDao.postArticle(articles)
+        }
+        Log.d(TAG, "postArticleToDB: $articles")
     }
 }

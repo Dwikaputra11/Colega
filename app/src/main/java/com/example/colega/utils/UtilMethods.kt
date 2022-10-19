@@ -2,11 +2,18 @@ package com.example.colega.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.JsonReader
 import android.util.Log
 import com.example.colega.R
+import com.example.colega.helper.ArticleDeserialize
+import com.example.colega.models.news.ArticleResponse
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import java.io.StringReader
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 object UtilMethods {
     @SuppressLint("SimpleDateFormat")
@@ -50,5 +57,23 @@ object UtilMethods {
             Log.e("Error Date ", e.message!!)
         }
         return "$formattedDate | $formattedTime"
+    }
+
+    fun convertToGson(json: String): List<ArticleResponse>{
+        val stringReader = StringReader(json)
+        val jsonReader = JsonReader(stringReader)
+
+        val gsonBuilder = GsonBuilder().serializeNulls()
+        gsonBuilder.registerTypeAdapter(ArticleResponse::class.java, ArticleDeserialize())
+        val gson = gsonBuilder.create()
+
+        val articleList: List<ArticleResponse> = gson.fromJson(stringReader, Array<ArticleResponse>::class.java).toList()
+
+        return articleList
+    }
+
+    fun convertToJson(list: List<ArticleResponse>): String {
+        val gson = Gson()
+        return gson.toJson(list)
     }
 }

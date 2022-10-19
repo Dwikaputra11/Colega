@@ -11,16 +11,21 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.colega.R
+import com.example.colega.data.article.HeadlineNews
+import com.example.colega.data.article.RelatedNews
 import com.example.colega.data.users.Bookmark
 import com.example.colega.databinding.FragmentNewsDetailBinding
-import com.example.colega.models.news.ArticleResponse
 import com.example.colega.utils.UtilMethods
 import com.example.colega.viewmodel.BookmarkViewModel
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class NewsDetailFragment(private val news: ArticleResponse?, private val bookmark: Bookmark?) : BottomSheetDialogFragment() {
+class NewsDetailFragment(
+    private val headlineNews: HeadlineNews?,
+    private val relatedNews: RelatedNews?,
+    private val bookmark: Bookmark?,
+) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewsDetailBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var bookmarkVM: BookmarkViewModel
@@ -44,8 +49,11 @@ class NewsDetailFragment(private val news: ArticleResponse?, private val bookmar
         setViews()
         setBehaviour(view)
         binding.btnToUrlPage.setOnClickListener {
-            if (news != null){
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(news.url))
+            if (relatedNews != null){
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(relatedNews.url))
+                requireActivity().startActivity(browserIntent)
+            }else if(headlineNews != null){
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(headlineNews.url))
                 requireActivity().startActivity(browserIntent)
             }
         }
@@ -88,15 +96,15 @@ class NewsDetailFragment(private val news: ArticleResponse?, private val bookmar
     }
 
     private fun setViews(){
-        if(news != null){
+        if(relatedNews != null){
             binding.tvDetailCategory.text = "tech"
-            binding.tvDetailDesc.text = news.description
-            binding.tvDetailContent.text = if(news.content != null) news.content.substringBefore("[") else ""
-            binding.tvDetailTitle.text = news.title
-            binding.tvDetailDate.text = UtilMethods.convertISOTime(requireContext(), news.publishedAt)
-            binding.tvDetailSource.text = news.articleSource.name
+            binding.tvDetailDesc.text = relatedNews.description
+            binding.tvDetailContent.text = if(relatedNews.content != null) relatedNews.content.substringBefore("[") else ""
+            binding.tvDetailTitle.text = relatedNews.title
+            binding.tvDetailDate.text = UtilMethods.convertISOTime(requireContext(), relatedNews.publishedAt)
+            binding.tvDetailSource.text = relatedNews.source
             Glide.with(requireContext())
-                .load(news.urlToImage)
+                .load(relatedNews.urlToImage)
                 .placeholder(R.drawable.news)
                 .into(binding.ivNews)
         }else if(bookmark != null){
@@ -114,6 +122,17 @@ class NewsDetailFragment(private val news: ArticleResponse?, private val bookmar
 //                binding.btnBookmark.isChecked = true
 //            }
             binding.btnBookmark.isChecked = true
+        }else if(headlineNews != null){
+            binding.tvDetailCategory.text = "tech"
+            binding.tvDetailDesc.text = headlineNews.description
+            binding.tvDetailContent.text = if(headlineNews.content != null) headlineNews.content.substringBefore("[") else ""
+            binding.tvDetailTitle.text = headlineNews.title
+            binding.tvDetailDate.text = UtilMethods.convertISOTime(requireContext(), headlineNews.publishedAt)
+            binding.tvDetailSource.text = headlineNews.source
+            Glide.with(requireContext())
+                .load(headlineNews.urlToImage)
+                .placeholder(R.drawable.news)
+                .into(binding.ivNews)
         }
     }
 
@@ -138,19 +157,39 @@ class NewsDetailFragment(private val news: ArticleResponse?, private val bookmar
     override fun onDismiss(dialog: DialogInterface) {
         Log.d(TAG, "onDismiss: ${binding.btnBookmark.isChecked}")
         if(binding.btnBookmark.isChecked) {
-            if(news != null){
+            if(relatedNews != null){
                 if (userId != -1) {
                     Log.d(TAG, "onDismiss: $userId")
                     val bookmark = Bookmark(
                         userId = userId,
-                        author = news.author,
-                        publishedAt = news.publishedAt,
-                        urlToImage = news.urlToImage,
-                        description = news.description,
-                        content = news.content,
-                        source = news.articleSource.name,
-                        title = news.title,
-                        url = news.url,
+                        author = relatedNews.author,
+                        publishedAt = relatedNews.publishedAt,
+                        urlToImage = relatedNews.urlToImage,
+                        description = relatedNews.description,
+                        content = relatedNews.content,
+                        source = relatedNews.source,
+                        title = relatedNews.title,
+                        url = relatedNews.url,
+                        id = 0,
+//                        isCheck = true,
+                    )
+                    bookmarkVM.insertBookmark(bookmark)
+                    bookmarkVM.postBookmarkToApi(bookmark)
+                    Log.d(TAG, "onDismiss: Done")
+                }
+            }else if(headlineNews != null){
+                if (userId != -1) {
+                    Log.d(TAG, "onDismiss: $userId")
+                    val bookmark = Bookmark(
+                        userId = userId,
+                        author = headlineNews.author,
+                        publishedAt = headlineNews.publishedAt,
+                        urlToImage = headlineNews.urlToImage,
+                        description = headlineNews.description,
+                        content = headlineNews.content,
+                        source = headlineNews.source,
+                        title = headlineNews.title,
+                        url = headlineNews.url,
                         id = 0,
 //                        isCheck = true,
                     )
@@ -160,7 +199,7 @@ class NewsDetailFragment(private val news: ArticleResponse?, private val bookmar
                 }
             }
         }else{
-            if(news == null && bookmark != null){
+            if(relatedNews == null && bookmark != null){
                 if (userId != -1) {
                     Log.d(TAG, "onDismiss: $userId")
                     bookmarkVM.deleteBookmark(bookmark)

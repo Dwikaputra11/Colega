@@ -1,5 +1,6 @@
 package com.example.colega.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -13,10 +14,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.work.*
 import com.example.colega.HomeActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentSplashScreenBinding
 import com.example.colega.utils.Utils
+import com.example.colega.viewmodel.ArticleViewModel
 import com.example.colega.viewmodel.UserViewModel
 import java.util.*
 
@@ -26,6 +29,10 @@ class SplashScreenFragment : Fragment() {
     private lateinit var binding: FragmentSplashScreenBinding
     private lateinit var sharedPref: SharedPreferences
     private lateinit var userVM: UserViewModel
+    private lateinit var articleVM: ArticleViewModel
+    private lateinit var workManager: WorkManager
+    private lateinit var data: Data
+    private lateinit var constraint: Constraints
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +45,9 @@ class SplashScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
         userVM = ViewModelProvider(this)[UserViewModel::class.java]
+        articleVM = ViewModelProvider(this)[ArticleViewModel::class.java]
+        workManager = WorkManager.getInstance(requireActivity().applicationContext)
+
         binding.progressBar.max = progressMax
         val language = sharedPref.getString(Utils.languageApp, null)
         if(language == null){
@@ -59,7 +69,7 @@ class SplashScreenFragment : Fragment() {
                     Log.d(TAG, "onViewCreated: over 300")
                     isFirstInstall()
                 }
-                Log.d(TAG, "onViewCreated: ${binding.progressBar.progress}")
+//                Log.d(TAG, "onViewCreated: ${binding.progressBar.progress}")
             }, i.toLong())
         }
     }
@@ -84,10 +94,50 @@ class SplashScreenFragment : Fragment() {
                 if(it.username.isBlank()){
                     Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_loginFragment)
                 }else{
-                    startActivity(Intent(requireActivity(), HomeActivity::class.java))
+//                    requestNews()
+                    startActivity(Intent(requireActivity(),HomeActivity::class.java))
                 }
             }
         }
     }
+
+    private fun loadNews(){
+        articleVM.getRelatedNews()
+        articleVM.getArticleLiveData().observe(viewLifecycleOwner){
+            if(it != null){
+                requestNews()
+//                val jsonString = convertToJson(it)
+//                val list = UtilMethods.convertToGson(jsonString)
+//                Log.d(TAG, "loadNews Gson: ${list[0].title}")
+            }
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    fun requestNews(){
+
+//        val jsonString = UtilMethods.convertToJson(list)
+
+        articleVM.fetchRelatedNews()
+        articleVM.getRelatedWorkInfo().observe(viewLifecycleOwner){
+            val workInfo = it[0]
+            when(workInfo.state){
+                WorkInfo.State.ENQUEUED ->{
+                    binding.tvProgressStatus.text = "Enqueued..."
+                }
+                WorkInfo.State.RUNNING ->{
+                    binding.tvProgressStatus.text = "Running..."
+                }
+                WorkInfo.State.SUCCEEDED ->{
+                    binding.tvProgressStatus.text = "Success..."
+                }
+                else ->{
+                    binding.tvProgressStatus.text = "Loading..."
+                }
+            }
+        }
+    }
+
+
 
 }

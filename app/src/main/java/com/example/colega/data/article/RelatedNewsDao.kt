@@ -14,5 +14,5 @@ interface RelatedNewsDao {
     fun deleteAllArticle()
 
     @Insert
-    fun postArticle(relatedNews: RelatedNews)
+    fun postArticle(relatedNewsList: List<RelatedNews>)
 }

@@ -7,9 +7,9 @@ class SourceRepository(private val sourceDao: SourceDao) {
 
     fun getAllSources(): LiveData<List<Source>> = sourceDao.getAllSource()
 
-    fun insertSource(source: Source){
+    fun insertSource(sources: List<Source>){
         MyDatabase.databaseWriteExecutor.execute {
-            sourceDao.postSource(source)
+            sourceDao.postSource(sources)
         }
     }
 

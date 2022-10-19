@@ -9,7 +9,7 @@ class RelatedNewsRepository(private val relatedNewsDao: RelatedNewsDao) {
 
     fun insertRelatedNews(relatedNews: RelatedNews){
         MyDatabase.databaseWriteExecutor.execute {
-            relatedNewsDao.postArticle(relatedNews)
+//            relatedNewsDao.postArticle(relatedNews)
         }
     }
 

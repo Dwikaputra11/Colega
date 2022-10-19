@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.colega.R
+import com.example.colega.data.article.RelatedNews
 import com.example.colega.databinding.RelatedNewsItemBinding
 import com.example.colega.models.news.ArticleResponse
 import com.example.colega.utils.PaginationAdapterCallback
@@ -26,19 +27,19 @@ class RelatedNewsAdapter():
     private var errorMsg: String? = ""
 
     interface OnItemClickListener{
-        fun onItemClick(news: ArticleResponse)
+        fun onItemClick(news: RelatedNews)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
         this.listener = listener
     }
 
-    private var diffCallback = object : DiffUtil.ItemCallback<ArticleResponse>(){
-        override fun areItemsTheSame(oldItem: ArticleResponse, newItem: ArticleResponse): Boolean {
+    private var diffCallback = object : DiffUtil.ItemCallback<RelatedNews>(){
+        override fun areItemsTheSame(oldItem: RelatedNews, newItem: RelatedNews): Boolean {
             return oldItem.title == newItem.title
         }
 
-        override fun areContentsTheSame(oldItem: ArticleResponse, newItem: ArticleResponse): Boolean {
+        override fun areContentsTheSame(oldItem: RelatedNews, newItem: RelatedNews): Boolean {
             return oldItem.hashCode() == newItem.hashCode()
         }
     }
@@ -64,7 +65,7 @@ class RelatedNewsAdapter():
             .placeholder(R.drawable.news)
             .into(holder.binding.ivRelated)
         holder.binding.tvRelatedCategory.text = Utils.category_technology
-        holder.binding.tvRelatedSource.text = differ.currentList[position].articleSource.name
+        holder.binding.tvRelatedSource.text = differ.currentList[position].source
         holder.binding.tvRelatedTitle.text = differ.currentList[position].title
         holder.binding.tvRelatedTime.text = UtilMethods.convertISOTime(holder.binding.root.context,differ.currentList[position].publishedAt)
     }
@@ -73,7 +74,7 @@ class RelatedNewsAdapter():
         return differ.currentList.size
     }
 
-    fun setRelatedNews(list: List<ArticleResponse>){
+    fun setRelatedNews(list: List<RelatedNews>){
         differ.submitList(list)
     }
 

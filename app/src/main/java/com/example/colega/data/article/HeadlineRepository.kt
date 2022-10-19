@@ -7,7 +7,7 @@ class HeadlineRepository(private val headlineDao: HeadlineDao) {
 
     fun getAllHeadline(): LiveData<List<HeadlineNews>> = headlineDao.getAllArticle()
 
-    fun insertHeadline(headlineNews: HeadlineNews){
+    fun insertHeadline(headlineNews: List<HeadlineNews>){
         MyDatabase.databaseWriteExecutor.execute {
             headlineDao.postArticle(headlineNews)
         }

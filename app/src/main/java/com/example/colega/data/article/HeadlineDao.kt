@@ -1,9 +1,11 @@
 package com.example.colega.data.article
 
 import androidx.lifecycle.LiveData
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 
+@Dao
 interface HeadlineDao {
 
     @Query("SELECT * FROM headline_news")
@@ -13,5 +15,5 @@ interface HeadlineDao {
     fun deleteAllArticle()
 
     @Insert
-    fun postArticle(headlineNews: HeadlineNews)
+    fun postArticle(headlineNews: List<HeadlineNews>)
 }

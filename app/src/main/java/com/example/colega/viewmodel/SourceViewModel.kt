@@ -4,9 +4,14 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.colega.api.RetrofitClient
+import com.example.colega.data.source.Source
+import com.example.colega.data.source.SourceRepository
+import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.SourceResponse
 import com.example.colega.models.news.SourceResponseItem
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,6 +20,12 @@ private const val TAG = "SourceViewModel"
 class SourceViewModel(application: Application): AndroidViewModel(application) {
 
     private val allSources: MutableLiveData<List<SourceResponseItem>?> = MutableLiveData()
+    private val repository: SourceRepository
+
+    init {
+        val sourceDao = MyDatabase.getDatabase(application).sourceDao()
+        repository = SourceRepository(sourceDao)
+    }
 
     fun getAllSources(): MutableLiveData<List<SourceResponseItem>?> = allSources
 
@@ -42,5 +53,17 @@ class SourceViewModel(application: Application): AndroidViewModel(application) {
                 }
 
             })
+    }
+
+    fun insertSourceToDB(sources: List<Source>){
+        viewModelScope.launch {
+            repository.insertSource(sources)
+        }
+    }
+
+    fun deleteAllSourceFromDB(){
+        viewModelScope.launch {
+            repository.deleteAllSource()
+        }
     }
 }

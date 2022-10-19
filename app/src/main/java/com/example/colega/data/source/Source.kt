@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class Source(
     @PrimaryKey(autoGenerate = true)
-    val id: String,
+    val id: Int,
     @ColumnInfo
     val name: String,
     @ColumnInfo
