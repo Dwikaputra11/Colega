@@ -133,18 +133,4 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
 
             })
     }
-
-    // DATABASE
-    fun insertFollowingToDB(followingSource: FollowingSource){
-        viewModelScope.launch {
-            repository.insertUserFollow(followingSource)
-        }
-    }
-
-    fun deleteFollowingFromDB(followingSource: FollowingSource){
-        viewModelScope.launch {
-            repository.deleteUserFollow(followingSource)
-        }
-    }
-    fun getAllFollowingSource(userId: String): LiveData<List<FollowingSource>> = repository.getAllNewsBySource(userId)
 }

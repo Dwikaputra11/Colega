@@ -102,31 +102,4 @@ class BookmarkViewModel(application: Application): AndroidViewModel(application)
                 }
             })
     }
-
-
-    fun getAllBookmark(userId: Int): LiveData<List<Bookmark>> = repository.getAllBookmark(userId)
-
-    fun insertBookmark(bookmark: Bookmark){
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.insertBookmark(bookmark)
-        }
-    }
-
-    fun updateBookmark(bookmark: Bookmark){
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateBookmark(bookmark)
-        }
-    }
-
-    fun deleteAllBookmark(){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.deleteAllBookmark()
-        }
-    }
-
-    fun deleteBookmark(bookmark: Bookmark){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.deleteBookmark(bookmark)
-        }
-    }
 }
