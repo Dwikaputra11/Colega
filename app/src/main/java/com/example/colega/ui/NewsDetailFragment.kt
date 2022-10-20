@@ -15,6 +15,7 @@ import com.example.colega.data.article.HeadlineNews
 import com.example.colega.data.article.RelatedNews
 import com.example.colega.data.users.Bookmark
 import com.example.colega.databinding.FragmentNewsDetailBinding
+import com.example.colega.models.user.UserBookmark
 import com.example.colega.utils.UtilMethods
 import com.example.colega.viewmodel.BookmarkViewModel
 import com.example.colega.viewmodel.UserViewModel
@@ -24,7 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class NewsDetailFragment(
     private val headlineNews: HeadlineNews?,
     private val relatedNews: RelatedNews?,
-    private val bookmark: Bookmark?,
+    private val bookmark: UserBookmark?,
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewsDetailBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
@@ -54,6 +55,9 @@ class NewsDetailFragment(
                 requireActivity().startActivity(browserIntent)
             }else if(headlineNews != null){
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(headlineNews.url))
+                requireActivity().startActivity(browserIntent)
+            }else if(bookmark != null){
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(bookmark.url))
                 requireActivity().startActivity(browserIntent)
             }
         }
@@ -154,6 +158,7 @@ class NewsDetailFragment(
         return styledAttributes.getDimension(0, 0f).toInt()
     }
 
+    // BOOKMARK can access only in api
     override fun onDismiss(dialog: DialogInterface) {
         Log.d(TAG, "onDismiss: ${binding.btnBookmark.isChecked}")
         if(binding.btnBookmark.isChecked) {
@@ -171,9 +176,8 @@ class NewsDetailFragment(
                         title = relatedNews.title,
                         url = relatedNews.url,
                         id = 0,
-//                        isCheck = true,
                     )
-                    bookmarkVM.insertBookmark(bookmark)
+//                    bookmarkVM.insertBookmark(bookmark)
                     bookmarkVM.postBookmarkToApi(bookmark)
                     Log.d(TAG, "onDismiss: Done")
                 }
@@ -191,9 +195,8 @@ class NewsDetailFragment(
                         title = headlineNews.title,
                         url = headlineNews.url,
                         id = 0,
-//                        isCheck = true,
                     )
-                    bookmarkVM.insertBookmark(bookmark)
+//                    bookmarkVM.insertBookmark(bookmark)
                     bookmarkVM.postBookmarkToApi(bookmark)
                     Log.d(TAG, "onDismiss: Done")
                 }
@@ -202,8 +205,8 @@ class NewsDetailFragment(
             if(relatedNews == null && bookmark != null){
                 if (userId != -1) {
                     Log.d(TAG, "onDismiss: $userId")
-                    bookmarkVM.deleteBookmark(bookmark)
-                    bookmarkVM.deleteBookmarkUserFromApi(userId.toString(), bookmark.id.toString())
+//                    bookmarkVM.deleteBookmark(bookmark)
+                    bookmarkVM.deleteBookmarkUserFromApi(userId.toString(), bookmark.id)
                     Log.d(TAG, "onDismiss: Done")
                 }
             }

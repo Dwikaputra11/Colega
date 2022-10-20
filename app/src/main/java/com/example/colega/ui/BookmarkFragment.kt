@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.BookmarkAdapter
 import com.example.colega.data.users.Bookmark
 import com.example.colega.databinding.FragmentBookmarkBinding
+import com.example.colega.models.user.UserBookmark
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.BookmarkViewModel
 import com.example.colega.viewmodel.UserViewModel
@@ -49,7 +50,8 @@ class BookmarkFragment : Fragment() {
             userId = it.userId
         }
         if(userId != -1){
-            bookmarkVM.getAllBookmark(userId).observe(viewLifecycleOwner){
+            bookmarkVM.getBookmarkFromApi(userId.toString())
+            bookmarkVM.getUserBookmark().observe(viewLifecycleOwner){
                 if(it != null){
                     adapter.setBookmarkList(it)
                     binding.shimmerLayout.startShimmer()
@@ -59,8 +61,8 @@ class BookmarkFragment : Fragment() {
             }
         }
         adapter.setOnItemClickListener(object : BookmarkAdapter.OnItemClickListener{
-            override fun onItemClick(news: Bookmark) {
-                val newsDetailFragment = NewsDetailFragment(null, news)
+            override fun onItemClick(news: UserBookmark) {
+                val newsDetailFragment = NewsDetailFragment(null, null, news)
                 newsDetailFragment.show(requireActivity().supportFragmentManager, newsDetailFragment.tag)
             }
         })

@@ -9,25 +9,26 @@ import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.data.users.Bookmark
 import com.example.colega.databinding.HeadlineItemBinding
+import com.example.colega.models.user.UserBookmark
 
 class BookmarkAdapter:RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
 
     private lateinit var listener: OnItemClickListener
 
     interface OnItemClickListener{
-        fun onItemClick(news: Bookmark)
+        fun onItemClick(news: UserBookmark)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
         this.listener = listener
     }
 
-    private var diffCallback = object : DiffUtil.ItemCallback<Bookmark>(){
-        override fun areItemsTheSame(oldItem: Bookmark, newItem: Bookmark): Boolean {
+    private var diffCallback = object : DiffUtil.ItemCallback<UserBookmark>(){
+        override fun areItemsTheSame(oldItem: UserBookmark, newItem: UserBookmark): Boolean {
             return oldItem.title == newItem.title
         }
 
-        override fun areContentsTheSame(oldItem: Bookmark, newItem: Bookmark): Boolean {
+        override fun areContentsTheSame(oldItem: UserBookmark, newItem: UserBookmark): Boolean {
             return oldItem.hashCode() == newItem.hashCode()
         }
     }
@@ -60,7 +61,7 @@ class BookmarkAdapter:RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
         return differ.currentList.size
     }
 
-    fun setBookmarkList(list: List<Bookmark>){
+    fun setBookmarkList(list: List<UserBookmark>){
         differ.submitList(list)
     }
 }

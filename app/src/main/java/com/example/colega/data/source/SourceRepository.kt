@@ -18,4 +18,10 @@ class SourceRepository(private val sourceDao: SourceDao) {
             sourceDao.deleteAllSource()
         }
     }
+
+    fun updateSource(source: Source){
+        MyDatabase.databaseWriteExecutor.execute {
+            sourceDao.updateSource(source)
+        }
+    }
 }

@@ -2,8 +2,6 @@ package com.example.colega.worker
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.colega.api.RetrofitClient
@@ -12,10 +10,6 @@ import com.example.colega.data.article.RelatedNewsDao
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.ArticleResponse
 import com.example.colega.models.news.NewsModel
-import com.example.colega.utils.UtilMethods
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,7 +37,6 @@ class LoadRelatedNews(
                         if(response.isSuccessful) {
                             Log.d(TAG, "onResponse: Data Success")
                             if (response.body() != null) {
-                                val it = response.body()!!.articleResponses
                                 postArticleToDB(response.body()!!.articleResponses)
                             }
                         }else{
@@ -67,9 +60,6 @@ class LoadRelatedNews(
     }
 
     fun postArticleToDB(it: List<ArticleResponse>){
-        MyDatabase.databaseWriteExecutor.execute {
-            relatedNewsDao.deleteAllArticle()
-        }
         val articles = it.map { list ->
             RelatedNews(
                 id = 0,
@@ -85,6 +75,7 @@ class LoadRelatedNews(
             )
         }.toList()
         MyDatabase.databaseWriteExecutor.execute {
+            relatedNewsDao.deleteAllArticle()
             relatedNewsDao.postArticle(articles)
         }
         Log.d(TAG, "postArticleToDB: $articles")

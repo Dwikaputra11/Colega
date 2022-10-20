@@ -15,7 +15,10 @@ import com.bumptech.glide.Glide
 import com.example.colega.HomeActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentLoginBinding
+import com.example.colega.models.user.DataUser
+import com.example.colega.models.user.UserResponseItem
 import com.example.colega.utils.Utils
+import com.example.colega.viewmodel.SourceViewModel
 import com.example.colega.viewmodel.UserViewModel
 import kotlinx.coroutines.*
 
@@ -25,7 +28,7 @@ class LoginFragment : Fragment() {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var userVM: UserViewModel
     private var usernameSharedPref = ""
-//    private var user: User? = null
+    private lateinit var sourceVM: SourceViewModel
     private val TAG = "LoginFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +44,7 @@ class LoginFragment : Fragment() {
             .into(binding.ivLogin)
         sharedPref = requireActivity().getSharedPreferences(Utils.name,Context.MODE_PRIVATE)
         userVM = ViewModelProvider(this)[UserViewModel::class.java]
+        sourceVM = ViewModelProvider(this)[SourceViewModel::class.java]
         binding.btnSignIn.setOnClickListener {
             Log.d(TAG, "onViewCreated: Clicked")
             GlobalScope.async {
@@ -85,12 +89,10 @@ class LoginFragment : Fragment() {
                 true
             } else {
                 Log.d(TAG, "isExist: Search to database user pref")
-//                findInDatabase(username)
                 findInApi()
             }
         } else {
             Log.d(TAG, "isExist: Search to database user pref null")
-//            findInDatabase(username)
             findInApi()
         }
     }
@@ -107,17 +109,19 @@ class LoginFragment : Fragment() {
     private fun addToSharedPref(password: String) {
         Log.d(TAG, "addToSharedPref: Started")
         userVM.getUser().observe(viewLifecycleOwner){
-            if(password == it.password){
-                Log.d("Register", "Username: ${it.username}")
-                Log.d("Register", "Password: ${it.password}")
-                Log.d("Register", "Email: ${it.email}")
-                Log.d("Register", "User Id: ${it.id}")
-                Log.d(TAG, "addToSharedPref: Password Same")
-                userVM.addToUserPref(it)
-                startActivity(Intent(requireActivity(), HomeActivity::class.java))
-            }else{
-                Log.d(TAG, "addToSharedPref: Your Password is wrong")
-                toastMessage(getString(R.string.password_status))
+            if(it != null){
+                if(password == it.password){
+                    Log.d("Register", "Username: ${it.username}")
+                    Log.d("Register", "Password: ${it.password}")
+                    Log.d("Register", "Email: ${it.email}")
+                    Log.d("Register", "User Id: ${it.id}")
+                    Log.d(TAG, "addToSharedPref: Password Same")
+                    userVM.addToUserPref(it)
+                    startActivity(Intent(requireActivity(), HomeActivity::class.java))
+                }else{
+                    Log.d(TAG, "addToSharedPref: Your Password is wrong")
+                    toastMessage(getString(R.string.password_status))
+                }
             }
         }
     }

@@ -8,6 +8,8 @@ import com.example.colega.models.user.DataUser
 import com.example.colega.data.users.User
 import com.example.colega.data.users.UserRepository
 import com.example.colega.db.MyDatabase
+import com.example.colega.models.user.UserBookmark
+import com.example.colega.models.user.UserFollowingSource
 import com.example.colega.models.user.UserResponseItem
 import com.example.colega.preferences.UserPreferencesRepository
 import kotlinx.coroutines.Dispatchers
@@ -24,12 +26,35 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     private val repository: UserRepository
     private val activeUser: MutableLiveData<UserResponseItem> = MutableLiveData()
     private val userData: MutableLiveData<UserResponseItem> = MutableLiveData()
+    private val userFollowingSource: MutableLiveData<List<UserFollowingSource>> = MutableLiveData()
+    private val userBookmarkNews: MutableLiveData<List<UserBookmark>> = MutableLiveData()
 
     init {
         val userDao = MyDatabase.getDatabase(
             application
         ).userDao()
         repository = UserRepository(userDao)
+    }
+
+    fun getUserBookmarkNews(): MutableLiveData<List<UserFollowingSource>> = userFollowingSource
+
+    fun getUserFollowFromApi(userId:String){
+        RetrofitClient.instanceUser.getUserFollowingSource(userId)
+            .enqueue(object : Callback<List<UserFollowingSource>>{
+                override fun onResponse(
+                    call: Call<List<UserFollowingSource>>,
+                    response: Response<List<UserFollowingSource>>
+                ) {
+                    if(response.isSuccessful){
+                        response.body()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<UserFollowingSource>>, t: Throwable) {
+
+                }
+
+            })
     }
 
     fun getUser(): MutableLiveData<UserResponseItem>{

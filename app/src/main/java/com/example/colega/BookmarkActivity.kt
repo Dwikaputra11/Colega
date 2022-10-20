@@ -29,7 +29,7 @@ class BookmarkActivity : AppCompatActivity() {
         if(userId != -1){
             bookmarkVM.getAllBookmark(userId).observe(this){
                 if(it != null){
-                    adapter.setBookmarkList(it)
+//                    adapter.setBookmarkList(it)
                     binding.shimmerLayout.startShimmer()
                     binding.shimmerLayout.visibility = View.GONE
                     binding.rvBookmark.visibility = View.VISIBLE

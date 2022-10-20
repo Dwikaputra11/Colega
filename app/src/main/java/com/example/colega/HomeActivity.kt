@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -16,12 +17,14 @@ import com.example.colega.databinding.ActivityHomeBinding
 import com.example.colega.ui.BookmarkFragment
 import com.example.colega.ui.HomeFragment
 import com.example.colega.ui.ProfileFragment
+import com.example.colega.viewmodel.UserViewModel
 
 
 private const val TAG = "HomeActivity"
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var userVM: UserViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -81,6 +84,9 @@ class HomeActivity : AppCompatActivity() {
                     startActivity(Intent(this, SourceActivity::class.java))
                     true
                 }
+                R.id.logout ->{
+                    logoutDialog()
+                }
                 else -> {
                     false
                 }
@@ -98,5 +104,20 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun logoutDialog(){
+        val builder = AlertDialog.Builder(this)
+        builder.setPositiveButton(R.string.yes) { _, _ ->
+            run {
+                userVM.clearUserPref()
+                startActivity(Intent(this@HomeActivity, MainActivity::class.java))
+            }
+        }
+
+        builder.setNegativeButton(getString(R.string.no)) { _, _ -> }
+        builder.setTitle(getString(R.string.logout_account))
+        builder.setMessage(getString(R.string.confirm_logout))
+        builder.create().show()
     }
 }

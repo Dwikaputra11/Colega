@@ -3,6 +3,7 @@ package com.example.colega.db
 import android.content.Context
 import androidx.room.*
 import androidx.room.migration.AutoMigrationSpec
+import androidx.room.migration.Migration
 import com.example.colega.data.article.HeadlineDao
 import com.example.colega.data.article.HeadlineNews
 import com.example.colega.data.article.RelatedNews
@@ -19,7 +20,7 @@ import java.util.concurrent.Executors
     autoMigrations = [
         AutoMigration (from = 1, to = 2, spec = MyDatabase.MyAutoMigration::class),
         AutoMigration(from = 2, to = 3),
-        AutoMigration(from = 3, to = 4)
+        AutoMigration(from = 3, to = 4),
     ],
 )
 abstract class MyDatabase: RoomDatabase() {
@@ -31,7 +32,13 @@ abstract class MyDatabase: RoomDatabase() {
     abstract fun relatedNews(): RelatedNewsDao
     abstract fun headlineDao(): HeadlineDao
     abstract fun sourceDao(): SourceDao
+
     companion object {
+//        val MIGRATION_4_5 = Migration(4,5){
+//            it.execSQL("ALTER TABLE source ADD COLUMN isFollow INTEGER NOT NULL")
+//            it.execSQL("ALTER TABLE source ADD COLUMN sourceId TEXT NOT NULL")
+//            it.execSQL("ALTER TABLE source ADD COLUMN userId TEXT NOT NULL")
+//        }
         private const val NUMBER_OF_THREADS = 4
 
         @Volatile

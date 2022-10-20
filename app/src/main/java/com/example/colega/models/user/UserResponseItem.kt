@@ -23,5 +23,5 @@ data class UserResponseItem(
     @SerializedName("password")
     val password: String,
     @SerializedName("username")
-    val username: String
+    val username: String,
 )

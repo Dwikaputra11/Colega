@@ -20,6 +20,8 @@ object Utils {
 
     // shared pref
     const val name = "ACCOUNT"
+    const val firstLogin = "first_login"
+    const val temporaryRegisterUser = "temporary_register_user"
     const val username = "username"
     const val password = "password"
     const val email = "email"

@@ -273,7 +273,7 @@ class ProfileFragment : Fragment() {
                 birthDate = it.birthDate,
                 email = it.email,
                 password = it.password,
-                avatar = downloadUri
+                avatar = downloadUri,
             )
             userVM.updateUser(userId, userData)
             userVM.getUserData().observe(this){ user ->

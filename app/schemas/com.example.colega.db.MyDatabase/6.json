@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 4,
+    "version": 6,
     "identityHash": "1c7cfc665690fbf6000940827558f7ec",
     "entities": [
       {
@@ -334,24 +334,12 @@
       },
       {
         "tableName": "Source",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` TEXT NOT NULL, `sourceId` TEXT NOT NULL, `name` TEXT NOT NULL, `category` TEXT NOT NULL, `country` TEXT NOT NULL, `description` TEXT NOT NULL, `language` TEXT NOT NULL, `url` TEXT NOT NULL, `isFollow` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `category` TEXT NOT NULL, `country` TEXT NOT NULL, `description` TEXT NOT NULL, `language` TEXT NOT NULL, `url` TEXT NOT NULL, `isFollow` INTEGER NOT NULL, `userId` TEXT NOT NULL, `sourceId` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "userId",
-            "columnName": "userId",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "sourceId",
-            "columnName": "sourceId",
-            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -394,6 +382,18 @@
             "fieldPath": "isFollow",
             "columnName": "isFollow",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceId",
+            "columnName": "sourceId",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],

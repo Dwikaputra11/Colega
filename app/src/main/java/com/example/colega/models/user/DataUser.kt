@@ -6,5 +6,5 @@ data class DataUser(
     val birthDate: String,
     val email: String,
     val password: String,
-    val avatar: String
+    val avatar: String,
 )

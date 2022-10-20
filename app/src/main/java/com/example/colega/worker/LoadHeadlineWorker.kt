@@ -12,7 +12,6 @@ import com.example.colega.models.news.NewsModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.log
 
 private const val TAG = "LoadHeadlineWorker"
 @Suppress("BlockingMethodInNonBlockingContext")
@@ -69,6 +68,7 @@ class LoadHeadlineWorker(
             )
         }.toList()
         MyDatabase.databaseWriteExecutor.execute {
+            headlineDao.deleteAllArticle()
             headlineDao.postArticle(headlines)
         }
         Log.d(TAG, "insertHeadlineToDB: Finished")

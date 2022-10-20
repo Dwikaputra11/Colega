@@ -25,7 +25,7 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
     private val deleteFollowingSource: MutableLiveData<UserFollowingSource?> = MutableLiveData()
     private val singleSource: MutableLiveData<List<UserFollowingSource>?> = MutableLiveData()
 
-    private var repository: FollowingSourceRepository
+    private val repository: FollowingSourceRepository
 
     init {
         val followingSourceDao = MyDatabase.getDatabase(application).followingDao()
@@ -73,19 +73,19 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
                 ) {
                     if(response.isSuccessful){
                         if(response.body() != null){
-                            response.body()?.let {
-                                val follSource = FollowingSource(
-                                    name = it.name,
-                                    userId = userId,
-                                    sourceId = it.sourceId,
-                                    createdAt = it.createdAt,
-                                    id = 0,
-                                    language = it.language,
-                                    country = it.country,
-                                    description = it.description
-                                )
-                                insertFollowingToDB(follSource)
-                            }
+//                            response.body()?.let {
+//                                val follSource = FollowingSource(
+//                                    name = it.name,
+//                                    userId = userId,
+//                                    sourceId = it.sourceId,
+//                                    createdAt = it.createdAt,
+//                                    id = 0,
+//                                    language = it.language,
+//                                    country = it.country,
+//                                    description = it.description
+//                                )
+//                                insertFollowingToDB(follSource)
+//                            }
                         }
                         postFollowingSource.postValue(response.body())
                     }else{
@@ -110,21 +110,6 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
                     response: Response<UserFollowingSource>
                 ) {
                     if(response.isSuccessful){
-                        if(response.body() != null){
-                            response.body()?.let {
-                                val follSource = FollowingSource(
-                                    name = it.name,
-                                    userId = userId,
-                                    sourceId = it.sourceId,
-                                    createdAt = it.createdAt,
-                                    id = 0,
-                                    language = it.language,
-                                    country = it.country,
-                                    description = it.description
-                                )
-                                deleteFollowingFromDB(follSource)
-                            }
-                        }
                         deleteFollowingSource.postValue(response.body())
                     }else{
                         Log.d(TAG, "onResponse: Delete Unsuccessfully")

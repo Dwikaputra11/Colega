@@ -20,5 +20,11 @@ data class Source(
     @ColumnInfo
     val language: String,
     @ColumnInfo
-    val url: String
+    val url: String,
+    @ColumnInfo
+    var isFollow: Boolean = false,
+    @ColumnInfo
+    val userId: String,
+    @ColumnInfo
+    val sourceId: String,
 )

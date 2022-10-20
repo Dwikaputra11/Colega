@@ -69,7 +69,6 @@ class SplashScreenFragment : Fragment() {
                     Log.d(TAG, "onViewCreated: over 300")
                     isFirstInstall()
                 }
-//                Log.d(TAG, "onViewCreated: ${binding.progressBar.progress}")
             }, i.toLong())
         }
     }
@@ -94,50 +93,11 @@ class SplashScreenFragment : Fragment() {
                 if(it.username.isBlank()){
                     Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_loginFragment)
                 }else{
-//                    requestNews()
                     startActivity(Intent(requireActivity(),HomeActivity::class.java))
                 }
             }
         }
     }
-
-    private fun loadNews(){
-        articleVM.getRelatedNews()
-        articleVM.getArticleLiveData().observe(viewLifecycleOwner){
-            if(it != null){
-                requestNews()
-//                val jsonString = convertToJson(it)
-//                val list = UtilMethods.convertToGson(jsonString)
-//                Log.d(TAG, "loadNews Gson: ${list[0].title}")
-            }
-        }
-    }
-
-    @SuppressLint("RestrictedApi")
-    fun requestNews(){
-
-//        val jsonString = UtilMethods.convertToJson(list)
-
-        articleVM.fetchRelatedNews()
-        articleVM.getRelatedWorkInfo().observe(viewLifecycleOwner){
-            val workInfo = it[0]
-            when(workInfo.state){
-                WorkInfo.State.ENQUEUED ->{
-                    binding.tvProgressStatus.text = "Enqueued..."
-                }
-                WorkInfo.State.RUNNING ->{
-                    binding.tvProgressStatus.text = "Running..."
-                }
-                WorkInfo.State.SUCCEEDED ->{
-                    binding.tvProgressStatus.text = "Success..."
-                }
-                else ->{
-                    binding.tvProgressStatus.text = "Loading..."
-                }
-            }
-        }
-    }
-
 
 
 }

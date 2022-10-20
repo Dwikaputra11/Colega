@@ -1,11 +1,7 @@
 package com.example.colega.worker
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.colega.api.RetrofitClient
@@ -13,7 +9,7 @@ import com.example.colega.data.source.Source
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.SourceResponse
 import com.example.colega.models.news.SourceResponseItem
-import com.example.colega.viewmodel.SourceViewModel
+import com.example.colega.models.user.UserFollowingSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,8 +23,11 @@ class LoadSourceWorker(
 
     private val application = applicationContext
     private val sourceDao = MyDatabase.getDatabase(application).sourceDao()
+    private lateinit var userId: String
 
     override suspend fun doWork(): Result {
+        userId = inputData.getString(WorkerKeys.SOURCE_INPUT_DATA).toString()
+        Log.d(TAG, "doWork: $userId")
         try {
             RetrofitClient.instanceFilm.getAllSourceNews()
                 .enqueue(object : Callback<SourceResponse>{
@@ -39,7 +38,7 @@ class LoadSourceWorker(
                         if(response.isSuccessful){
                             Log.d(TAG, "onResponse: Success")
                             response.body()?.let { sourceResponse ->
-                                insertSourceToDB(sourceResponse.sources)
+                                syncWithUserFollowingSource(sourceResponse.sources)
                             }
                         }else{
                             Log.d(TAG, "onResponse: Unsuccessfully")
@@ -61,21 +60,51 @@ class LoadSourceWorker(
     }
 
 
-    fun insertSourceToDB(list: List<SourceResponseItem>){
+    fun syncWithUserFollowingSource(list: List<SourceResponseItem>){
+        RetrofitClient.instanceUser.getUserFollowingSource(userId)
+            .enqueue(object : Callback<List<UserFollowingSource>>{
+                override fun onResponse(
+                    call: Call<List<UserFollowingSource>>,
+                    response: Response<List<UserFollowingSource>>
+                ) {
+                    if(response.isSuccessful){
+                        Log.d(TAG, "onResponse: Response Success Sync Started")
+                        response.body()?.let { followingSource ->
+                            val source = list.map { source ->
+                                Source(
+                                    id = 0,
+                                    userId = userId,
+                                    name = source.name,
+                                    url = source.url,
+                                    description = source.description,
+                                    country = source.country,
+                                    language = source.language,
+                                    category = source.category,
+                                    sourceId = source.id,
+                                    isFollow = followingSource.any { it.sourceId == source.id }
+                                )
+                            }.toList()
+                            insertSourceToDB(source)
+                        }
+                    }else{
+                        Log.d(TAG, "onResponse: Sync Response Unsuccessfully")
+                        throw Exception()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<UserFollowingSource>>, t: Throwable) {
+                    Log.d(TAG, "onFailure: ${t.message}")
+                    throw Exception()
+                }
+
+            })
+    }
+
+    fun insertSourceToDB(list: List<Source>){
         Log.d(TAG, "insertSourceToDB: Started")
-        val sources = list.map {
-            Source(
-                id = 0,
-                name = it.name,
-                url = it.name,
-                description = it.description,
-                country = it.country,
-                language = it.language,
-                category = it.category
-            )
-        }.toList()
         MyDatabase.databaseWriteExecutor.execute {
-            sourceDao.postSource(sources)
+            sourceDao.deleteAllSource()
+            sourceDao.postSource(list)
         }
         Log.d(TAG, "insertSourceToDB: Finished")
     }

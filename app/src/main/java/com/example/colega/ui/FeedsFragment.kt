@@ -54,16 +54,6 @@ class FeedsFragment : Fragment() {
         })
 
         requestNews()
-//        articleVM.getRelatedNews()
-//        articleVM.getArticleLiveData().observe(viewLifecycleOwner){
-//            if(it != null){
-//                relatedAdapter.setRelatedNews(it)
-//                binding.shimmerLayout.startShimmer()
-//                binding.shimmerLayout.visibility = View.GONE
-//                binding.rvForYou.visibility = View.VISIBLE
-//            }
-//        }
-
         binding.tvSeeMore.setOnClickListener {
 
         }

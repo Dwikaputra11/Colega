@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colega.R
+import com.example.colega.data.source.Source
 import com.example.colega.databinding.SourceNewsItemBinding
 import com.example.colega.models.news.SourceResponseItem
 
@@ -17,17 +18,17 @@ class SourceNewsAdapter: RecyclerView.Adapter<SourceNewsAdapter.ViewHolder>() {
 
     private lateinit var listener: OnItemClickListener
 
-    private var diffCallback = object : DiffUtil.ItemCallback<SourceResponseItem>(){
+    private var diffCallback = object : DiffUtil.ItemCallback<Source>(){
         override fun areItemsTheSame(
-            oldItem: SourceResponseItem,
-            newItem: SourceResponseItem
+            oldItem: Source,
+            newItem: Source
         ): Boolean {
             return oldItem.name == newItem.name
         }
 
         override fun areContentsTheSame(
-            oldItem: SourceResponseItem,
-            newItem: SourceResponseItem
+            oldItem: Source,
+            newItem: Source
         ): Boolean {
             return oldItem.hashCode() == newItem.hashCode()
         }
@@ -36,7 +37,7 @@ class SourceNewsAdapter: RecyclerView.Adapter<SourceNewsAdapter.ViewHolder>() {
     private val differ = AsyncListDiffer(this, diffCallback)
 
     interface OnItemClickListener{
-        fun onItemClick(sourceResponseItem: SourceResponseItem, isClicked: Boolean)
+        fun onItemClick(source: Source)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
@@ -44,22 +45,9 @@ class SourceNewsAdapter: RecyclerView.Adapter<SourceNewsAdapter.ViewHolder>() {
     }
 
     inner class ViewHolder(val binding: SourceNewsItemBinding):RecyclerView.ViewHolder(binding.root) {
-        var isClicked = false
         init {
             binding.btnFollow.setOnClickListener {
-                isClicked = !isClicked
-                listener.onItemClick(differ.currentList[absoluteAdapterPosition], isClicked)
-                if(isClicked){
-                    binding.btnFollow.setBackgroundResource(R.drawable.follow_button_selected)
-                    binding.btnFollow.text = binding.root.context.getText(R.string.following)
-                    binding.btnFollow.setCompoundDrawables(null,null,null,null)
-                    binding.btnFollow.setTextColor(binding.root.context.getColor(R.color.white))
-                }else{
-                    binding.btnFollow.setBackgroundResource(R.drawable.follow_button)
-                    binding.btnFollow.text = binding.root.context.getText(R.string.follow)
-                    binding.btnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_round_add_24_black,0,0,0)
-                    binding.btnFollow.setTextColor(binding.root.context.getColor(R.color.black))
-                }
+                listener.onItemClick(differ.currentList[absoluteAdapterPosition])
             }
         }
     }
@@ -70,17 +58,26 @@ class SourceNewsAdapter: RecyclerView.Adapter<SourceNewsAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d(TAG, "onBindViewHolder: $position")
         holder.binding.tvNameSource.text = differ.currentList[position].name
         holder.binding.tvDescSource.text = differ.currentList[position].description
         holder.binding.tvCountry.text = differ.currentList[position].country.uppercase()
         holder.binding.tvLanguage.text = differ.currentList[position].language
+        if(differ.currentList[position].isFollow){
+            holder.binding.btnFollow.setBackgroundResource(R.drawable.follow_button_selected)
+            holder.binding.btnFollow.text =  holder.binding.root.context.getText(R.string.following)
+            holder.binding.btnFollow.setCompoundDrawables(null,null,null,null)
+            holder.binding.btnFollow.setTextColor( holder.binding.root.context.getColor(R.color.white))
+        }else{
+            holder.binding.btnFollow.setBackgroundResource(R.drawable.follow_button)
+            holder.binding.btnFollow.text =  holder.binding.root.context.getText(R.string.follow)
+            holder.binding.btnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_round_add_24_black,0,0,0)
+            holder.binding.btnFollow.setTextColor( holder.binding.root.context.getColor(R.color.black))
+        }
     }
 
     override fun getItemCount(): Int = differ.currentList.size
 
-    fun setSourceNewsList(list: List<SourceResponseItem>) {
-        Log.d(TAG, "setSourceNewsList: $list")
+    fun setSourceNewsList(list: List<Source>) {
         differ.submitList(list)
     }
 }

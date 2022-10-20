@@ -7,25 +7,26 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colega.data.users.FollowingSource
 import com.example.colega.databinding.FollowingItemBinding
+import com.example.colega.models.user.UserFollowingSource
 
 class FollowingAdapter: RecyclerView.Adapter<FollowingAdapter.ViewHolder>() {
 
     private lateinit var listener: OnItemClickListener
 
     interface OnItemClickListener{
-        fun onItemClick(source: FollowingSource)
+        fun onItemClick(source: UserFollowingSource)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
         this.listener = listener
     }
 
-    private var diffCallback = object : DiffUtil.ItemCallback<FollowingSource>(){
-        override fun areItemsTheSame(oldItem: FollowingSource, newItem: FollowingSource): Boolean {
+    private var diffCallback = object : DiffUtil.ItemCallback<UserFollowingSource>(){
+        override fun areItemsTheSame(oldItem: UserFollowingSource, newItem: UserFollowingSource): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: FollowingSource, newItem: FollowingSource): Boolean {
+        override fun areContentsTheSame(oldItem: UserFollowingSource, newItem: UserFollowingSource): Boolean {
             return oldItem.hashCode() == newItem.hashCode()
         }
     }
@@ -56,5 +57,5 @@ class FollowingAdapter: RecyclerView.Adapter<FollowingAdapter.ViewHolder>() {
         return differ.currentList.size
     }
 
-    fun setFollowingList(list: List<FollowingSource>) = differ.submitList(list)
+    fun setFollowingList(list: List<UserFollowingSource>) = differ.submitList(list)
 }

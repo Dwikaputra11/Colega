@@ -22,7 +22,6 @@ class FollowingFragment : Fragment() {
     private lateinit var binding: FragmentFollowingBinding
     private lateinit var userFollowingSourceVM: FollowingSourceViewModel
     private lateinit var userVM: UserViewModel
-    private var userId: String = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,14 +34,17 @@ class FollowingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         userFollowingSourceVM = ViewModelProvider(this)[FollowingSourceViewModel::class.java]
         userVM = ViewModelProvider(this)[UserViewModel::class.java]
-        setViews()
+        userVM.dataUser.observe(viewLifecycleOwner){
+            setViews(it.userId.toString())
+        }
     }
 
-    private fun setViews(){
+    private fun setViews(userId: String){
         userVM.dataUser.observe(viewLifecycleOwner){
             if(it != null){
                 val adapter = FollowingAdapter()
-                userFollowingSourceVM.getAllFollowingSource(it.userId.toString()).observe(viewLifecycleOwner){ list ->
+                userFollowingSourceVM.getFollowingFromApi(userId)
+                userFollowingSourceVM.getFollowingSource().observe(viewLifecycleOwner){ list ->
                     if(list != null){
                         binding.tvEmptyFollow.visibility = View.GONE
                         binding.rvFollowing.visibility = View.VISIBLE
@@ -53,7 +55,7 @@ class FollowingFragment : Fragment() {
                 }
 
                 adapter.setOnItemClickListener(object : FollowingAdapter.OnItemClickListener{
-                    override fun onItemClick(source: FollowingSource) {
+                    override fun onItemClick(source: UserFollowingSource) {
                         Log.d(TAG, "onItemClick: $source")
                     }
                 })
