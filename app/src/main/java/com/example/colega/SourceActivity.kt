@@ -123,10 +123,13 @@ class SourceActivity : AppCompatActivity() {
 
     private fun deleteFromApi(source: Source){
         // delete the source from api if the button change to follow base on userId and sourceId in source data
-        followingSourceVM.deleteFollowingFromApi(source.userId, source.sourceId)
-        followingSourceVM.getDeleteFollowingSource().observe(this@SourceActivity){
-            if(it  != null) Toast.makeText(this@SourceActivity, "Delete from Following", Toast.LENGTH_SHORT).show()
-            else Toast.makeText(this@SourceActivity, "Failed to Delete", Toast.LENGTH_SHORT).show()
+        followingSourceVM.getSingleSourceFromApi(source.userId, source.sourceId)
+        followingSourceVM.getSingleSource().observe(this){
+            followingSourceVM.deleteFollowingFromApi(it.userId, it.id)
+            followingSourceVM.getDeleteFollowingSource().observe(this@SourceActivity){
+                if(it  != null) Toast.makeText(this@SourceActivity, "Delete from Following", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this@SourceActivity, "Failed to Delete", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

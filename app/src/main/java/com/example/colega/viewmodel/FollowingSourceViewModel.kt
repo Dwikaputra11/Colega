@@ -23,7 +23,7 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
     private val allUserFollowingSource: MutableLiveData<List<UserFollowingSource>?> = MutableLiveData()
     private val postFollowingSource: MutableLiveData<UserFollowingSource?> = MutableLiveData()
     private val deleteFollowingSource: MutableLiveData<UserFollowingSource?> = MutableLiveData()
-    private val singleSource: MutableLiveData<List<UserFollowingSource>?> = MutableLiveData()
+    private val singleSource: MutableLiveData<UserFollowingSource> = MutableLiveData()
 
     private val repository: FollowingSourceRepository
 
@@ -35,7 +35,7 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
     fun getFollowingSource(): MutableLiveData<List<UserFollowingSource>?> = allUserFollowingSource
     fun getPostFollowingSource(): MutableLiveData<UserFollowingSource?> = postFollowingSource
     fun getDeleteFollowingSource():MutableLiveData<UserFollowingSource?> = deleteFollowingSource
-    fun getSingleSource():MutableLiveData<List<UserFollowingSource>?> = singleSource
+    fun getSingleSource():MutableLiveData<UserFollowingSource> = singleSource
 
 
 
@@ -72,21 +72,6 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
                     response: Response<UserFollowingSource>
                 ) {
                     if(response.isSuccessful){
-                        if(response.body() != null){
-//                            response.body()?.let {
-//                                val follSource = FollowingSource(
-//                                    name = it.name,
-//                                    userId = userId,
-//                                    sourceId = it.sourceId,
-//                                    createdAt = it.createdAt,
-//                                    id = 0,
-//                                    language = it.language,
-//                                    country = it.country,
-//                                    description = it.description
-//                                )
-//                                insertFollowingToDB(follSource)
-//                            }
-                        }
                         postFollowingSource.postValue(response.body())
                     }else{
                         Log.d(TAG, "onResponse: Post Unsuccessfully")
@@ -134,16 +119,16 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
                     response: Response<List<UserFollowingSource>>
                 ) {
                     if(response.isSuccessful){
-                        singleSource.postValue(response.body())
+                        response.body()?.let {
+                            singleSource.postValue(it.first())
+                        }
                     }else{
                         Log.d(TAG, "onResponse: Delete Unsuccessfully")
-                        singleSource.postValue(null)
                     }
                 }
 
                 override fun onFailure(call: Call<List<UserFollowingSource>>, t: Throwable) {
                     Log.d(TAG, "onFailure: Delete ${t.message}")
-                    singleSource.postValue(null)
                 }
 
             })

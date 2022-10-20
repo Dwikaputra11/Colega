@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatDelegate
 
 /**
  * TODO:
- * 1. Sync database with api Work Manager (every 1 hour)
- * 2. Check application is connected to internet or not
- * 3. Add Pagination to recycle view
- * 4. Add Following fragment with article from source that user follow
- * 5. Implement search from database to search article
- * 6. Implement drawer to source list page and add profile logout option in there
+ * 1. Sync database with api Work Manager (every 1 hour) SUCCESS
+ * 2. Check application is connected to internet or not NOT YET
+ * 3. Add Pagination to recycle view NOT YET
+ * 4. Add Following fragment with article from source that user follow SUCCESS
+ * 5. Implement search from database to search article NOT YET
+ * 6. Implement drawer to source list page and add profile logout option in there SUCCESS
  * */
 
 class MainActivity : AppCompatActivity() {

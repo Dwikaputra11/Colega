@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import com.example.colega.databinding.ActivityHomeBinding
 import com.example.colega.ui.BookmarkFragment
 import com.example.colega.ui.HomeFragment
@@ -29,6 +30,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        userVM = ViewModelProvider(this)[UserViewModel::class.java]
 
         configureToolbar()
         configureNavigationDrawer()
