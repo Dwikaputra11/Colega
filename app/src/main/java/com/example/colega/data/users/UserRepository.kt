@@ -2,8 +2,9 @@ package com.example.colega.data.users
 
 import androidx.lifecycle.LiveData
 import com.example.colega.db.MyDatabase
+import javax.inject.Inject
 
-class UserRepository(private val userDao: UserDao) {
+class UserRepository (private val userDao: UserDao) {
 
     fun findUser(username:String): LiveData<User> = userDao.findUser(username)
 

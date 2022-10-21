@@ -14,8 +14,9 @@ import com.example.colega.data.article.HeadlineNews
 import com.example.colega.databinding.FragmentHeadlineBinding
 import com.example.colega.models.news.ArticleResponse
 import com.example.colega.viewmodel.ArticleViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class HeadlineFragment : Fragment() {
     private val TAG = "HeadlineFragment"
     private lateinit var binding: FragmentHeadlineBinding

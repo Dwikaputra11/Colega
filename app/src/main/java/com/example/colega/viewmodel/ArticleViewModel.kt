@@ -3,34 +3,39 @@ package com.example.colega.viewmodel
 import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
-import com.example.colega.api.RetrofitClient
+import com.example.colega.api.NewsService
 import com.example.colega.data.article.HeadlineNews
 import com.example.colega.data.article.HeadlineRepository
 import com.example.colega.data.article.RelatedNews
 import com.example.colega.data.article.RelatedNewsRepository
-import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.ArticleResponse
 import com.example.colega.models.news.NewsModel
 import com.example.colega.worker.LoadHeadlineWorker
 import com.example.colega.worker.LoadRelatedNews
 import com.example.colega.worker.WorkerKeys
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 private const val TAG = "ArticleViewModel"
-class ArticleViewModel(application: Application): AndroidViewModel(application) {
+@HiltViewModel
+class ArticleViewModel @Inject constructor(
+    private val newsService: NewsService,
+    private val relatedNewsRepository: RelatedNewsRepository,
+    private val headlineRepository: HeadlineRepository,
+    application: Application
+): ViewModel() {
     private var articleResponseLiveData: MutableLiveData<List<ArticleResponse>> = MutableLiveData()
     private var headlineLiveData : MutableLiveData<List<ArticleResponse>> = MutableLiveData()
-    private val relatedNewsRepository: RelatedNewsRepository
-    private val headlineRepository: HeadlineRepository
     private val workManager: WorkManager
     private val relatedWorkInfo: LiveData<List<WorkInfo>>
     private val headlineWorkInfo: LiveData<List<WorkInfo>>
@@ -39,10 +44,6 @@ class ArticleViewModel(application: Application): AndroidViewModel(application) 
     fun getHeadlineLiveData(): MutableLiveData<List<ArticleResponse>> = headlineLiveData
 
     init {
-        val relatedNewsDao = MyDatabase.getDatabase(application).relatedNews()
-        relatedNewsRepository = RelatedNewsRepository(relatedNewsDao)
-        val headlineDao = MyDatabase.getDatabase(application).headlineDao()
-        headlineRepository = HeadlineRepository(headlineDao)
         workManager = WorkManager.getInstance(application)
         relatedWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_RELATED_NEWS_DATA)
         headlineWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_HEADLINE_NEWS_DATA)
@@ -101,7 +102,7 @@ class ArticleViewModel(application: Application): AndroidViewModel(application) 
     fun getHeadlineWorkInfo(): LiveData<List<WorkInfo>> = headlineWorkInfo
 
     fun getRelatedNews(){
-        RetrofitClient.instanceFilm.getPreferences()
+        newsService.getPreferences()
             .enqueue(object : Callback<NewsModel>{
                 override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
                     if(response.isSuccessful){
@@ -122,7 +123,7 @@ class ArticleViewModel(application: Application): AndroidViewModel(application) 
     }
 
     fun getHeadlineNews(){
-        RetrofitClient.instanceFilm.getTopHeadLines()
+        newsService.getTopHeadLines()
             .enqueue(object : Callback<NewsModel>{
                 override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
                     if(response.isSuccessful){

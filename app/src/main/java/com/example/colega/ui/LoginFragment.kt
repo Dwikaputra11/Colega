@@ -20,8 +20,10 @@ import com.example.colega.models.user.UserResponseItem
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.SourceViewModel
 import com.example.colega.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding

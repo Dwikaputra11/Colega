@@ -3,6 +3,7 @@ package com.example.colega
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * TODO:
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate
  * 6. Implement drawer to source list page and add profile logout option in there SUCCESS
  * */
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

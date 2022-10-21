@@ -32,6 +32,7 @@ import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.UserViewModel
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -39,6 +40,7 @@ import java.util.*
 private const val REQUEST_IMAGE_CODE_PERMISSION = 100
 private const val TAG = "ProfileFragment"
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
     private lateinit var userId: String
     private lateinit var username:String
@@ -78,9 +80,6 @@ class ProfileFragment : Fragment() {
         storage = FirebaseStorage.getInstance()
         storageReference = storage.reference
         setViews()
-        binding.ivLogout.setOnClickListener {
-            logoutDialog()
-        }
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
                 val edit = sharedPref.edit()
@@ -103,21 +102,6 @@ class ProfileFragment : Fragment() {
         binding.btnAddProfile.setOnClickListener {
             checkPermission()
         }
-    }
-
-    private fun logoutDialog(){
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setPositiveButton(R.string.yes) { _, _ ->
-            run {
-                userVM.clearUserPref()
-                startActivity(Intent(requireActivity(), MainActivity::class.java))
-            }
-        }
-
-        builder.setNegativeButton(getString(R.string.no)) { _, _ -> }
-        builder.setTitle(getString(R.string.logout_account))
-        builder.setMessage(getString(R.string.confirm_logout))
-        builder.create().show()
     }
 
     private fun setViews() {

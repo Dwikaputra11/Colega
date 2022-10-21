@@ -19,12 +19,14 @@ import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 private val TAG = "RegisterFragment"
 
+@AndroidEntryPoint
 class RegisterFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>

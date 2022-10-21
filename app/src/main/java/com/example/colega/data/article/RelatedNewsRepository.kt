@@ -2,8 +2,9 @@ package com.example.colega.data.article
 
 import androidx.lifecycle.LiveData
 import com.example.colega.db.MyDatabase
+import javax.inject.Inject
 
-class RelatedNewsRepository(private val relatedNewsDao: RelatedNewsDao) {
+class RelatedNewsRepository @Inject constructor(private val relatedNewsDao: RelatedNewsDao) {
 
     fun getAllRelatedNews(): LiveData<List<RelatedNews>> = relatedNewsDao.getAllArticle()
 

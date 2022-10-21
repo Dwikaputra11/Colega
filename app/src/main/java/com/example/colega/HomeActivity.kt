@@ -19,10 +19,12 @@ import com.example.colega.ui.BookmarkFragment
 import com.example.colega.ui.HomeFragment
 import com.example.colega.ui.ProfileFragment
 import com.example.colega.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 private const val TAG = "HomeActivity"
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var userVM: UserViewModel

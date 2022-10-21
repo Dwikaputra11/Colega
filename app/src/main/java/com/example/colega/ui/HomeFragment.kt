@@ -13,9 +13,11 @@ import com.example.colega.databinding.FragmentHomeBinding
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "HomeFragment"
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var userVM: UserViewModel

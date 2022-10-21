@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
-import com.example.colega.api.RetrofitClient
+import com.example.colega.api.NewsService
 import com.example.colega.data.source.Source
 import com.example.colega.data.source.SourceRepository
 import com.example.colega.db.MyDatabase
@@ -15,14 +15,17 @@ import com.example.colega.models.news.SourceResponse
 import com.example.colega.models.news.SourceResponseItem
 import com.example.colega.worker.LoadSourceWorker
 import com.example.colega.worker.WorkerKeys
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 private const val TAG = "SourceViewModel"
-class SourceViewModel(application: Application): AndroidViewModel(application) {
+@HiltViewModel
+class SourceViewModel @Inject constructor(private val newsService: NewsService, application: Application): AndroidViewModel(application) {
 
     private val allSources: MutableLiveData<List<SourceResponseItem>?> = MutableLiveData()
     private val repository: SourceRepository
@@ -71,7 +74,7 @@ class SourceViewModel(application: Application): AndroidViewModel(application) {
     fun getAllSources(): MutableLiveData<List<SourceResponseItem>?> = allSources
 
     fun getSourcesFromApi(){
-        RetrofitClient.instanceFilm.getAllSourceNews()
+        newsService.getAllSourceNews()
             .enqueue(object : Callback<SourceResponse>{
                 override fun onResponse(
                     call: Call<SourceResponse>,

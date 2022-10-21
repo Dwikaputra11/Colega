@@ -16,9 +16,11 @@ import com.example.colega.models.user.UserBookmark
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.BookmarkViewModel
 import com.example.colega.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "BookmarkFragment"
 
+@AndroidEntryPoint
 class BookmarkFragment : Fragment() {
     private lateinit var binding: FragmentBookmarkBinding
     private lateinit var bookmarkVM: BookmarkViewModel

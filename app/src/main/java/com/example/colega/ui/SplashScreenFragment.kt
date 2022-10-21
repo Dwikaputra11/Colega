@@ -21,8 +21,10 @@ import com.example.colega.databinding.FragmentSplashScreenBinding
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.ArticleViewModel
 import com.example.colega.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class SplashScreenFragment : Fragment() {
     private var progressMax = 450
     private val TAG = "SplashScreenFragment"

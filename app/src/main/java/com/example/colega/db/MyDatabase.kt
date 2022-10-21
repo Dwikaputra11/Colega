@@ -3,7 +3,6 @@ package com.example.colega.db
 import android.content.Context
 import androidx.room.*
 import androidx.room.migration.AutoMigrationSpec
-import androidx.room.migration.Migration
 import com.example.colega.data.article.HeadlineDao
 import com.example.colega.data.article.HeadlineNews
 import com.example.colega.data.article.RelatedNews
@@ -29,7 +28,7 @@ abstract class MyDatabase: RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun bookmarkDao(): BookmarkDao
     abstract fun followingDao(): FollowingSourceDao
-    abstract fun relatedNews(): RelatedNewsDao
+    abstract fun relatedNewsDao(): RelatedNewsDao
     abstract fun headlineDao(): HeadlineDao
     abstract fun sourceDao(): SourceDao
 

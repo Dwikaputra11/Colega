@@ -4,7 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.colega.api.RetrofitClient
+import com.example.colega.api.NewsService
+import com.example.colega.api.UserService
 import com.example.colega.data.source.Source
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.SourceResponse
@@ -13,6 +14,7 @@ import com.example.colega.models.user.UserFollowingSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 private const val TAG = "LoadSourceWorker"
 @Suppress("BlockingMethodInNonBlockingContext")
@@ -24,12 +26,16 @@ class LoadSourceWorker(
     private val application = applicationContext
     private val sourceDao = MyDatabase.getDatabase(application).sourceDao()
     private lateinit var userId: String
+    @Inject
+    lateinit var newsService: NewsService
+    @Inject
+    lateinit var userService: UserService
 
     override suspend fun doWork(): Result {
         userId = inputData.getString(WorkerKeys.SOURCE_INPUT_DATA).toString()
         Log.d(TAG, "doWork: $userId")
         try {
-            RetrofitClient.instanceFilm.getAllSourceNews()
+            newsService.getAllSourceNews()
                 .enqueue(object : Callback<SourceResponse>{
                     override fun onResponse(
                         call: Call<SourceResponse>,
@@ -61,7 +67,7 @@ class LoadSourceWorker(
 
 
     fun syncWithUserFollowingSource(list: List<SourceResponseItem>){
-        RetrofitClient.instanceUser.getUserFollowingSource(userId)
+        userService.getUserFollowingSource(userId)
             .enqueue(object : Callback<List<UserFollowingSource>>{
                 override fun onResponse(
                     call: Call<List<UserFollowingSource>>,

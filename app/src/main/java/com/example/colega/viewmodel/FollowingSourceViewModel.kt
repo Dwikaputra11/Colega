@@ -1,37 +1,25 @@
 package com.example.colega.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.example.colega.api.RetrofitClient
-import com.example.colega.data.users.FollowingSource
-import com.example.colega.data.users.FollowingSourceRepository
-import com.example.colega.db.MyDatabase
+import androidx.lifecycle.ViewModel
+import com.example.colega.api.UserService
 import com.example.colega.models.user.DataFollowingSource
 import com.example.colega.models.user.UserFollowingSource
-import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 private const val TAG = "FollowingSourceViewModel"
 
-class FollowingSourceViewModel(application: Application): AndroidViewModel(application) {
+@HiltViewModel
+class FollowingSourceViewModel @Inject constructor(private val userService: UserService): ViewModel() {
     private val allUserFollowingSource: MutableLiveData<List<UserFollowingSource>?> = MutableLiveData()
     private val postFollowingSource: MutableLiveData<UserFollowingSource?> = MutableLiveData()
     private val deleteFollowingSource: MutableLiveData<UserFollowingSource?> = MutableLiveData()
     private val singleSource: MutableLiveData<UserFollowingSource> = MutableLiveData()
-
-    private val repository: FollowingSourceRepository
-
-    init {
-        val followingSourceDao = MyDatabase.getDatabase(application).followingDao()
-        repository = FollowingSourceRepository(followingSourceDao)
-    }
-
     fun getFollowingSource(): MutableLiveData<List<UserFollowingSource>?> = allUserFollowingSource
     fun getPostFollowingSource(): MutableLiveData<UserFollowingSource?> = postFollowingSource
     fun getDeleteFollowingSource():MutableLiveData<UserFollowingSource?> = deleteFollowingSource
@@ -41,7 +29,7 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
 
     // API
     fun getFollowingFromApi(userId: String){
-        RetrofitClient.instanceUser.getUserFollowingSource(userId)
+        userService.getUserFollowingSource(userId)
             .enqueue(object : Callback<List<UserFollowingSource>>{
                 override fun onResponse(
                     call: Call<List<UserFollowingSource>>,
@@ -65,7 +53,7 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
     }
 
     fun postFollowingSourceToApi(userId: String, dataFollowingSource: DataFollowingSource){
-        RetrofitClient.instanceUser.postFollowingSource(userId, dataFollowingSource)
+        userService.postFollowingSource(userId, dataFollowingSource)
             .enqueue(object : Callback<UserFollowingSource>{
                 override fun onResponse(
                     call: Call<UserFollowingSource>,
@@ -88,7 +76,7 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
     }
 
     fun deleteFollowingFromApi(userId: String, id: String){
-        RetrofitClient.instanceUser.deleteFollowingSource(userId, id)
+        userService.deleteFollowingSource(userId, id)
             .enqueue(object : Callback<UserFollowingSource>{
                 override fun onResponse(
                     call: Call<UserFollowingSource>,
@@ -111,7 +99,7 @@ class FollowingSourceViewModel(application: Application): AndroidViewModel(appli
     }
 
     fun getSingleSourceFromApi(userId: String, sourceId: String){
-        RetrofitClient.instanceUser.getSingleSource(userId, sourceId)
+        userService.getSingleSource(userId, sourceId)
             .enqueue(object : Callback<List<UserFollowingSource>>{
 
                 override fun onResponse(

@@ -17,7 +17,9 @@ import com.example.colega.databinding.FragmentFeedsBinding
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.ArticleViewModel
 import com.example.colega.viewmodel.BookmarkViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FeedsFragment : Fragment() {
     private  val TAG = "FeedsFragment"
     private lateinit var binding: FragmentFeedsBinding

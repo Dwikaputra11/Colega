@@ -1,35 +1,25 @@
 package com.example.colega.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.example.colega.api.RetrofitClient
+import androidx.lifecycle.ViewModel
+import com.example.colega.api.UserService
 import com.example.colega.data.users.Bookmark
-import com.example.colega.data.users.BookmarkRepository
-import com.example.colega.db.MyDatabase
 import com.example.colega.models.user.UserBookmark
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 private const val TAG = "BookmarkViewModel"
 
-class BookmarkViewModel(application: Application): AndroidViewModel(application) {
-    private val repository: BookmarkRepository
+@HiltViewModel
+class BookmarkViewModel @Inject constructor(private val userService: UserService): ViewModel() {
     private val getAllUserBookmark: MutableLiveData<List<UserBookmark>?> = MutableLiveData()
     private val postUserBookmark: MutableLiveData<UserBookmark> = MutableLiveData()
     private val deleteUserBookmark: MutableLiveData<UserBookmark> = MutableLiveData()
 
-    init {
-        val bookmarkDao = MyDatabase.getDatabase(application)
-            .bookmarkDao()
-        repository = BookmarkRepository(bookmarkDao)
-    }
 
     fun getUserBookmark(): MutableLiveData<List<UserBookmark>?> = getAllUserBookmark
 
@@ -38,7 +28,7 @@ class BookmarkViewModel(application: Application): AndroidViewModel(application)
     fun deleteUserBookmark(): MutableLiveData<UserBookmark> = deleteUserBookmark
 
     fun getBookmarkFromApi(userId: String){
-        RetrofitClient.instanceUser.getUserBookmark(userId)
+        userService.getUserBookmark(userId)
             .enqueue(object : Callback<List<UserBookmark>>{
                 override fun onResponse(
                     call: Call<List<UserBookmark>>,
@@ -63,7 +53,7 @@ class BookmarkViewModel(application: Application): AndroidViewModel(application)
     }
 
     fun postBookmarkToApi(bookmark: Bookmark){
-        RetrofitClient.instanceUser.postBookmark(bookmark.userId.toString(), bookmark)
+        userService.postBookmark(bookmark.userId.toString(), bookmark)
             .enqueue(object : Callback<UserBookmark>{
                 override fun onResponse(
                     call: Call<UserBookmark>,
@@ -84,7 +74,7 @@ class BookmarkViewModel(application: Application): AndroidViewModel(application)
     }
 
     fun deleteBookmarkUserFromApi(userId: String, id: String){
-        RetrofitClient.instanceUser.deleteBookmark(userId, id)
+        userService.deleteBookmark(userId, id)
             .enqueue(object: Callback<UserBookmark>{
                 override fun onResponse(
                     call: Call<UserBookmark>,

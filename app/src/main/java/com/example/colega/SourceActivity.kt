@@ -18,9 +18,11 @@ import com.example.colega.viewmodel.FollowingSourceViewModel
 import com.example.colega.viewmodel.SourceViewModel
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.shape.ShapePath.PathQuadOperation
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "SourceActivity"
 
+@AndroidEntryPoint
 class SourceActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySourceBinding
     private lateinit var sourceVM:SourceViewModel

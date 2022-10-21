@@ -15,9 +15,11 @@ import com.example.colega.databinding.FragmentFollowingBinding
 import com.example.colega.models.user.UserFollowingSource
 import com.example.colega.viewmodel.FollowingSourceViewModel
 import com.example.colega.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "FollowingFragment"
 
+@AndroidEntryPoint
 class FollowingFragment : Fragment() {
     private lateinit var binding: FragmentFollowingBinding
     private lateinit var userFollowingSourceVM: FollowingSourceViewModel

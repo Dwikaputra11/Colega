@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.colega.api.RetrofitClient
+import com.example.colega.api.NewsService
 import com.example.colega.data.article.HeadlineNews
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.ArticleResponse
@@ -12,6 +12,7 @@ import com.example.colega.models.news.NewsModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 private const val TAG = "LoadHeadlineWorker"
 @Suppress("BlockingMethodInNonBlockingContext")
@@ -22,10 +23,12 @@ class LoadHeadlineWorker(
 
     private val application = applicationContext
     private val headlineDao = MyDatabase.getDatabase(application).headlineDao()
+    @Inject
+    lateinit var newsService: NewsService
 
     override suspend fun doWork(): Result {
         try {
-            RetrofitClient.instanceFilm.getTopHeadLines()
+            newsService.getTopHeadLines()
                 .enqueue(object : Callback<NewsModel>{
                     override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
                         if(response.isSuccessful){

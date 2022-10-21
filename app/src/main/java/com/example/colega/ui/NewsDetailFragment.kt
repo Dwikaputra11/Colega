@@ -21,7 +21,9 @@ import com.example.colega.viewmodel.BookmarkViewModel
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NewsDetailFragment(
     private val headlineNews: HeadlineNews?,
     private val relatedNews: RelatedNews?,

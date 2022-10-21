@@ -2,67 +2,44 @@ package com.example.colega.viewmodel
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.*
-import com.example.colega.api.RetrofitClient
-import com.example.colega.models.user.DataUser
-import com.example.colega.data.users.User
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.colega.api.UserService
 import com.example.colega.data.users.UserRepository
 import com.example.colega.db.MyDatabase
+import com.example.colega.models.user.DataUser
 import com.example.colega.models.user.UserBookmark
 import com.example.colega.models.user.UserFollowingSource
 import com.example.colega.models.user.UserResponseItem
 import com.example.colega.preferences.UserPreferencesRepository
-import kotlinx.coroutines.Dispatchers
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 private const val TAG = "UserViewModel"
 
-class UserViewModel(application: Application): AndroidViewModel(application) {
+@HiltViewModel
+class UserViewModel @Inject constructor(
+    private val userService: UserService,
+    application: Application,
+): ViewModel() {
     private val prefRepo = UserPreferencesRepository(application)
     val dataUser = prefRepo.readData.asLiveData()
-    private val repository: UserRepository
     private val activeUser: MutableLiveData<UserResponseItem> = MutableLiveData()
     private val userData: MutableLiveData<UserResponseItem> = MutableLiveData()
-    private val userFollowingSource: MutableLiveData<List<UserFollowingSource>> = MutableLiveData()
-    private val userBookmarkNews: MutableLiveData<List<UserBookmark>> = MutableLiveData()
 
-    init {
-        val userDao = MyDatabase.getDatabase(
-            application
-        ).userDao()
-        repository = UserRepository(userDao)
-    }
-
-    fun getUserBookmarkNews(): MutableLiveData<List<UserFollowingSource>> = userFollowingSource
-
-    fun getUserFollowFromApi(userId:String){
-        RetrofitClient.instanceUser.getUserFollowingSource(userId)
-            .enqueue(object : Callback<List<UserFollowingSource>>{
-                override fun onResponse(
-                    call: Call<List<UserFollowingSource>>,
-                    response: Response<List<UserFollowingSource>>
-                ) {
-                    if(response.isSuccessful){
-                        response.body()
-                    }
-                }
-
-                override fun onFailure(call: Call<List<UserFollowingSource>>, t: Throwable) {
-
-                }
-
-            })
-    }
 
     fun getUser(): MutableLiveData<UserResponseItem>{
         return activeUser
     }
 
     fun getUserResponse(username: String){
-        RetrofitClient.instanceUser.getAllUsers()
+        userService.getAllUsers()
             .enqueue(object: Callback<List<UserResponseItem>>{
                 override fun onResponse(
                     call: Call<List<UserResponseItem>>,
@@ -97,7 +74,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun postUser(user: DataUser){
-        RetrofitClient.instanceUser.addUser(user)
+        userService.addUser(user)
             .enqueue(object :Callback<UserResponseItem>{
                 override fun onResponse(
                     call: Call<UserResponseItem>,
@@ -119,7 +96,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun updateUser(userId: String,user: DataUser){
-        RetrofitClient.instanceUser.updateUser(userId,user)
+        userService.updateUser(userId,user)
             .enqueue(object : Callback<UserResponseItem>{
                 override fun onResponse(
                     call: Call<UserResponseItem>,
@@ -135,26 +112,6 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
                 }
 
             })
-    }
-
-    fun addUser(user: User){
-        viewModelScope.launch(Dispatchers.IO){ repository.addUser(user) }
-    }
-
-    fun updateUser(user: User){
-        viewModelScope.launch(Dispatchers.IO){ repository.updateUser(user) }
-    }
-
-    fun deleteUser(user: User){
-        viewModelScope.launch(Dispatchers.IO){ repository.deleteUser(user) }
-    }
-
-    fun findUser(username:String): LiveData<User> {
-        return repository.findUser(username)
-    }
-
-    fun isUserExist(username: String): Int{
-        return repository.countUser(username)
     }
 
     fun addToUserPref(user: UserResponseItem){
