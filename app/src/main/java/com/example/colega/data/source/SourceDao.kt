@@ -15,6 +15,9 @@ interface SourceDao {
     @Query("DELETE FROM source")
     fun deleteAllSource()
 
+    @Query("SELECT COUNT(*) FROM source")
+    fun countSourceSize(): Int
+
     @Insert
     fun postSource(sources: List<Source>)
 

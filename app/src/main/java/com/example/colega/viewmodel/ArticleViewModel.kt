@@ -32,22 +32,22 @@ class ArticleViewModel @Inject constructor(
     private val newsService: NewsService,
     private val relatedNewsRepository: RelatedNewsRepository,
     private val headlineRepository: HeadlineRepository,
+    private var workManager: WorkManager,
     application: Application
 ): ViewModel() {
     private var articleResponseLiveData: MutableLiveData<List<ArticleResponse>> = MutableLiveData()
     private var headlineLiveData : MutableLiveData<List<ArticleResponse>> = MutableLiveData()
-    private val workManager: WorkManager
     private val relatedWorkInfo: LiveData<List<WorkInfo>>
     private val headlineWorkInfo: LiveData<List<WorkInfo>>
-
-    fun getArticleLiveData(): MutableLiveData<List<ArticleResponse>> = articleResponseLiveData
-    fun getHeadlineLiveData(): MutableLiveData<List<ArticleResponse>> = headlineLiveData
 
     init {
         workManager = WorkManager.getInstance(application)
         relatedWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_RELATED_NEWS_DATA)
         headlineWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_HEADLINE_NEWS_DATA)
     }
+
+    fun getArticleLiveData(): MutableLiveData<List<ArticleResponse>> = articleResponseLiveData
+    fun getHeadlineLiveData(): MutableLiveData<List<ArticleResponse>> = headlineLiveData
 
     @SuppressLint("RestrictedApi")
     fun fetchRelatedNews(){

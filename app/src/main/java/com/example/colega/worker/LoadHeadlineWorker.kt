@@ -2,13 +2,18 @@ package com.example.colega.worker
 
 import android.content.Context
 import android.util.Log
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.colega.api.NewsService
+import com.example.colega.api.SingletonInstance
+import com.example.colega.data.article.HeadlineDao
 import com.example.colega.data.article.HeadlineNews
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.ArticleResponse
 import com.example.colega.models.news.NewsModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,19 +21,16 @@ import javax.inject.Inject
 
 private const val TAG = "LoadHeadlineWorker"
 @Suppress("BlockingMethodInNonBlockingContext")
-class LoadHeadlineWorker(
+class LoadHeadlineWorker constructor(
     context: Context,
     workerParams: WorkerParameters
 ): CoroutineWorker(context, workerParams) {
 
-    private val application = applicationContext
-    private val headlineDao = MyDatabase.getDatabase(application).headlineDao()
-    @Inject
-    lateinit var newsService: NewsService
+    private val headlineDao: HeadlineDao = MyDatabase.getDatabase(applicationContext).headlineDao()
 
     override suspend fun doWork(): Result {
         try {
-            newsService.getTopHeadLines()
+            SingletonInstance.instanceNews.getTopHeadLines()
                 .enqueue(object : Callback<NewsModel>{
                     override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
                         if(response.isSuccessful){

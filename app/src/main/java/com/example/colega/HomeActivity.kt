@@ -18,6 +18,7 @@ import com.example.colega.databinding.ActivityHomeBinding
 import com.example.colega.ui.BookmarkFragment
 import com.example.colega.ui.HomeFragment
 import com.example.colega.ui.ProfileFragment
+import com.example.colega.viewmodel.SourceViewModel
 import com.example.colega.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,12 +29,14 @@ private const val TAG = "HomeActivity"
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var userVM: UserViewModel
+    private lateinit var sourceVM: SourceViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         userVM = ViewModelProvider(this)[UserViewModel::class.java]
+        sourceVM = ViewModelProvider(this)[SourceViewModel::class.java]
 
         configureToolbar()
         configureNavigationDrawer()
@@ -116,6 +119,7 @@ class HomeActivity : AppCompatActivity() {
         builder.setPositiveButton(R.string.yes) { _, _ ->
             run {
                 userVM.clearUserPref()
+                sourceVM.deleteAllSourceFromDB()
                 startActivity(Intent(this@HomeActivity, MainActivity::class.java))
             }
         }

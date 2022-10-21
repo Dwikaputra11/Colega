@@ -19,6 +19,10 @@ import com.example.colega.viewmodel.SourceViewModel
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.shape.ShapePath.PathQuadOperation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 private const val TAG = "SourceActivity"
 
@@ -39,19 +43,21 @@ class SourceActivity : AppCompatActivity() {
         followingSourceVM = ViewModelProvider(this)[FollowingSourceViewModel::class.java]
         userVm = ViewModelProvider(this)[UserViewModel::class.java]
 
-        userVm.dataUser.observe(this){
-            if(it != null){
-                requestSource(it.userId.toString())
-            }
-            Log.d(TAG, "onCreate: UserId: $userId")
-        }
-
         adapter = SourceNewsAdapter()
         binding.rvSourceNews.adapter = adapter
         binding.rvSourceNews.layoutManager =  object : LinearLayoutManager(binding.root.context){
             override fun canScrollVertically(): Boolean {
                 return true
             }
+        }
+
+        userVm.dataUser.observe(this){
+            if(it != null){
+                GlobalScope.async {
+                    fetchData(it.userId.toString())
+                }
+            }
+            Log.d(TAG, "onCreate: UserId: $userId")
         }
 
         // TODO: FIX BUTTON WHEN CLICK FOLLOW
@@ -73,17 +79,47 @@ class SourceActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    private suspend fun fetchData(it: String) {
+        val isEmpty = isSourceEmpty()
+        if(isEmpty){
+            Log.d(TAG, "onCreate: Source DB Empty, Request to Api")
+            requestSource(it)
+        }
+        else{
+            Log.d(TAG, "onCreate: Source DB Not Empty")
+            getSourceFromDB()
+        }
+    }
+
+    private suspend fun isSourceEmpty(): Boolean{
+        val isEmpty = CoroutineScope(Dispatchers.IO).async {
+            val status = sourceVM.isSourceEmpty()
+            Log.d(TAG, "isSourceEmpty: ${sourceVM.isSourceEmpty()}")
+            status
+        }.await()
+
+        return isEmpty
+    }
+
     private fun requestSource(userId: String) {
-        sourceVM.fetchSource(userId)
-        sourceVM.getSourceWorkInfo().observe(this){
-            val workInfo = it[0]
-            if(workInfo.state.isFinished || workInfo.state == WorkInfo.State.ENQUEUED){
-                sourceVM.getAllSourceFromDB().observe(this){ list ->
-                    binding.shimmerLayout.startShimmer()
-                    adapter.setSourceNewsList(list)
-                    binding.shimmerLayout.visibility = View.GONE
-                    binding.rvSourceNews.visibility = View.VISIBLE
+        runOnUiThread {
+            sourceVM.fetchSource(userId)
+            sourceVM.getSourceWorkInfo().observe(this){
+                val workInfo = it[0]
+                if(workInfo.state.isFinished || workInfo.state == WorkInfo.State.ENQUEUED){
+                    getSourceFromDB()
                 }
+            }
+        }
+    }
+
+    private fun getSourceFromDB(){
+        runOnUiThread{
+            sourceVM.getAllSourceFromDB().observe(this){ list ->
+                binding.shimmerLayout.startShimmer()
+                adapter.setSourceNewsList(list)
+                binding.shimmerLayout.visibility = View.GONE
+                binding.rvSourceNews.visibility = View.VISIBLE
             }
         }
     }

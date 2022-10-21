@@ -5,12 +5,12 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
 import com.example.colega.api.NewsService
 import com.example.colega.data.source.Source
 import com.example.colega.data.source.SourceRepository
-import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.SourceResponse
 import com.example.colega.models.news.SourceResponseItem
 import com.example.colega.worker.LoadSourceWorker
@@ -25,30 +25,33 @@ import javax.inject.Inject
 
 private const val TAG = "SourceViewModel"
 @HiltViewModel
-class SourceViewModel @Inject constructor(private val newsService: NewsService, application: Application): AndroidViewModel(application) {
+class SourceViewModel @Inject constructor(
+    private val newsService: NewsService,
+    private val repository: SourceRepository,
+    private var workManager: WorkManager,
+    application: Application
+): ViewModel() {
 
     private val allSources: MutableLiveData<List<SourceResponseItem>?> = MutableLiveData()
-    private val repository: SourceRepository
     private val sourceWorkInfo: LiveData<List<WorkInfo>>
-    private val workManager = WorkManager.getInstance(application)
 
     init {
-        val sourceDao = MyDatabase.getDatabase(application).sourceDao()
-        repository = SourceRepository(sourceDao)
+        workManager = WorkManager.getInstance(application)
         sourceWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_SOURCE_DATA)
     }
+
+    fun isSourceEmpty(): Boolean = repository.isSourceEmpty() == 0
 
     fun getSourceWorkInfo(): LiveData<List<WorkInfo>> = sourceWorkInfo
 
     fun fetchSource(userId: String){
-
         val constraint = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
         val inputData = Data.Builder().putString(WorkerKeys.SOURCE_INPUT_DATA, userId).build()
 
-        val periodicTimeWorkRequest = PeriodicWorkRequest.Builder(LoadSourceWorker::class.java, 2, TimeUnit.HOURS)
+        val oneTimeWorkRequest = OneTimeWorkRequest.Builder(LoadSourceWorker::class.java)
             .addTag(WorkerKeys.TAG_SOURCE_DATA)
             .setInputData(inputData)
             .setConstraints(constraint)
@@ -60,10 +63,10 @@ class SourceViewModel @Inject constructor(private val newsService: NewsService, 
             )
             .build()
 
-        workManager.enqueueUniquePeriodicWork(
+        workManager.enqueueUniqueWork(
             WorkerKeys.SYNC_SOURCE_DATA,
-            ExistingPeriodicWorkPolicy.KEEP,
-            periodicTimeWorkRequest
+            ExistingWorkPolicy.KEEP,
+            oneTimeWorkRequest
         )
 
     }
@@ -95,7 +98,6 @@ class SourceViewModel @Inject constructor(private val newsService: NewsService, 
                     Log.d(TAG, "onFailure: ${t.message}")
                     allSources.postValue(null)
                 }
-
             })
     }
 

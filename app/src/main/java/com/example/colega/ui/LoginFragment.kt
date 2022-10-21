@@ -100,11 +100,11 @@ class LoginFragment : Fragment() {
     }
 
     private suspend fun findInApi(): Boolean {
-        val status = withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+        val status =CoroutineScope(Dispatchers.IO).async {
             val isExist = userVM.getUser().value?.username != null
             Log.d(TAG, "findInApi: $isExist")
             isExist
-        }
+        }.await()
         Log.d(TAG, "findInApi: status $status")
         return status
     }

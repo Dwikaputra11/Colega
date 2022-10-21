@@ -31,10 +31,6 @@ class SplashScreenFragment : Fragment() {
     private lateinit var binding: FragmentSplashScreenBinding
     private lateinit var sharedPref: SharedPreferences
     private lateinit var userVM: UserViewModel
-    private lateinit var articleVM: ArticleViewModel
-    private lateinit var workManager: WorkManager
-    private lateinit var data: Data
-    private lateinit var constraint: Constraints
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,8 +43,6 @@ class SplashScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
         userVM = ViewModelProvider(this)[UserViewModel::class.java]
-        articleVM = ViewModelProvider(this)[ArticleViewModel::class.java]
-        workManager = WorkManager.getInstance(requireActivity().applicationContext)
 
         binding.progressBar.max = progressMax
         val language = sharedPref.getString(Utils.languageApp, null)
