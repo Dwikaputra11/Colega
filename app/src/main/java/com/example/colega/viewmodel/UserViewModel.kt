@@ -2,16 +2,13 @@ package com.example.colega.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.colega.api.UserService
-import com.example.colega.data.users.UserRepository
-import com.example.colega.db.MyDatabase
 import com.example.colega.models.user.DataUser
-import com.example.colega.models.user.UserBookmark
-import com.example.colega.models.user.UserFollowingSource
 import com.example.colega.models.user.UserResponseItem
 import com.example.colega.preferences.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,16 +27,29 @@ class UserViewModel @Inject constructor(
 ): ViewModel() {
     private val prefRepo = UserPreferencesRepository(application)
     val dataUser = prefRepo.readData.asLiveData()
-    private val activeUser: MutableLiveData<UserResponseItem> = MutableLiveData()
+    private val activeUser: MutableLiveData<UserResponseItem?> = MutableLiveData()
+    private val allUsers: MutableLiveData<List<UserResponseItem>> = MutableLiveData()
     private val userData: MutableLiveData<UserResponseItem> = MutableLiveData()
 
 
-    fun getUser(): MutableLiveData<UserResponseItem>{
+    fun getUser(): MutableLiveData<UserResponseItem?> {
         return activeUser
     }
 
+    fun isUserExist(username: String, lifecycleOwner: LifecycleOwner): Boolean{
+        var isExist = false
+        allUsers.observe(lifecycleOwner){ user ->
+            user.forEach {
+                if(it.username == username)
+                    isExist = true
+            }
+        }
+
+        return isExist
+    }
+
     fun getUserResponse(username: String){
-        userService.getAllUsers()
+        userService.getUserByUsername(username)
             .enqueue(object: Callback<List<UserResponseItem>>{
                 override fun onResponse(
                     call: Call<List<UserResponseItem>>,
@@ -47,18 +57,26 @@ class UserViewModel @Inject constructor(
                 ) {
                     if (response.isSuccessful) {
                         Log.d("Login", "onResponse: ${response.body()}")
-                        val userList = response.body()?.filter {
-                            it.username == username
-                        } as List<UserResponseItem>
-                        if (!userList.indices.isEmpty()) {
-                            val user = userList.first {
-                                it.username == username
-                            }
-                            activeUser.postValue(user)
-                            Log.d("Login", "onResponse: $user")
-                        } else {
-                            Log.d("Login Activity", "onResponse: Gagal")
+//                        allUsers.postValue(response.body())
+                        response.body()?.let { user ->
+                            val isExist =  user.find { username == it.username }
+                            if(isExist != null)
+                                activeUser.postValue(isExist)
+                            else
+                                Log.d(TAG, "onResponse: User Not Exist")
                         }
+//                        val userList = response.body()?.filter {
+//                            it.username == username
+//                        } as List<UserResponseItem>
+//                        if (!userList.indices.isEmpty()) {
+//                            val user = userList.first {
+//                                it.username == username
+//                            }
+//                            activeUser.postValue(user)
+//                            Log.d("Login", "onResponse: $user")
+//                        } else {
+//                            Log.d("Login Activity", "onResponse: Gagal")
+//                        }
                     }
                 }
 

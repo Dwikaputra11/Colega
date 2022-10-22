@@ -7,8 +7,10 @@ import retrofit2.http.*
 
 interface UserService {
     // USER
-    @GET("users")
-    fun getAllUsers(): Call<List<UserResponseItem>>
+    @GET("users/")
+    fun getUserByUsername(
+        @Query("username") username: String
+    ): Call<List<UserResponseItem>>
 
     @GET("users/{id}")
     fun getUser(@Path("id") id: String): Call<UserResponseItem>

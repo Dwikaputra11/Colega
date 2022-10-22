@@ -49,9 +49,7 @@ class LoginFragment : Fragment() {
         sourceVM = ViewModelProvider(this)[SourceViewModel::class.java]
         binding.btnSignIn.setOnClickListener {
             Log.d(TAG, "onViewCreated: Clicked")
-            GlobalScope.async {
-                loginAccount()
-            }
+            loginAccount()
         }
         userVM.dataUser.observe(viewLifecycleOwner){
             usernameSharedPref = it.username
@@ -63,28 +61,35 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private suspend fun loginAccount() {
+    private fun loginAccount() {
         val username = binding.etUsername.text.toString().trim()
         val password = binding.etPassword.text.toString().trim()
-        withContext(Dispatchers.IO) {
-            userVM.getUserResponse(username)
-        }
-        if(isExist(username)){
+        userVM.getUserResponse(username)
+        userVM.getUser().observe(viewLifecycleOwner){
             // if auth success username will be store in shared pref so
             // when user open the app, it will goes to home page immediately
-
-            // cause login() run in different thread so when we go back to the ui thread it cannot work
-            // so we have to declare the that the function we want tu run in ui thread like below
-            requireActivity().runOnUiThread {
+            if(it != null || usernameSharedPref == username){
                 addToSharedPref(password)
+            }else{
+                toastMessage(getString(R.string.username_status))
             }
-            Log.d(TAG, "loginAccount: Exist")
-        }else{
-            toastMessage(getString(R.string.username_status))
         }
+//        if(isExist(username)){
+//            // if auth success username will be store in shared pref so
+//            // when user open the app, it will goes to home page immediately
+//
+//            // cause login() run in different thread so when we go back to the ui thread it cannot work
+//            // so we have to declare the that the function we want tu run in ui thread like below
+//            requireActivity().runOnUiThread {
+//                addToSharedPref(password)
+//            }
+//            Log.d(TAG, "loginAccount: Exist")
+//        }else{
+//            toastMessage(getString(R.string.username_status))
+//        }
     }
 
-    private suspend fun isExist(username: String):Boolean{
+    private fun isExist(username: String):Boolean{
         Log.d(TAG, "isExist: $usernameSharedPref")
         return if (usernameSharedPref.isNotBlank()) {
             if (usernameSharedPref == username) {
@@ -99,14 +104,18 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private suspend fun findInApi(): Boolean {
-        val status =CoroutineScope(Dispatchers.IO).async {
-            val isExist = userVM.getUser().value?.username != null
-            Log.d(TAG, "findInApi: $isExist")
-            isExist
-        }.await()
-        Log.d(TAG, "findInApi: status $status")
-        return status
+    private fun findInApi(): Boolean {
+        var isExist = false
+        userVM.getUser().observe(viewLifecycleOwner){
+            isExist = it != null
+        }
+//        val status =CoroutineScope(Dispatchers.IO).async {
+//            val isExist = userVM.getUser().value?.username != null
+//            Log.d(TAG, "findInApi: $isExist")
+//            isExist
+//        }.await()
+        Log.d(TAG, "findInApi: status $isExist")
+        return isExist
     }
     private fun addToSharedPref(password: String) {
         Log.d(TAG, "addToSharedPref: Started")

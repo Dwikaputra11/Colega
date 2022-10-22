@@ -106,7 +106,7 @@ class SourceActivity : AppCompatActivity() {
             sourceVM.fetchSource(userId)
             sourceVM.getSourceWorkInfo().observe(this){
                 val workInfo = it[0]
-                if(workInfo.state.isFinished || workInfo.state == WorkInfo.State.ENQUEUED){
+                if(workInfo.state.isFinished){
                     getSourceFromDB()
                 }
             }

@@ -23,6 +23,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
+private const val TAG = "NewsDetailFragment"
+
 @AndroidEntryPoint
 class NewsDetailFragment(
     private val headlineNews: HeadlineNews?,
@@ -34,7 +36,6 @@ class NewsDetailFragment(
     private lateinit var bookmarkVM: BookmarkViewModel
     private lateinit var userVM: UserViewModel
     private var userId = -1
-    private val TAG = "NewsDetailFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
