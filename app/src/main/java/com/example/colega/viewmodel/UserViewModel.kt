@@ -36,18 +36,6 @@ class UserViewModel @Inject constructor(
         return activeUser
     }
 
-    fun isUserExist(username: String, lifecycleOwner: LifecycleOwner): Boolean{
-        var isExist = false
-        allUsers.observe(lifecycleOwner){ user ->
-            user.forEach {
-                if(it.username == username)
-                    isExist = true
-            }
-        }
-
-        return isExist
-    }
-
     fun getUserResponse(username: String){
         userService.getUserByUsername(username)
             .enqueue(object: Callback<List<UserResponseItem>>{
@@ -57,7 +45,6 @@ class UserViewModel @Inject constructor(
                 ) {
                     if (response.isSuccessful) {
                         Log.d("Login", "onResponse: ${response.body()}")
-//                        allUsers.postValue(response.body())
                         response.body()?.let { user ->
                             val isExist =  user.find { username == it.username }
                             if(isExist != null)
@@ -65,23 +52,11 @@ class UserViewModel @Inject constructor(
                             else
                                 Log.d(TAG, "onResponse: User Not Exist")
                         }
-//                        val userList = response.body()?.filter {
-//                            it.username == username
-//                        } as List<UserResponseItem>
-//                        if (!userList.indices.isEmpty()) {
-//                            val user = userList.first {
-//                                it.username == username
-//                            }
-//                            activeUser.postValue(user)
-//                            Log.d("Login", "onResponse: $user")
-//                        } else {
-//                            Log.d("Login Activity", "onResponse: Gagal")
-//                        }
                     }
                 }
 
                 override fun onFailure(call: Call<List<UserResponseItem>>, t: Throwable) {
-                    Log.d(TAG, "onFailure: Faild to login")
+                    Log.d(TAG, "onFailure: Failed to login")
                 }
 
             })
