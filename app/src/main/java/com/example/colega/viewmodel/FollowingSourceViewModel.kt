@@ -26,7 +26,6 @@ class FollowingSourceViewModel @Inject constructor(private val userService: User
     fun getSingleSource():MutableLiveData<UserFollowingSource> = singleSource
 
 
-
     // API
     fun getFollowingFromApi(userId: String){
         userService.getUserFollowingSource(userId)

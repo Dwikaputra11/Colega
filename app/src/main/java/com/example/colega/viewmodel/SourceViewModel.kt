@@ -100,12 +100,6 @@ class SourceViewModel @Inject constructor(
             })
     }
 
-    fun insertSourceToDB(sources: List<Source>){
-        viewModelScope.launch {
-            repository.insertSource(sources)
-        }
-    }
-
     fun deleteAllSourceFromDB(){
         viewModelScope.launch {
             repository.deleteAllSource()

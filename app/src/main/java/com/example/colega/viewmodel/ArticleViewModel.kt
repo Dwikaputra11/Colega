@@ -146,28 +146,4 @@ class ArticleViewModel @Inject constructor(
 
     fun getAllHeadlineNewsFromDB(): LiveData<List<HeadlineNews>> = headlineRepository.getAllHeadline()
 
-    fun insertRelatedNewsToDB(relatedNews: RelatedNews){
-        viewModelScope.launch {
-            relatedNewsRepository.insertRelatedNews(relatedNews)
-        }
-    }
-
-    fun deleteAllRelatedFromDB(){
-        viewModelScope.launch {
-            relatedNewsRepository.deleteAllRelatedNews()
-        }
-    }
-
-    fun insertHeadlineToDB(headlineNews: List<HeadlineNews>){
-        viewModelScope.launch {
-            headlineRepository.insertHeadline(headlineNews)
-        }
-    }
-
-    fun deleteAllHeadlineFromDB(){
-        viewModelScope.launch {
-            headlineRepository.deleteAllHeadline()
-        }
-    }
-
 }
