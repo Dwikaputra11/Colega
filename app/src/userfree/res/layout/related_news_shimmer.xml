@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvCategory"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="0dp"
+        android:backgroundTint="@color/shimmer_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvRelatedCategory"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textColor="#525252"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="5dp"
+            />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvRelatedTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cvCategory"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_toStartOf="@+id/ivRelated"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/roboto"
+        android:maxLines="2"
+        android:maxEms="250"
+        android:background="@color/shimmer_placeholder"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:layout_marginTop="2dp"
+        android:id="@+id/tvRelatedSource"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRelatedTitle"
+        android:layout_marginEnd="10dp"
+        android:background="@color/shimmer_placeholder" />
+
+    <TextView
+        android:id="@+id/tvRelatedTime"
+        android:layout_marginTop="2dp"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRelatedTitle"
+        android:layout_toEndOf="@id/tvRelatedSource"
+        android:background="@color/shimmer_placeholder"
+        android:fontFamily="@font/roboto"
+        android:paddingHorizontal="10dp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivRelated"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/radius_10_dp"
+        android:backgroundTint="@color/shimmer_placeholder"
+        android:contentDescription="@string/related_news_image" />
+
+
+</RelativeLayout>

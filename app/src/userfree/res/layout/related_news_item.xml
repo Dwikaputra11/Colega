@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvCategory"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="0dp"
+        android:backgroundTint="#EFEFEF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvRelatedCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="category"
+            android:textColor="#525252"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="5dp"
+            />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvRelatedTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cvCategory"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_toStartOf="@+id/ivRelated"
+        android:ellipsize="end"
+        android:fontFamily="@font/roboto"
+        android:maxLines="2"
+        android:maxEms="250"
+        android:paddingVertical="8dp"
+        android:paddingEnd="10dp"
+        android:text="Title"
+        android:textColor="@color/black" />
+    <TextView
+        android:id="@+id/tvRelatedSource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Source"
+        android:layout_below="@id/tvRelatedTitle"
+        android:textSize="12sp"
+        android:textColor="#525252"
+        android:fontFamily="@font/roboto"
+        />
+    <TextView
+        android:id="@+id/tvRelatedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00 PM"
+        android:layout_below="@id/tvRelatedTitle"
+        android:layout_toEndOf="@id/tvRelatedSource"
+        android:paddingHorizontal="10dp"
+        android:textSize="12sp"
+        android:textColor="#525252"
+        android:fontFamily="@font/roboto"
+        />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivRelated"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/related_news_image" />
+
+
+</RelativeLayout>
