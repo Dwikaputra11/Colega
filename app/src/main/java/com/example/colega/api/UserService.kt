@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface UserService {
     // USER
-    @GET("users/")
+    @GET("users")
     fun getUserByUsername(
         @Query("username") username: String
     ): Call<List<UserResponseItem>>
