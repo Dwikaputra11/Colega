@@ -24,6 +24,7 @@ import com.example.colega.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 class SplashScreenFragment : Fragment() {
     private var progressMax = 450
