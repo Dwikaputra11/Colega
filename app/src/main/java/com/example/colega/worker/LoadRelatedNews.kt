@@ -2,13 +2,18 @@ package com.example.colega.worker
 
 import android.content.Context
 import android.util.Log
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.colega.api.NewsService
 import com.example.colega.di.SingletonInstance
 import com.example.colega.data.article.RelatedNews
+import com.example.colega.data.article.RelatedNewsDao
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.ArticleResponse
 import com.example.colega.models.news.NewsModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,12 +21,15 @@ import retrofit2.Response
 
 private const val TAG = "LoadRelatedNews"
 @Suppress("BlockingMethodInNonBlockingContext")
-class LoadRelatedNews constructor(
-    context: Context,
-    workerParams: WorkerParameters,
+@HiltWorker
+class LoadRelatedNews @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val relatedNewsDao: RelatedNewsDao,
+    private val newsService: NewsService,
 ): CoroutineWorker(context, workerParams) {
 
-    private val relatedNewsDao = MyDatabase.getDatabase(applicationContext).relatedNewsDao()
+//    private val relatedNewsDao = MyDatabase.getDatabase(applicationContext).relatedNewsDao()
 
     override suspend fun doWork(): Result {
         Log.d(TAG, "doWork: Started")
@@ -29,7 +37,7 @@ class LoadRelatedNews constructor(
             // TODO: CHECK IF CONNECTION AVAILABLE IF NOT RETRY
             Log.d(TAG, "doWork: Fetching Data")
 
-            SingletonInstance.instanceNews.getPreferences()
+            newsService.getPreferences()
                 .enqueue(object : Callback<NewsModel> {
                     override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
                         if(response.isSuccessful) {

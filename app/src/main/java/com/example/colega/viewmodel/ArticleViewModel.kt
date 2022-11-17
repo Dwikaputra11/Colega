@@ -37,13 +37,8 @@ class ArticleViewModel @Inject constructor(
 ): ViewModel() {
     private var articleResponseLiveData: MutableLiveData<List<ArticleResponse>> = MutableLiveData()
     private var headlineLiveData : MutableLiveData<List<ArticleResponse>> = MutableLiveData()
-    private val relatedWorkInfo: LiveData<List<WorkInfo>>
-    private val headlineWorkInfo: LiveData<List<WorkInfo>>
-
-    init {
-        relatedWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_RELATED_NEWS_DATA)
-        headlineWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_HEADLINE_NEWS_DATA)
-    }
+    private val relatedWorkInfo: LiveData<List<WorkInfo>> = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_RELATED_NEWS_DATA)
+    private val headlineWorkInfo: LiveData<List<WorkInfo>> = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_HEADLINE_NEWS_DATA)
 
     fun getArticleLiveData(): MutableLiveData<List<ArticleResponse>> = articleResponseLiveData
     fun getHeadlineLiveData(): MutableLiveData<List<ArticleResponse>> = headlineLiveData

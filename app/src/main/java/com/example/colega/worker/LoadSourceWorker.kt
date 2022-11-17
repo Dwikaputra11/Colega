@@ -2,33 +2,43 @@ package com.example.colega.worker
 
 import android.content.Context
 import android.util.Log
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.colega.api.NewsService
+import com.example.colega.api.UserService
 import com.example.colega.di.SingletonInstance
 import com.example.colega.data.source.Source
+import com.example.colega.data.source.SourceDao
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.SourceResponse
 import com.example.colega.models.news.SourceResponseItem
 import com.example.colega.models.user.UserFollowingSource
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 private const val TAG = "LoadSourceWorker"
 @Suppress("BlockingMethodInNonBlockingContext")
-class LoadSourceWorker constructor(
-    context: Context,
-    workerParams: WorkerParameters,
+@HiltWorker
+class LoadSourceWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val sourceDao: SourceDao,
+    private val newsService: NewsService,
+    private val userService: UserService,
 ): CoroutineWorker(context, workerParams) {
 
     private lateinit var userId: String
-    private val sourceDao = MyDatabase.getDatabase(applicationContext).sourceDao()
+//    private val sourceDao = MyDatabase.getDatabase(applicationContext).sourceDao()
 
     override suspend fun doWork(): Result {
         userId = inputData.getString(WorkerKeys.SOURCE_INPUT_DATA).toString()
         Log.d(TAG, "doWork: $userId")
         try {
-            SingletonInstance.instanceNews.getAllSourceNews()
+            newsService.getAllSourceNews()
                 .enqueue(object : Callback<SourceResponse>{
                     override fun onResponse(
                         call: Call<SourceResponse>,
@@ -61,7 +71,7 @@ class LoadSourceWorker constructor(
 
 
     fun syncWithUserFollowingSource(list: List<SourceResponseItem>){
-        SingletonInstance.instanceUser.getUserFollowingSource(userId)
+        userService.getUserFollowingSource(userId)
             .enqueue(object : Callback<List<UserFollowingSource>>{
                 override fun onResponse(
                     call: Call<List<UserFollowingSource>>,

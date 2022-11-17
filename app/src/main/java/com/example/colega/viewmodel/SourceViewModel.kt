@@ -32,11 +32,7 @@ class SourceViewModel @Inject constructor(
 ): ViewModel() {
 
     private val allSources: MutableLiveData<List<SourceResponseItem>?> = MutableLiveData()
-    private val sourceWorkInfo: LiveData<List<WorkInfo>>
-
-    init {
-        sourceWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_SOURCE_DATA)
-    }
+    private val sourceWorkInfo: LiveData<List<WorkInfo>> = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_SOURCE_DATA)
 
     fun isSourceEmpty(): Boolean = repository.isSourceEmpty() == 0
 
