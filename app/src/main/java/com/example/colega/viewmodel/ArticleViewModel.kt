@@ -41,7 +41,6 @@ class ArticleViewModel @Inject constructor(
     private val headlineWorkInfo: LiveData<List<WorkInfo>>
 
     init {
-        workManager = WorkManager.getInstance(application)
         relatedWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_RELATED_NEWS_DATA)
         headlineWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_HEADLINE_NEWS_DATA)
     }

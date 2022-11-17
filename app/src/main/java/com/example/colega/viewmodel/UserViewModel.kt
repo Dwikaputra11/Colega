@@ -25,7 +25,7 @@ class UserViewModel @Inject constructor(
     private val userService: UserService,
     application: Application,
 ): ViewModel() {
-    private val prefRepo = UserPreferencesRepository(application)
+    private val prefRepo = UserPreferencesRepository(application.applicationContext)
     val dataUser = prefRepo.readData.asLiveData()
     private val activeUser: MutableLiveData<UserResponseItem?> = MutableLiveData()
     private val allUsers: MutableLiveData<List<UserResponseItem>> = MutableLiveData()

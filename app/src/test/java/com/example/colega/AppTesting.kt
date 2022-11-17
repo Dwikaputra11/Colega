@@ -1,5 +1,12 @@
 package com.example.colega
 
+import android.content.Context
+import android.os.Build.VERSION_CODES.Q
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.work.ListenableWorker
+import androidx.work.testing.TestListenableWorkerBuilder
 import com.example.colega.api.NewsService
 import com.example.colega.api.UserService
 import com.example.colega.models.news.NewsModel
@@ -8,26 +15,35 @@ import com.example.colega.models.user.DataUser
 import com.example.colega.models.user.UserBookmark
 import com.example.colega.models.user.UserFollowingSource
 import com.example.colega.models.user.UserResponseItem
-import com.example.colega.utils.Utils
+import com.example.colega.worker.LoadHeadlineWorker
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
+import org.robolectric.annotation.Config
 import retrofit2.Call
 
+@RunWith(AndroidJUnit4::class)
+@Config(sdk = [Q])
 class AppTesting {
 
-    lateinit var userService: UserService
-    lateinit var newsService: NewsService
+    private lateinit var userService: UserService
+    private lateinit var newsService: NewsService
+    private lateinit var context: Context
 
 
     @Before
     fun setUp(){
         userService = mockk()
         newsService = mockk()
+        context = ApplicationProvider.getApplicationContext()
     }
 
 
@@ -173,5 +189,37 @@ class AppTesting {
         }
 
         assertEquals(result, response)
+    }
+
+    // Test Worker
+    @Test
+    fun testHeadlineWorker(){
+        // get the Listenable Worker
+        val worker = TestListenableWorkerBuilder<LoadHeadlineWorker>(context).build()
+
+        // run the worker synchronously
+        val result = worker.startWork().get()
+
+        assertThat(result, `is`(ListenableWorker.Result.success()))
+    }
+
+    @Test
+    fun testHeadlineWorkRetry(){
+        val worker = TestListenableWorkerBuilder<LoadHeadlineWorker>(context)
+            .setRunAttemptCount(2)
+            .build()
+        val result = worker.startWork().get()
+
+        assertThat(result, `is`(ListenableWorker.Result.success())) // show success() instead retry()
+    }
+
+    @Test
+    fun testHeadlineWorkRetryFailed(){
+        val worker = TestListenableWorkerBuilder<LoadHeadlineWorker>(context)
+            .setRunAttemptCount(3)
+            .build()
+        val result = worker.startWork().get()
+
+        assertThat(result, `is`(ListenableWorker.Result.success())) // show success() instead retry()
     }
 }

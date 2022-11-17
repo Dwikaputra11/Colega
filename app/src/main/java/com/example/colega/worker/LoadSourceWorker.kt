@@ -2,25 +2,17 @@ package com.example.colega.worker
 
 import android.content.Context
 import android.util.Log
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.colega.api.NewsService
-import com.example.colega.api.SingletonInstance
-import com.example.colega.api.UserService
+import com.example.colega.di.SingletonInstance
 import com.example.colega.data.source.Source
-import com.example.colega.data.source.SourceDao
-import com.example.colega.data.users.UserDao
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.SourceResponse
 import com.example.colega.models.news.SourceResponseItem
 import com.example.colega.models.user.UserFollowingSource
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import javax.inject.Inject
 
 private const val TAG = "LoadSourceWorker"
 @Suppress("BlockingMethodInNonBlockingContext")

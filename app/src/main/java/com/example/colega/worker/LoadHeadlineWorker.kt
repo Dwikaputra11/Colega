@@ -2,34 +2,30 @@ package com.example.colega.worker
 
 import android.content.Context
 import android.util.Log
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.colega.api.NewsService
-import com.example.colega.api.SingletonInstance
+import com.example.colega.di.SingletonInstance
 import com.example.colega.data.article.HeadlineDao
 import com.example.colega.data.article.HeadlineNews
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.ArticleResponse
 import com.example.colega.models.news.NewsModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import javax.inject.Inject
 
 private const val TAG = "LoadHeadlineWorker"
 @Suppress("BlockingMethodInNonBlockingContext")
 class LoadHeadlineWorker constructor(
     context: Context,
-    workerParams: WorkerParameters
+    workerParams: WorkerParameters,
+    private val service: SingletonInstance,
 ): CoroutineWorker(context, workerParams) {
 
     private val headlineDao: HeadlineDao = MyDatabase.getDatabase(applicationContext).headlineDao()
 
     override suspend fun doWork(): Result {
-        try {
+        return try {
             SingletonInstance.instanceNews.getTopHeadLines()
                 .enqueue(object : Callback<NewsModel>{
                     override fun onResponse(call: Call<NewsModel>, response: Response<NewsModel>) {
@@ -50,9 +46,13 @@ class LoadHeadlineWorker constructor(
 
                 })
             Log.d(TAG, "doWork: Success")
-            return Result.success()
+            Result.success()
         }catch (e: Exception){
-            return Result.failure()
+            if(runAttemptCount < 3){
+                Result.retry()
+            }else{
+                Result.failure()
+            }
         }
     }
 

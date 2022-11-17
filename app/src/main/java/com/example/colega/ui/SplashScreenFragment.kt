@@ -24,10 +24,12 @@ import com.example.colega.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+private const val TAG = "SplashScreenFragment"
+
+@SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 class SplashScreenFragment : Fragment() {
     private var progressMax = 450
-    private val TAG = "SplashScreenFragment"
     private lateinit var binding: FragmentSplashScreenBinding
     private lateinit var sharedPref: SharedPreferences
     private lateinit var userVM: UserViewModel
@@ -85,7 +87,7 @@ class SplashScreenFragment : Fragment() {
             Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_onBoardingFragment)
         }else{
             // if user is already login it will go to home, if not it will go to login page
-            userVM.dataUser.observe(requireActivity()){
+            userVM.dataUser.observe(viewLifecycleOwner){
                 // username blank that means the last user open the app the account has been already logout
                 if(it.username.isBlank()){
                     Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_loginFragment)

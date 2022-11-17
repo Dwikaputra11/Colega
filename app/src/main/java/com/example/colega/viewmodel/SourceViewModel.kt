@@ -35,7 +35,6 @@ class SourceViewModel @Inject constructor(
     private val sourceWorkInfo: LiveData<List<WorkInfo>>
 
     init {
-        workManager = WorkManager.getInstance(application)
         sourceWorkInfo = workManager.getWorkInfosByTagLiveData(WorkerKeys.TAG_SOURCE_DATA)
     }
 

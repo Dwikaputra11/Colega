@@ -2,22 +2,16 @@ package com.example.colega.worker
 
 import android.content.Context
 import android.util.Log
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.colega.api.NewsService
-import com.example.colega.api.SingletonInstance
+import com.example.colega.di.SingletonInstance
 import com.example.colega.data.article.RelatedNews
-import com.example.colega.data.article.RelatedNewsDao
 import com.example.colega.db.MyDatabase
 import com.example.colega.models.news.ArticleResponse
 import com.example.colega.models.news.NewsModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import javax.inject.Inject
 
 
 private const val TAG = "LoadRelatedNews"
