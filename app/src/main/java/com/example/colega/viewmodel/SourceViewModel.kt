@@ -27,7 +27,7 @@ private const val TAG = "SourceViewModel"
 class SourceViewModel @Inject constructor(
     private val newsService: NewsService,
     private val repository: SourceRepository,
-    private var workManager: WorkManager,
+    private val workManager: WorkManager,
     application: Application
 ): ViewModel() {
 
@@ -39,6 +39,7 @@ class SourceViewModel @Inject constructor(
     fun getSourceWorkInfo(): LiveData<List<WorkInfo>> = sourceWorkInfo
 
     fun fetchSource(userId: String){
+        Log.d(TAG, "fetchSource: Started")
         val constraint = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()

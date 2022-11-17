@@ -21,17 +21,17 @@
         android:theme="@style/Theme.Colega"
         tools:targetApi="31">
         <activity
-            android:name=".SourceActivity"
+            android:name=".ui.activity.SourceActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".ui.activity.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,15 +44,25 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 <!--        using startup dependency-->
+<!--        <provider-->
+<!--            android:name="androidx.startup.InitializationProvider"-->
+<!--            android:authorities="${applicationId}.androidx-startup"-->
+<!--            tools:node="remove">-->
+<!--        </provider>-->
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge">
-            <!-- If you are using androidx.startup to initialize other components -->
+            <!-- disable default -->
+            <meta-data
+                android:name="com.example.colega.ContextProvider"
+                android:value="androidx.startup"
+                />
             <meta-data
                 android:name="androidx.work.WorkManagerInitializer"
-                android:value="androidx.startup"
+                android:value="@string/androidx_startup"
                 tools:node="remove" />
         </provider>
 <!--        without startup dependency-->

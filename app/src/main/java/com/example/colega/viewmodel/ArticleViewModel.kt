@@ -32,7 +32,7 @@ class ArticleViewModel @Inject constructor(
     private val newsService: NewsService,
     private val relatedNewsRepository: RelatedNewsRepository,
     private val headlineRepository: HeadlineRepository,
-    private var workManager: WorkManager,
+    private val workManager: WorkManager,
     application: Application
 ): ViewModel() {
     private var articleResponseLiveData: MutableLiveData<List<ArticleResponse>> = MutableLiveData()
@@ -42,6 +42,12 @@ class ArticleViewModel @Inject constructor(
 
     fun getArticleLiveData(): MutableLiveData<List<ArticleResponse>> = articleResponseLiveData
     fun getHeadlineLiveData(): MutableLiveData<List<ArticleResponse>> = headlineLiveData
+
+    fun updateRelatedNews(relatedNews: RelatedNews){
+        viewModelScope.launch {
+            relatedNewsRepository.updateRelatedNews(relatedNews)
+        }
+    }
 
     @SuppressLint("RestrictedApi")
     fun fetchRelatedNews(){
@@ -136,8 +142,14 @@ class ArticleViewModel @Inject constructor(
             })
     }
 
-    fun getAlRelatedNewsFromDB(): LiveData<List<RelatedNews>> = relatedNewsRepository.getAllRelatedNews()
+    fun getAlRelatedNewsFromDB(): LiveData<List<RelatedNews>> {
+        Log.d(TAG, "getAlRelatedNewsFromDB: true")
+        return relatedNewsRepository.getAllRelatedNews()
+    }
 
-    fun getAllHeadlineNewsFromDB(): LiveData<List<HeadlineNews>> = headlineRepository.getAllHeadline()
+    fun getAllHeadlineNewsFromDB(): LiveData<List<HeadlineNews>> {
+        Log.d(TAG, "getAllHeadlineNewsFromDB: true")
+        return headlineRepository.getAllHeadline()
+    }
 
 }

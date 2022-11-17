@@ -3,6 +3,7 @@ package com.example.colega.di
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.startup.Initializer
 import androidx.work.Configuration
 import androidx.work.WorkManager
@@ -15,6 +16,7 @@ import com.example.colega.db.MyDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -25,7 +27,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SingletonInstance: Initializer<WorkManager> {
+object SingletonInstance {
 
     private const val BASE_URL_NEWS = "https://newsapi.org/v2/"
     private const val BASE_URL_USER = "https://6347ce8d0484786c6e892194.mockapi.io/colega/v1/"
@@ -115,14 +117,15 @@ object SingletonInstance: Initializer<WorkManager> {
     fun getSourceDao(myDatabase: MyDatabase): SourceDao =
         myDatabase.sourceDao()
 
-    override fun create(context: Context): WorkManager {
-        val configuration = Configuration.Builder().build()
-        WorkManager.initialize(context,configuration)
-        Log.d("WorkManagerInitializer", "WorkManager initialized by Hilt this time")
-        return WorkManager.getInstance(context)
-    }
+    @Provides
+    @Singleton
+    fun provideWorkManagerConfiguration(workerFactory: HiltWorkerFactory): Configuration =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        return emptyList()
-    }
+    @Provides
+    @Singleton
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager =
+        WorkManager.getInstance(context)
 }

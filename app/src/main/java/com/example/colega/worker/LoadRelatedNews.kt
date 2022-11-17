@@ -17,19 +17,21 @@ import dagger.assisted.AssistedInject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 
 private const val TAG = "LoadRelatedNews"
-@Suppress("BlockingMethodInNonBlockingContext")
 @HiltWorker
 class LoadRelatedNews @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val relatedNewsDao: RelatedNewsDao,
-    private val newsService: NewsService,
+    val relatedNewsDao: RelatedNewsDao,
+    val newsService: NewsService,
 ): CoroutineWorker(context, workerParams) {
 
 //    private val relatedNewsDao = MyDatabase.getDatabase(applicationContext).relatedNewsDao()
+//    @Inject lateinit var relatedNewsDao: RelatedNewsDao
+//    @Inject lateinit var newsService: NewsService
 
     override suspend fun doWork(): Result {
         Log.d(TAG, "doWork: Started")
@@ -60,6 +62,7 @@ class LoadRelatedNews @AssistedInject constructor(
             Log.d(TAG, "doWork: Success")
             return Result.success()
         }catch (e: Exception){
+            Log.d(TAG, "doWork: ${e.localizedMessage}")
             Log.d(TAG, "doWork: Failed")
             return Result.failure()
         }

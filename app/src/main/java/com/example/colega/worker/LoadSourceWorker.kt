@@ -19,20 +19,24 @@ import dagger.assisted.AssistedInject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 private const val TAG = "LoadSourceWorker"
-@Suppress("BlockingMethodInNonBlockingContext")
 @HiltWorker
 class LoadSourceWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val sourceDao: SourceDao,
-    private val newsService: NewsService,
-    private val userService: UserService,
+    val sourceDao: SourceDao,
+    val userService: UserService,
+    val newsService: NewsService
 ): CoroutineWorker(context, workerParams) {
 
     private lateinit var userId: String
 //    private val sourceDao = MyDatabase.getDatabase(applicationContext).sourceDao()
+
+//    @Inject lateinit var sourceDao: SourceDao
+//    @Inject lateinit var newsService: NewsService
+//    @Inject lateinit var userService: UserService
 
     override suspend fun doWork(): Result {
         userId = inputData.getString(WorkerKeys.SOURCE_INPUT_DATA).toString()
