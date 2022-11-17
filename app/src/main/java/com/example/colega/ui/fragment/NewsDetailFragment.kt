@@ -1,4 +1,4 @@
-package com.example.colega.ui
+package com.example.colega.ui.fragment
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.colega.R
 import com.example.colega.data.article.HeadlineNews
@@ -17,6 +17,7 @@ import com.example.colega.data.users.Bookmark
 import com.example.colega.databinding.FragmentNewsDetailBinding
 import com.example.colega.models.user.UserBookmark
 import com.example.colega.utils.UtilMethods
+import com.example.colega.viewmodel.ArticleViewModel
 import com.example.colega.viewmodel.BookmarkViewModel
 import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -33,8 +34,9 @@ class NewsDetailFragment(
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewsDetailBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
-    private lateinit var bookmarkVM: BookmarkViewModel
-    private lateinit var userVM: UserViewModel
+    private val bookmarkVM: BookmarkViewModel by viewModels()
+    private val userVM: UserViewModel by viewModels()
+    private val articleVM: ArticleViewModel by viewModels()
     private var userId = -1
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,8 +47,6 @@ class NewsDetailFragment(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        bookmarkVM = ViewModelProvider(this)[BookmarkViewModel::class.java]
-        userVM = ViewModelProvider(this)[UserViewModel::class.java]
         userVM.dataUser.observe(viewLifecycleOwner){
             userId = it.userId
         }
@@ -114,6 +114,7 @@ class NewsDetailFragment(
                 .load(relatedNews.urlToImage)
                 .placeholder(R.drawable.news)
                 .into(binding.ivNews)
+            binding.btnBookmark.isChecked = relatedNews.isCheck
         }else if(bookmark != null){
             binding.tvDetailCategory.text = "tech"
             binding.tvDetailDesc.text = bookmark.description
@@ -140,6 +141,7 @@ class NewsDetailFragment(
                 .load(headlineNews.urlToImage)
                 .placeholder(R.drawable.news)
                 .into(binding.ivNews)
+            binding.btnBookmark.isChecked = headlineNews.isCheck
         }
     }
 
@@ -168,6 +170,9 @@ class NewsDetailFragment(
             if(relatedNews != null){
                 if (userId != -1) {
                     Log.d(TAG, "onDismiss: $userId")
+                    // update status in db
+                    relatedNews.isCheck = true
+                    // add news to bookmark
                     val bookmark = Bookmark(
                         userId = userId,
                         author = relatedNews.author,
@@ -180,8 +185,8 @@ class NewsDetailFragment(
                         url = relatedNews.url,
                         id = 0,
                     )
-//                    bookmarkVM.insertBookmark(bookmark)
                     bookmarkVM.postBookmarkToApi(bookmark)
+                    articleVM.updateRelatedNews(relatedNews)
                     Log.d(TAG, "onDismiss: Done")
                 }
             }else if(headlineNews != null){
