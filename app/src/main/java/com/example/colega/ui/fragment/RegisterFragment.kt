@@ -1,4 +1,4 @@
-package com.example.colega.ui
+package com.example.colega.ui.fragment
 
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.colega.R
 import com.example.colega.models.user.DataUser
 import com.example.colega.databinding.FragmentRegisterBinding
@@ -30,7 +30,7 @@ private val TAG = "RegisterFragment"
 class RegisterFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
-    private lateinit var userVm : UserViewModel
+    private val userVm : UserViewModel by viewModels()
     private lateinit var sharedPref: SharedPreferences
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +42,6 @@ class RegisterFragment : BottomSheetDialogFragment() {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        userVm = ViewModelProvider(this)[UserViewModel::class.java]
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
         setViews(view)
         binding.btnSignUp.setOnClickListener {

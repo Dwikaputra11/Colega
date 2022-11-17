@@ -1,4 +1,4 @@
-package com.example.colega.ui
+package com.example.colega.ui.fragment
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -7,10 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colega.adapter.BookmarkAdapter
-import com.example.colega.data.users.Bookmark
 import com.example.colega.databinding.FragmentBookmarkBinding
 import com.example.colega.models.user.UserBookmark
 import com.example.colega.utils.Utils
@@ -23,8 +22,8 @@ private const val TAG = "BookmarkFragment"
 @AndroidEntryPoint
 class BookmarkFragment : Fragment() {
     private lateinit var binding: FragmentBookmarkBinding
-    private lateinit var bookmarkVM: BookmarkViewModel
-    private lateinit var userVM: UserViewModel
+    private val bookmarkVM: BookmarkViewModel by viewModels()
+    private val userVM: UserViewModel by viewModels()
     private lateinit var sharedPref: SharedPreferences
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +35,6 @@ class BookmarkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
-        bookmarkVM = ViewModelProvider(this)[BookmarkViewModel::class.java]
-        userVM = ViewModelProvider(this)[UserViewModel::class.java]
         requireActivity().runOnUiThread {
             setViews()
         }

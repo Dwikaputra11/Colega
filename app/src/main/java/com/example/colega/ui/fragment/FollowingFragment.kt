@@ -1,4 +1,4 @@
-package com.example.colega.ui
+package com.example.colega.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -6,11 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.colega.R
 import com.example.colega.adapter.FollowingAdapter
-import com.example.colega.data.users.FollowingSource
 import com.example.colega.databinding.FragmentFollowingBinding
 import com.example.colega.models.user.UserFollowingSource
 import com.example.colega.viewmodel.FollowingSourceViewModel
@@ -22,8 +20,8 @@ private const val TAG = "FollowingFragment"
 @AndroidEntryPoint
 class FollowingFragment : Fragment() {
     private lateinit var binding: FragmentFollowingBinding
-    private lateinit var userFollowingSourceVM: FollowingSourceViewModel
-    private lateinit var userVM: UserViewModel
+    private val userFollowingSourceVM: FollowingSourceViewModel by viewModels()
+    private val userVM: UserViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,8 +32,7 @@ class FollowingFragment : Fragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        userFollowingSourceVM = ViewModelProvider(this)[FollowingSourceViewModel::class.java]
-        userVM = ViewModelProvider(this)[UserViewModel::class.java]
+        Log.d(TAG, "onViewCreated: Started")
         userVM.dataUser.observe(viewLifecycleOwner){
             setViews(it.userId.toString())
         }

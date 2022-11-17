@@ -1,4 +1,4 @@
-package com.example.colega.ui
+package com.example.colega.ui.fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,14 +12,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.work.*
-import com.example.colega.HomeActivity
+import com.example.colega.ui.activity.HomeActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentSplashScreenBinding
 import com.example.colega.utils.Utils
-import com.example.colega.viewmodel.ArticleViewModel
 import com.example.colega.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -32,7 +31,7 @@ class SplashScreenFragment : Fragment() {
     private var progressMax = 450
     private lateinit var binding: FragmentSplashScreenBinding
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var userVM: UserViewModel
+    private val userVM: UserViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +44,6 @@ class SplashScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "onViewCreated: usefree")
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
-        userVM = ViewModelProvider(this)[UserViewModel::class.java]
 
         binding.progressBar.max = progressMax
         val language = sharedPref.getString(Utils.languageApp, null)
@@ -92,7 +90,7 @@ class SplashScreenFragment : Fragment() {
                 if(it.username.isBlank()){
                     Navigation.findNavController(binding.root).navigate(R.id.action_splashScreenFragment_to_loginFragment)
                 }else{
-                    startActivity(Intent(requireActivity(),HomeActivity::class.java))
+                    startActivity(Intent(requireActivity(), HomeActivity::class.java))
                 }
             }
         }

@@ -1,47 +1,38 @@
-package com.example.colega
+package com.example.colega.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.WorkInfo
+import com.example.colega.R
 import com.example.colega.adapter.SourceNewsAdapter
 import com.example.colega.data.source.Source
-import com.example.colega.models.user.DataFollowingSource
 import com.example.colega.databinding.ActivitySourceBinding
-import com.example.colega.models.news.SourceResponseItem
+import com.example.colega.models.user.DataFollowingSource
 import com.example.colega.viewmodel.FollowingSourceViewModel
 import com.example.colega.viewmodel.SourceViewModel
 import com.example.colega.viewmodel.UserViewModel
-import com.google.android.material.shape.ShapePath.PathQuadOperation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 
 private const val TAG = "SourceActivity"
 
 @AndroidEntryPoint
 class SourceActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySourceBinding
-    private lateinit var sourceVM:SourceViewModel
-    private lateinit var followingSourceVM: FollowingSourceViewModel
-    private lateinit var userVm: UserViewModel
+    private val sourceVM:SourceViewModel by viewModels()
+    private val followingSourceVM: FollowingSourceViewModel by viewModels()
+    private val userVm: UserViewModel by viewModels()
     private lateinit var adapter: SourceNewsAdapter
-    private var userId: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySourceBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        sourceVM = ViewModelProvider(this)[SourceViewModel::class.java]
-        followingSourceVM = ViewModelProvider(this)[FollowingSourceViewModel::class.java]
-        userVm = ViewModelProvider(this)[UserViewModel::class.java]
 
         adapter = SourceNewsAdapter()
         binding.rvSourceNews.adapter = adapter
@@ -53,11 +44,14 @@ class SourceActivity : AppCompatActivity() {
 
         userVm.dataUser.observe(this){
             if(it != null){
+                Log.d(TAG, "onCreate: Exist")
                 GlobalScope.async {
                     fetchData(it.userId.toString())
                 }
+            }else{
+                Log.d(TAG, "onCreate: null")
             }
-            Log.d(TAG, "onCreate: UserId: $userId")
+            Log.d(TAG, "onCreate: UserId: ${it.userId}")
         }
 
         // TODO: FIX BUTTON WHEN CLICK FOLLOW
@@ -81,6 +75,7 @@ class SourceActivity : AppCompatActivity() {
 
     private suspend fun fetchData(it: String) {
         val isEmpty = isSourceEmpty()
+        Log.d(TAG, "fetchData: $isEmpty")
         if(isEmpty){
             Log.d(TAG, "onCreate: Source DB Empty, Request to Api")
             requestSource(it)
@@ -92,11 +87,11 @@ class SourceActivity : AppCompatActivity() {
     }
 
     private suspend fun isSourceEmpty(): Boolean{
-        val isEmpty = CoroutineScope(Dispatchers.IO).async {
-            val status = sourceVM.isSourceEmpty()
-            Log.d(TAG, "isSourceEmpty: ${sourceVM.isSourceEmpty()}")
-            status
-        }.await()
+        val isEmpty = withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+                val status = sourceVM.isSourceEmpty()
+                Log.d(TAG, "isSourceEmpty: ${sourceVM.isSourceEmpty()}")
+                status
+            }
 
         return isEmpty
     }
@@ -106,7 +101,11 @@ class SourceActivity : AppCompatActivity() {
             sourceVM.fetchSource(userId)
             sourceVM.getSourceWorkInfo().observe(this){
                 val workInfo = it[0]
-                if(workInfo.state.isFinished){
+                Log.d(TAG, "requestSource: ${workInfo.state}")
+                if(workInfo.state == WorkInfo.State.ENQUEUED || workInfo.state == WorkInfo.State.SUCCEEDED){
+                    Log.d(TAG, "requestSource: ${workInfo.state}")
+                    getSourceFromDB()
+                }else{
                     getSourceFromDB()
                 }
             }

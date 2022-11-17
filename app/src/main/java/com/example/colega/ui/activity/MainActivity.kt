@@ -1,8 +1,8 @@
-package com.example.colega
+package com.example.colega.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDelegate
+import com.example.colega.R
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

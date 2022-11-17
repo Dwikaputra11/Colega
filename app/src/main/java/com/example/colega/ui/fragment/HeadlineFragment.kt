@@ -1,4 +1,4 @@
-package com.example.colega.ui
+package com.example.colega.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.WorkInfo
 import com.example.colega.adapter.HeadlineAdapter
 import com.example.colega.data.article.HeadlineNews
 import com.example.colega.databinding.FragmentHeadlineBinding
-import com.example.colega.models.news.ArticleResponse
 import com.example.colega.viewmodel.ArticleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HeadlineFragment : Fragment() {
     private val TAG = "HeadlineFragment"
     private lateinit var binding: FragmentHeadlineBinding
-    private lateinit var articleVM: ArticleViewModel
+    private val articleVM: ArticleViewModel by viewModels()
     private lateinit var adapter: HeadlineAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +30,7 @@ class HeadlineFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        articleVM = ViewModelProvider(this)[ArticleViewModel::class.java]
+        Log.d(TAG, "onViewCreated: Started")
         adapter = HeadlineAdapter()
         binding.rvHeadline.adapter = adapter
         binding.rvHeadline.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
@@ -54,7 +53,7 @@ class HeadlineFragment : Fragment() {
         })
     }
 
-    fun requestHeadlines(){
+    private fun requestHeadlines(){
         articleVM.fetchHeadlineNews()
         articleVM.getHeadlineWorkInfo().observe(viewLifecycleOwner){
             val workInfo = it[0]

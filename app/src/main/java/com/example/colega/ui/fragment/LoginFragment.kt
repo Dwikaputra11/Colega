@@ -1,4 +1,4 @@
-package com.example.colega.ui
+package com.example.colega.ui.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -10,13 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.example.colega.HomeActivity
+import com.example.colega.ui.activity.HomeActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentLoginBinding
-import com.example.colega.models.user.DataUser
-import com.example.colega.models.user.UserResponseItem
 import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.SourceViewModel
 import com.example.colega.viewmodel.UserViewModel
@@ -28,9 +26,9 @@ class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var userVM: UserViewModel
+    private val userVM: UserViewModel by viewModels()
+    private val sourceVM: SourceViewModel by viewModels()
     private var usernameSharedPref = ""
-    private lateinit var sourceVM: SourceViewModel
     private val TAG = "LoginFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,8 +43,6 @@ class LoginFragment : Fragment() {
             .load(Utils.loginImage)
             .into(binding.ivLogin)
         sharedPref = requireActivity().getSharedPreferences(Utils.name,Context.MODE_PRIVATE)
-        userVM = ViewModelProvider(this)[UserViewModel::class.java]
-        sourceVM = ViewModelProvider(this)[SourceViewModel::class.java]
         binding.btnSignIn.setOnClickListener {
             Log.d(TAG, "onViewCreated: Clicked")
             loginAccount()

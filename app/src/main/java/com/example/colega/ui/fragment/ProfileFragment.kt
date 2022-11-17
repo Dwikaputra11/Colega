@@ -1,4 +1,4 @@
-package com.example.colega.ui
+package com.example.colega.ui.fragment
 
 import android.Manifest
 import android.app.Activity
@@ -21,9 +21,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.example.colega.MainActivity
 import com.example.colega.R
 import com.example.colega.databinding.FragmentProfileBinding
 import com.example.colega.databinding.UploadImageProfileProgressBinding
@@ -46,7 +45,7 @@ class ProfileFragment : Fragment() {
     private lateinit var username:String
     private lateinit var binding: FragmentProfileBinding
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var userVM: UserViewModel
+    private val userVM: UserViewModel by viewModels()
     private lateinit var storage: FirebaseStorage
     private lateinit var storageReference: StorageReference
     private lateinit var imgUri: Uri
@@ -76,7 +75,6 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedPref = requireActivity().getSharedPreferences(Utils.name, Context.MODE_PRIVATE)
-        userVM = ViewModelProvider(this)[UserViewModel::class.java]
         storage = FirebaseStorage.getInstance()
         storageReference = storage.reference
         setViews()
