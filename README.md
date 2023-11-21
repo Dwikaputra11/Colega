@@ -1,6 +1,6 @@
 # Colega
 A News App using NewsAPI
 
-Nama: I Made Dwika Putra Riswanda
-NIM: 123200112
-Kelas: IF-E
+<p>Nama: I Made Dwika Putra Riswanda</p>
+<p>NIM: 123200112</p>
+<p>Kelas: IF-E</p>
