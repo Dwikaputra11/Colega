@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
     id 'kotlin-kapt'
-    id "com.google.protobuf" version "0.8.17"
+    id "com.google.protobuf" version '0.9.0'
     id 'dagger.hilt.android.plugin'
     id 'com.google.firebase.crashlytics'
 }
@@ -71,6 +71,9 @@ dependencies {
     testImplementation "io.mockk:mockk:1.13.1"
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.zeugmasolutions.localehelper:locale-helper-android:1.5.1'
+
+    implementation 'com.github.aagarwal1012:Image-Steganography-Library-Android:v1.0'
+    implementation("de.nycode:bcrypt:2.2.0")
 
     // Testing
     androidTestImplementation 'androidx.test:core:1.5.0'

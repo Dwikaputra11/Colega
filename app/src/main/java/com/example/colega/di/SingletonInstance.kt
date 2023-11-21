@@ -43,39 +43,39 @@ object SingletonInstance {
     private val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
 
-    val instanceNews: NewsService by lazy {
-        val interceptor = HttpLoggingInterceptor().apply {
-            this.level = HttpLoggingInterceptor.Level.BODY
-        }
-
-        val client = OkHttpClient.Builder().apply {
-            this.addInterceptor(interceptor)
-                .connectTimeout(30, TimeUnit.SECONDS)
-        }.build()
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL_NEWS)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        retrofit.create(NewsService::class.java)
-    }
-
-    val instanceUser: UserService by lazy {
-        val interceptor = HttpLoggingInterceptor().apply {
-            this.level = HttpLoggingInterceptor.Level.BODY
-        }
-
-        val client = OkHttpClient.Builder().apply {
-            this.addInterceptor(interceptor)
-                .connectTimeout(30, TimeUnit.SECONDS)
-        }.build()
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL_USER)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        retrofit.create(UserService::class.java)
-    }
+//    val instanceNews: NewsService by lazy {
+//        val interceptor = HttpLoggingInterceptor().apply {
+//            this.level = HttpLoggingInterceptor.Level.BODY
+//        }
+//
+//        val client = OkHttpClient.Builder().apply {
+//            this.addInterceptor(interceptor)
+//                .connectTimeout(30, TimeUnit.SECONDS)
+//        }.build()
+//        val retrofit = Retrofit.Builder()
+//            .baseUrl(BASE_URL_NEWS)
+//            .client(client)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//        retrofit.create(NewsService::class.java)
+//    }
+//
+//    val instanceUser: UserService by lazy {
+//        val interceptor = HttpLoggingInterceptor().apply {
+//            this.level = HttpLoggingInterceptor.Level.BODY
+//        }
+//
+//        val client = OkHttpClient.Builder().apply {
+//            this.addInterceptor(interceptor)
+//                .connectTimeout(30, TimeUnit.SECONDS)
+//        }.build()
+//        val retrofit = Retrofit.Builder()
+//            .baseUrl(BASE_URL_USER)
+//            .client(client)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//        retrofit.create(UserService::class.java)
+//    }
 
     @Singleton
     @Provides

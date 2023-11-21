@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,10 +70,11 @@ class FeedsFragment : Fragment() {
         super.onPause()
     }
 
-    @SuppressLint("RestrictedApi")
-    fun requestNews(){
+
+    private fun requestNews(){
         articleVM.fetchRelatedNews()
         articleVM.getRelatedWorkInfo().observe(viewLifecycleOwner){
+            Log.d(TAG, "requestNews: $it")
             val workInfo = it[0]
             if(workInfo.state == WorkInfo.State.ENQUEUED || workInfo.state == WorkInfo.State.SUCCEEDED){
                 binding.shimmerLayout.startShimmer()

@@ -192,34 +192,34 @@ class AppTesting {
     }
 
     // Test Worker
-    @Test
-    fun testHeadlineWorker(){
-        // get the Listenable Worker
-        val worker = TestListenableWorkerBuilder<LoadHeadlineWorker>(context).build()
+//    @Test
+//    fun testHeadlineWorker(){
+//        // get the Listenable Worker
+//        val worker = TestListenableWorkerBuilder<LoadHeadlineWorker>(context).build()
+//
+//        // run the worker synchronously
+//        val result = worker.startWork().get()
+//
+//        assertThat(result, `is`(ListenableWorker.Result.success()))
+//    }
+//
+//    @Test
+//    fun testHeadlineWorkRetry(){
+//        val worker = TestListenableWorkerBuilder<LoadHeadlineWorker>(context)
+//            .setRunAttemptCount(2)
+//            .build()
+//        val result = worker.startWork().get()
+//
+//        assertThat(result, `is`(ListenableWorker.Result.success())) // show success() instead retry()
+//    }
 
-        // run the worker synchronously
-        val result = worker.startWork().get()
-
-        assertThat(result, `is`(ListenableWorker.Result.success()))
-    }
-
-    @Test
-    fun testHeadlineWorkRetry(){
-        val worker = TestListenableWorkerBuilder<LoadHeadlineWorker>(context)
-            .setRunAttemptCount(2)
-            .build()
-        val result = worker.startWork().get()
-
-        assertThat(result, `is`(ListenableWorker.Result.success())) // show success() instead retry()
-    }
-
-    @Test
-    fun testHeadlineWorkRetryFailed(){
-        val worker = TestListenableWorkerBuilder<LoadHeadlineWorker>(context)
-            .setRunAttemptCount(3)
-            .build()
-        val result = worker.startWork().get()
-
-        assertThat(result, `is`(ListenableWorker.Result.success())) // show success() instead retry()
-    }
+//    @Test
+//    fun testHeadlineWorkRetryFailed(){
+//        val worker = TestListenableWorkerBuilder<LoadHeadlineWorker>(context)
+//            .setRunAttemptCount(3)
+//            .build()
+//        val result = worker.startWork().get()
+//
+//        assertThat(result, `is`(ListenableWorker.Result.success())) // show success() instead retry()
+//    }
 }

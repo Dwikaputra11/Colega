@@ -14,6 +14,7 @@ import com.example.colega.adapter.SourceNewsAdapter
 import com.example.colega.data.source.Source
 import com.example.colega.databinding.ActivitySourceBinding
 import com.example.colega.models.user.DataFollowingSource
+import com.example.colega.ui.fragment.VerificationFragment
 import com.example.colega.viewmodel.FollowingSourceViewModel
 import com.example.colega.viewmodel.SourceViewModel
 import com.example.colega.viewmodel.UserViewModel
@@ -58,6 +59,22 @@ class SourceActivity : AppCompatActivity() {
         adapter.setOnItemClickListener(object : SourceNewsAdapter.OnItemClickListener{
             override fun onItemClick(source: Source) {
                 // source follow is true it will post to userApi
+                verifyUser(source)
+            }
+        })
+
+        setSupportActionBar(binding.sourceToolbar)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_round_arrow_back_24)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun verifyUser(source: Source) {
+        val verificationFragment = VerificationFragment()
+        verificationFragment.show(this.supportFragmentManager, verificationFragment.tag)
+
+        verificationFragment.setOnSuccessVerification(object : VerificationFragment.OnSuccessVerification{
+            override fun onSuccess() {
+                Log.d(TAG, "onSuccess: $source")
                 if(!source.isFollow){
                     postToApi(source)
                 }else{
@@ -67,10 +84,6 @@ class SourceActivity : AppCompatActivity() {
                 updateDatabase(source)
             }
         })
-
-        setSupportActionBar(binding.sourceToolbar)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_round_arrow_back_24)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private suspend fun fetchData(it: String) {

@@ -20,6 +20,7 @@ import com.example.colega.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import de.nycode.bcrypt.hash
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -72,9 +73,10 @@ class RegisterFragment : BottomSheetDialogFragment() {
         }
     }
     private fun addToApi(username: String, password: String, email: String, birthDate: String) {
+        Log.d(TAG, "password: ${String(hash(password))}")
         val user = DataUser(
             username = username,
-            password = password,
+            password = String(hash(password)),
             email = email,
             birthDate = birthDate,
             fullName = "dwika putra",

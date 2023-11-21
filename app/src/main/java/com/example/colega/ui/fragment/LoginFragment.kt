@@ -19,6 +19,7 @@ import com.example.colega.utils.Utils
 import com.example.colega.viewmodel.SourceViewModel
 import com.example.colega.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import de.nycode.bcrypt.verify
 import kotlinx.coroutines.*
 
 @AndroidEntryPoint
@@ -117,9 +118,9 @@ class LoginFragment : Fragment() {
         Log.d(TAG, "addToSharedPref: Started")
         userVM.getUser().observe(viewLifecycleOwner){
             if(it != null){
-                if(password == it.password){
-                    Log.d("Register", "Username: ${it.username}")
-                    Log.d("Register", "Password: ${it.password}")
+                Log.d("Register", "Username: ${it.username}")
+                Log.d("Register", "Password: ${it.password}")
+                if(verify(password, it.password.toByteArray())){
                     Log.d("Register", "Email: ${it.email}")
                     Log.d("Register", "User Id: ${it.id}")
                     Log.d(TAG, "addToSharedPref: Password Same")
